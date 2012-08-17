@@ -1,26 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Diagnostics;
 using System.Net;
+using System.Text.RegularExpressions;
+using Panta.DataModels;
+using Panta.Indexing;
 
-namespace Panta
+namespace Panta.Formatters
 {
     [Serializable]
-    public class UTDepartmentReader : IFormatReader<Department>
+    public class UTDepartmentFormatter : IWebpageFormatter<Department>
     {
-        public const string Root = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
-        public const string Home = "sponsors.htm";
-        public const string Url = Root + Home;
-
-        public const string CourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
+        public string Root = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
+        public string Home = "sponsors.htm";
+        public string Url { get { return Root + Home; } }
+        public string CourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
 
         public IEnumerable<Department> Read()
         {
+            List<Department> results = new List<Department>();
             WebClient client = new WebClient();
             string departmentContent;
-            
+
             try
             {
                 departmentContent = client.DownloadString(Url);
@@ -28,7 +29,8 @@ namespace Panta
             catch (WebException ex)
             {
                 ex.Source = "Unable to fetch: " + Url;
-                throw ex;
+                Trace.WriteLine(ex.ToString());
+                return results;
             }
 
             departmentContent = departmentContent.Replace("\r\n", String.Empty);
@@ -47,15 +49,14 @@ namespace Panta
                 name = circleRegex.Replace(name, String.Empty);
                 name = doubleSpace.Replace(name, " ");
 
-                Department dep = new Department(name, Root, new UTCourseReader(Root + address), new UTCourseDetailReader(CourseDetailRoot + abbr.ToLowerInvariant() + ".htm"))
-                {
-                    Url = address,
-                    Abbr = abbr
-                };
+                Department dep = new UTDepartment(name, abbr, new UTCourseFormatter(Root + address), new UTCourseDetailFormatter(CourseDetailRoot + abbr.ToLowerInvariant() + ".htm"));
+
                 Console.WriteLine();
                 Console.Write("\nDepartment: {0}", dep.Name);
-                yield return dep;
+
+                results.Add(dep);
             }
+            return results;
         }
     }
 }
