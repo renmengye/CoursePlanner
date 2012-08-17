@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Panta.Indexing
+namespace Panta.Indexing.Expressions
 {
     public abstract class LogicExpression : IExpression
     {

@@ -12,7 +12,7 @@ namespace Panta.Tests
     ///to contain all StringSplitterTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class StringSplitterTest
+    public class StringSplitterTests
     {
 
 

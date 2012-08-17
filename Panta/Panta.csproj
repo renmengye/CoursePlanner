@@ -42,7 +42,8 @@
   <ItemGroup>
     <Compile Include="DataModels\Course.cs" />
     <Compile Include="DataModels\Department.cs" />
-    <Compile Include="Indexing\Expressions\LogicAddExpression.cs" />
+    <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
+    <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
     <Compile Include="Indexing\IdSigner.cs" />
     <Compile Include="Indexing\Expressions\IExpression.cs" />
     <Compile Include="Indexing\IIdProvider.cs" />
@@ -54,8 +55,9 @@
     <Compile Include="Indexing\Expressions\LogicExpression.cs" />
     <Compile Include="Indexing\Expressions\LogicOrExpression.cs" />
     <Compile Include="Indexing\Expressions\SearchExpression.cs" />
+    <Compile Include="Indexing\Correctors\ITermCorrector.cs" />
     <Compile Include="Indexing\StringSplitter.cs" />
-    <Compile Include="Indexing\TermExpression.cs" />
+    <Compile Include="Indexing\Expressions\TermExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModels\School.cs" />
     <Compile Include="Formatters\UTCourseDetailFormatter.cs" />

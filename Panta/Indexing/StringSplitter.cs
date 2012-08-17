@@ -64,5 +64,19 @@ namespace Panta.Indexing
                 set.Add(toAdd);
             }
         }
+
+        public static void SeparatePrefix(string value, out string prefix, out string root)
+        {
+            // Default: No prefix, root is full value
+            prefix = String.Empty;
+            root = value;
+
+            // If a ':' is found, separate the prefix and ':' from the rest
+            if (!String.IsNullOrEmpty(root) && root.Contains(":") && !root.EndsWith(":"))
+            {
+                prefix = root.Substring(0, root.IndexOf(':') + 1);
+                root = root.Substring(prefix.Length);
+            }
+        }
     }
 }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Panta.Indexing
+namespace Panta.Indexing.Expressions
 {
-    public class LogicAddExpression : LogicExpression
+    public class LogicAndExpression : LogicExpression
     {
-        public LogicAddExpression(IExpression left, IExpression right) : base(left, right) { }
+        public LogicAndExpression(IExpression left, IExpression right) : base(left, right) { }
 
         #region IExpression Implementation
         public override HashSet<uint> Evaluate(IIdProvider provider)
@@ -21,6 +21,13 @@ namespace Panta.Indexing
             return leftSet;
         }
         #endregion
+
+        public static IExpression Join(IExpression left, IExpression right)
+        {
+            if (left == null) return right;
+            if (right == null) return left;
+            return new LogicAndExpression(left, right);
+        }
 
         public override string ToString()
         {
