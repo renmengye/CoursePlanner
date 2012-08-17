@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
+using Panta.DataModels;
 
-namespace Panta
+namespace Panta.Formatters
 {
     [Serializable]
-    public class UTCourseReader : IFormatReader<Course>
+    public class UTCourseFormatter : IWebpageFormatter<Course>
     {
         public string Url { get; set; }
 
-        public UTCourseReader(string url)
+        public UTCourseFormatter(string url)
         {
             this.Url = url;
         }
