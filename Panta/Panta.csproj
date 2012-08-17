@@ -42,17 +42,18 @@
   <ItemGroup>
     <Compile Include="DataModels\Course.cs" />
     <Compile Include="DataModels\Department.cs" />
-    <Compile Include="Indexing\LogicAddExpression.cs" />
+    <Compile Include="Indexing\Expressions\LogicAddExpression.cs" />
     <Compile Include="Indexing\IdSigner.cs" />
-    <Compile Include="Indexing\IExpression.cs" />
+    <Compile Include="Indexing\Expressions\IExpression.cs" />
     <Compile Include="Indexing\IIdProvider.cs" />
     <Compile Include="Indexing\IIndexable.cs" />
     <Compile Include="Indexing\Indexer.cs" />
     <Compile Include="Indexing\InvertedWordIndex.cs" />
     <Compile Include="Formatters\IWebpageFormatter.cs" />
-    <Compile Include="Indexing\LogicAndNotExpression.cs" />
-    <Compile Include="Indexing\LogicExpression.cs" />
-    <Compile Include="Indexing\LogicOrExpression.cs" />
+    <Compile Include="Indexing\Expressions\LogicAndNotExpression.cs" />
+    <Compile Include="Indexing\Expressions\LogicExpression.cs" />
+    <Compile Include="Indexing\Expressions\LogicOrExpression.cs" />
+    <Compile Include="Indexing\Expressions\SearchExpression.cs" />
     <Compile Include="Indexing\StringSplitter.cs" />
     <Compile Include="Indexing\TermExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
