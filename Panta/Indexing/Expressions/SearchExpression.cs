@@ -16,6 +16,7 @@ namespace Panta.Indexing.Expressions
         /// <returns>Expression tree (Join AndExpression for different terms and join OrExpression for corrections)</returns>
         public static IExpression Parse(string query, ITermCorrector corrector)
         {
+            query = query.ToLowerInvariant();
             if (String.IsNullOrEmpty(query)) return new TermExpression(String.Empty);
             string[] pieces = query.Split(' ', '\t', '\n', '\r');
 
@@ -23,10 +24,20 @@ namespace Panta.Indexing.Expressions
 
             foreach (string piece in pieces)
             {
-                IExpression expr = corrector.Correct(piece);
+                IExpression expr;
+                if (piece.Length > 1)
+                {
+                    if (piece[0] == '-')
+                    {
+                        expr = corrector.Correct(piece.Substring(1));
+                        result = LogicAndNotExpression.Join(result, expr);
+                        continue;
+                    }
+                }
+
+                expr = corrector.Correct(piece);
                 result = LogicAndExpression.Join(result, expr);
             }
-
             return result;
         }
     }

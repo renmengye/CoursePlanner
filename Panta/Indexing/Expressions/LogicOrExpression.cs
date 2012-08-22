@@ -13,8 +13,6 @@ namespace Panta.Indexing.Expressions
         public override HashSet<uint> Evaluate(IIdProvider provider)
         {
             HashSet<uint> leftSet = Left.Evaluate(provider);
-            if (leftSet.Count == 0) return leftSet;
-
             HashSet<uint> rightSet = Right.Evaluate(provider);
             leftSet.UnionWith(rightSet);
 

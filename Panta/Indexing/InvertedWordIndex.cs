@@ -4,6 +4,7 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Panta.Indexing.Expressions;
+using System.Linq;
 
 namespace Panta.Indexing
 {
@@ -12,6 +13,13 @@ namespace Panta.Indexing
     {
         private Dictionary<string, HashSet<uint>> IndexEntries { get; set; }
         public string Name { get; set; }
+        public IEnumerable<string> SortedKeys
+        {
+            get
+            {
+                return IndexEntries.Keys.OrderBy((x => x), StringComparer.Ordinal);
+            }
+        }
 
         public HashSet<uint> GetMatchedIDs(string key)
         {
@@ -37,31 +45,17 @@ namespace Panta.Indexing
 
         public void Add(IIndexable item)
         {
-            foreach (IndexString indexString in item.GetIndexStrings())
+            foreach (string s in item.GetSplittedIndexStrings())
             {
-                foreach (string part in StringSplitter.Split(indexString.Root))
+                HashSet<uint> collection = new HashSet<uint>();
+
+                // Index only root
+                if (!IndexEntries.TryGetValue(s, out collection))
                 {
-                    HashSet<uint> collection = new HashSet<uint>();
-
-                    // Index only root
-                    if (!IndexEntries.TryGetValue(part, out collection))
-                    {
-                        collection = new HashSet<uint>();
-                        IndexEntries.Add(part, collection);
-                    }
-                    collection.Add(item.ID);
-
-                    // Index prefix+root
-                    if (!String.IsNullOrEmpty(indexString.Prefix))
-                    {
-                        if (!IndexEntries.TryGetValue(indexString.Prefix + part, out collection))
-                        {
-                            collection = new HashSet<uint>();
-                            IndexEntries.Add(indexString.Prefix + part, collection);
-                        }
-                        collection.Add(item.ID);
-                    }
+                    collection = new HashSet<uint>();
+                    IndexEntries.Add(s, collection);
                 }
+                collection.Add(item.ID);
             }
         }
 
@@ -95,7 +89,7 @@ namespace Panta.Indexing
         public void Save()
         {
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(this.Name + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
+            Stream stream = new FileStream(this.Name + ".idx", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
         }

@@ -32,5 +32,10 @@ namespace Panta.Indexing.Expressions
             }
             return results;
         }
+
+        public override string ToString()
+        {
+            return this.Term;
+        }
     }
 }

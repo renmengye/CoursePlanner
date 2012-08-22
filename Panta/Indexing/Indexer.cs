@@ -14,6 +14,11 @@ namespace Panta.Indexing
             this.InvertedIndex = new InvertedWordIndex();
         }
 
+        public Indexer(string name)
+        {
+            this.InvertedIndex = new InvertedWordIndex(name);
+        }
+
         public void Index(IEnumerable<T> items)
         {
             foreach (T item in items)

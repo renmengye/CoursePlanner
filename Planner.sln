@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Panta.Search", "Panta.Search\Panta.Search.csproj", "{C637E534-1745-4C7F-A701-CE4AB9906284}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Planner.vsmdi
@@ -57,6 +59,16 @@ Global
 		{ADE27296-9058-4A8A-B00B-DA05F02EADEA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{ADE27296-9058-4A8A-B00B-DA05F02EADEA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{ADE27296-9058-4A8A-B00B-DA05F02EADEA}.Release|x86.ActiveCfg = Release|Any CPU
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Debug|x86.ActiveCfg = Debug|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Debug|x86.Build.0 = Debug|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Release|Any CPU.ActiveCfg = Release|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Release|x86.ActiveCfg = Release|x86
+		{C637E534-1745-4C7F-A701-CE4AB9906284}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

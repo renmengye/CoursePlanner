@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataModels\Course.cs" />
+    <Compile Include="DataModels\CourseSection.cs" />
     <Compile Include="DataModels\Department.cs" />
     <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
     <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Indexing\IIdProvider.cs" />
     <Compile Include="Indexing\IIndexable.cs" />
     <Compile Include="Indexing\Indexer.cs" />
+    <Compile Include="Indexing\IndexString.cs" />
     <Compile Include="Indexing\InvertedWordIndex.cs" />
     <Compile Include="Formatters\IWebpageFormatter.cs" />
     <Compile Include="Indexing\Expressions\LogicAndNotExpression.cs" />

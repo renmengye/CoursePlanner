@@ -20,17 +20,17 @@ namespace Panta.Indexing.Correctors
             string prefix, root;
             StringSplitter.SeparatePrefix(term, out prefix, out root);
 
-            if (root.Length > 2)
+            if (root.Length >= 2)
             {
-                IExpression results = null;
+                IExpression results = new TermExpression(root);
                 foreach (string correction in FindStartsWith(term))
                 {
-                    results = LogicOrExpression.Join(results, new TermExpression(correction));
+                    if (!correction.Equals(root)) results = LogicOrExpression.Join(results, new TermExpression(correction));
                 }
                 return results;
             }
 
-            return null;
+            return new TermExpression(String.Empty);
         }
 
         public IEnumerable<string> FindStartsWith(string term)
