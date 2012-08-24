@@ -13,11 +13,11 @@ namespace Panta.Indexing
     {
         private Dictionary<string, HashSet<uint>> IndexEntries { get; set; }
         public string Name { get; set; }
-        public IEnumerable<string> SortedKeys
+        public string[] SortedKeys
         {
             get
             {
-                return IndexEntries.Keys.OrderBy((x => x), StringComparer.Ordinal);
+                return IndexEntries.Keys.OrderBy((x => x), StringComparer.Ordinal).ToArray<string>();
             }
         }
 
@@ -57,11 +57,6 @@ namespace Panta.Indexing
                 }
                 collection.Add(item.ID);
             }
-        }
-
-        public ICollection<uint> TrySearch(IExpression expression)
-        {
-            throw new NotImplementedException();
         }
 
         #region IIdProvider implementation

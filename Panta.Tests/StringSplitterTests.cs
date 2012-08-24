@@ -69,10 +69,30 @@ namespace Panta.Tests
         ///A test for Split
         ///</summary>
         [TestMethod()]
-        public void SplitTest()
+        public void SplitTests()
         {
             string s = "! Microsoft!!.are VisualStudio222.222TestTools..@@.UnitTesting";
             Assert.AreEqual("microsoft visualstudio222 222testtools unittesting", String.Join(" ", StringSplitter.Split(s)));
+        }
+
+        [TestMethod]
+        public void SeparatePrefixTests()
+        {
+            string prefix;
+            string root;
+
+            // Regular case
+            StringSplitter.SeparatePrefix("a:b", out prefix, out root);
+            Assert.AreEqual("a: b", String.Join(" ", prefix, root));
+
+            // Multiple colons
+            StringSplitter.SeparatePrefix("a::b", out prefix, out root);
+            Assert.AreEqual("a: :b", String.Join(" ", prefix, root));
+
+            // End with colon
+            StringSplitter.SeparatePrefix("aaaa:", out prefix, out root);
+            Assert.AreEqual(" aaaa:", String.Join(" ", prefix, root));
+
         }
     }
 }

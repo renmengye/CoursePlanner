@@ -38,9 +38,16 @@ namespace Panta.Indexing.Correctors
             int startIndex = Array.BinarySearch<string>(SortedWords, term, StringComparer.Ordinal);
             if (startIndex < 0) startIndex = ~startIndex;
 
-            for (int i = startIndex; SortedWords[i].StartsWith(term); i++)
+            for (int i = startIndex; i < SortedWords.Length; i++)
             {
-                yield return SortedWords[i];
+                if (SortedWords[i].StartsWith(term))
+                {
+                    yield return SortedWords[i];
+                }
+                else
+                {
+                    break;
+                }
             }
         }
     }

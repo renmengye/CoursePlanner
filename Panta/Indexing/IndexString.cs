@@ -34,7 +34,10 @@ namespace Panta.Indexing
             List<string> results = new List<string>();
             foreach(string part in StringSplitter.Split(this.Root)){
                 results.Add(part);
-                results.Add(this.Prefix + part);
+                if (!String.IsNullOrEmpty(this.Prefix))
+                {
+                    results.Add(this.Prefix + part);
+                }
             }
             return results;
         }

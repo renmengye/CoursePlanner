@@ -20,7 +20,7 @@ namespace Panta.Search
                 Console.Write("Please input a query: ");
                 string query = Console.ReadLine();
 
-                IExpression expression = SearchExpression.Parse(query, new SuffixCorrector(index.SortedKeys.ToArray<string>()));
+                IExpression expression = SearchExpression.Parse(query, new SuffixCorrector(index.SortedKeys));
 
                 Console.WriteLine("Search results: ");
                 foreach (uint id in expression.Evaluate(index))
