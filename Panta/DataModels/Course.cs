@@ -11,7 +11,32 @@ namespace Panta.DataModels
         public uint ID { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public string Semester { get; set; }
+
+        private string _semester;
+        public string Semester
+        {
+            get { return _semester; }
+            set
+            {
+                _semester = value;
+                switch (value)
+                {
+                    case "Y":
+                        DetailedSemester = "Year";
+                        break;
+                    case "F":
+                        DetailedSemester = "First Fall";
+                        break;
+                    case "S":
+                        DetailedSemester = "Second Winter";
+                        break;
+                    default:
+                        DetailedSemester = "Year";
+                        break;
+                }
+            }
+        }
+        public string DetailedSemester { get; private set; }
 
         // use section name as dictionary key
         public Dictionary<string, CourseSection> Sections { get; set; }
@@ -40,11 +65,14 @@ namespace Panta.DataModels
             strings.Add(new IndexString("id:", this.ID.ToString()));
             strings.Add(new IndexString("code:", this.Code));
             strings.Add(new IndexString("name:", this.Name));
-            strings.Add(new IndexString("sems:", this.Semester));
+
+            // No need to index simple semester since suffix corrector will get you the right one
+            ////strings.Add(new IndexString("sems:", this.Semester));
+            strings.Add(new IndexString("sems:", this.DetailedSemester));
             strings.Add(new IndexString(null, this.Description));
-            if(this.Prerequisites.FirstOrDefault()!=null) strings.Add(new IndexString("preq:", String.Join(" ", this.Prerequisites)));
+            if (this.Prerequisites.FirstOrDefault() != null) strings.Add(new IndexString("preq:", String.Join(" ", this.Prerequisites)));
             if (this.Exclusions.FirstOrDefault() != null) strings.Add(new IndexString("excl:", String.Join(" ", this.Exclusions)));
-            if(!String.IsNullOrEmpty(this.BreadthRequirement)) strings.Add(new IndexString("bred:", this.BreadthRequirement));
+            if (!String.IsNullOrEmpty(this.BreadthRequirement)) strings.Add(new IndexString("bred:", this.BreadthRequirement));
             if (!String.IsNullOrEmpty(this.DistributionRequirement)) strings.Add(new IndexString("dist:", this.DistributionRequirement));
             return strings;
         }

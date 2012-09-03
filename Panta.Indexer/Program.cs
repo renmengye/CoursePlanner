@@ -1,22 +1,24 @@
-﻿using System.IO;
-using System.Linq;
-using Panta.DataModels;
-using Panta.Formatters;
+﻿using Panta.DataModels;
 using Panta.Indexing;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Panta
+namespace Panta.Indexer
 {
-    public class UTCrawler
+    public class Program
     {
         public const string UTSavePath = "uoft.bin";
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            UTCrawler p = new UTCrawler();
+            Program p = new Program();
         }
 
-        public UTCrawler()
+        public Program()
         {
             School UOfT;
             if (File.Exists(UTSavePath))
@@ -26,9 +28,7 @@ namespace Panta
             }
             else
             {
-                UOfT = new School("University of Toronto", "uoft", new UTDepartmentFormatter());
-                UOfT.FetchDepartments();
-                UOfT.Save();
+                throw new FileNotFoundException("Data file not found");
             }
         }
 

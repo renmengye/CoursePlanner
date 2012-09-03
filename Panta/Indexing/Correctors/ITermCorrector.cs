@@ -15,7 +15,7 @@ namespace Panta.Indexing.Correctors
         /// Correct a term and build an expression of corrected terms
         /// </summary>
         /// <param name="term">Input term</param>
-        /// <returns>An expression of corrected terms (usually OrExpression)</returns>
-        IExpression Correct(string term);
+        /// <returns>A list of corrected terms</returns>
+        IEnumerable<string> Correct(string term);
     }
 }

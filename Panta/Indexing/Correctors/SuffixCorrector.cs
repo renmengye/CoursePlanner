@@ -15,22 +15,20 @@ namespace Panta.Indexing.Correctors
             SortedWords = sortedWords;
         }
 
-        public IExpression Correct(string term)
+        public IEnumerable<string> Correct(string term)
         {
             string prefix, root;
             StringSplitter.SeparatePrefix(term, out prefix, out root);
+            List<string> results = new List<string>();
 
             if (root.Length >= 2)
             {
-                IExpression results = new TermExpression(root);
                 foreach (string correction in FindStartsWith(term))
                 {
-                    if (!correction.Equals(root)) results = LogicOrExpression.Join(results, new TermExpression(correction));
+                    if (!correction.Equals(root)) results.Add(correction);
                 }
-                return results;
             }
-
-            return new TermExpression(String.Empty);
+            return results;
         }
 
         public IEnumerable<string> FindStartsWith(string term)

@@ -24,7 +24,7 @@ namespace Panta.Indexing.Expressions
 
         public static IExpression Join(IExpression left, IExpression right)
         {
-            if (left == null) return right;
+            if (left == null) return new TermExpression(String.Empty);
             if (right == null) return left;
             return new LogicAndNotExpression(left, right);
         }

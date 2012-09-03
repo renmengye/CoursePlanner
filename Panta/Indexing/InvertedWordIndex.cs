@@ -11,13 +11,14 @@ namespace Panta.Indexing
     [Serializable]
     public class InvertedWordIndex : IIdProvider
     {
-        private Dictionary<string, HashSet<uint>> IndexEntries { get; set; }
+        private SortedDictionary<string, HashSet<uint>> IndexEntries { get; set; }
         public string Name { get; set; }
+
         public string[] SortedKeys
         {
             get
             {
-                return IndexEntries.Keys.OrderBy((x => x), StringComparer.Ordinal).ToArray<string>();
+                return IndexEntries.Keys.ToArray();
             }
         }
 
@@ -40,7 +41,7 @@ namespace Panta.Indexing
         public InvertedWordIndex(string name)
         {
             this.Name = name;
-            this.IndexEntries = new Dictionary<string, HashSet<uint>>();
+            this.IndexEntries = new SortedDictionary<string, HashSet<uint>>();
         }
 
         public void Add(IIndexable item)

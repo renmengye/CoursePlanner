@@ -43,24 +43,24 @@ namespace Panta.Tests
         [TestMethod]
         public void SuffixCorrectorBasic()
         {
-            Assert.AreEqual("((01 || 011) || 01156)", corrector.Correct("01").ToString());
+            Assert.AreEqual("011 01156", String.Join(" ", corrector.Correct("01")));
         }
 
         [TestMethod]
         public void SuffixCorrectorSizeBound()
         {
             // Hit the upper bound of the sorted keys
-            Assert.AreEqual("((((12 || 12111) || 12555) || 12666) || 12e8)", corrector.Correct("12").ToString());
+            Assert.AreEqual("12111 12555 12666 12e8", String.Join(" ", corrector.Correct("12")));
 
             // Hit the lower bound
-            Assert.AreEqual("((00 || 000) || 001)", corrector.Correct("00").ToString());
+            Assert.AreEqual("000 001", String.Join(" ", corrector.Correct("00")));
         }
 
         [TestMethod]
         public void SuffixCorrectorShort()
         {
             // Does not correct less than two characters
-            Assert.AreEqual("", corrector.Correct("0").ToString());
+            Assert.AreEqual("", String.Join(" ", corrector.Correct("0")));
         }
     }
 }
