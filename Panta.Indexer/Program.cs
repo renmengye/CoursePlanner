@@ -35,7 +35,7 @@ namespace Panta.Indexer
         public void Index(School school)
         {
             Indexer<Course> indexer = new Indexer<Course>(school.Abbr);
-            indexer.Index(school.Courses.Select<KeyValuePair<uint, Course>, Course>(entry => entry.Value));
+            indexer.Index(school.Courses);
         }
     }
 }

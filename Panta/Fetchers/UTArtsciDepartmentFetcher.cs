@@ -1,24 +1,23 @@
-﻿using System;
+﻿using Panta.DataModels.Extensions.UT;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Text.RegularExpressions;
-using Panta.DataModels;
-using Panta.Indexing;
 
-namespace Panta.Formatters
+namespace Panta.Fetchers
 {
     [Serializable]
-    public class UTDepartmentFormatter : IWebpageFormatter<Department>
+    public class UTArtsciDepartmentFetcher : IItemFetcher<UTDepartment>
     {
         public string Root = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
         public string Home = "sponsors.htm";
         public string Url { get { return Root + Home; } }
         public string CourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
 
-        public IEnumerable<Department> Read()
+        public IEnumerable<UTDepartment> FetchItems()
         {
-            List<Department> results = new List<Department>();
+            List<UTDepartment> results = new List<UTDepartment>();
             WebClient client = new WebClient();
             string departmentContent;
 
@@ -49,10 +48,16 @@ namespace Panta.Formatters
                 name = circleRegex.Replace(name, String.Empty);
                 name = doubleSpace.Replace(name, " ");
 
-                Department dep = new UTDepartment(name, abbr, new UTCourseFormatter(Root + address), new UTCourseDetailFormatter(CourseDetailRoot + abbr.ToLowerInvariant() + ".htm"));
+                //UTDepartment dep = new UTDepartment(name, abbr, new UTCourseFetcher(Root + address), new UTCourseDetailFormatter(CourseDetailRoot + abbr.ToLowerInvariant() + ".htm"));
+                UTDepartment dep = new UTDepartment()
+                {
+                    Name = name,
+                    Abbr = abbr,
+                    Url = Root + address,
+                    DetailUrl = CourseDetailRoot + abbr.ToLowerInvariant() + ".htm"
+                };
 
-                Console.WriteLine();
-                Console.Write("\nDepartment: {0}", dep.Name);
+                Console.WriteLine("Department: {0}", dep.Name);
 
                 results.Add(dep);
             }

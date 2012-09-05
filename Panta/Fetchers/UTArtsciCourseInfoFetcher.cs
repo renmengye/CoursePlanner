@@ -5,22 +5,22 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using Panta.DataModels;
+using Panta.DataModels.Extensions.UT;
 
-namespace Panta.Formatters
+namespace Panta.Fetchers
 {
-    [Serializable]
-    public class UTCourseFormatter : IWebpageFormatter<Course>
+    public class UTArtsciCourseInfoFetcher : IItemFetcher<UTCourse>
     {
         public string Url { get; set; }
 
-        public UTCourseFormatter(string url)
+        public UTArtsciCourseInfoFetcher(string url)
         {
             this.Url = url;
         }
 
-        public IEnumerable<Course> Read()
+        public IEnumerable<UTCourse> FetchItems()
         {
-            List<Course> results = new List<Course>();
+            List<UTCourse> results = new List<UTCourse>();
             WebClient client = new WebClient();
             string content;
 
@@ -50,44 +50,56 @@ namespace Panta.Formatters
 
                 string[] properties = line.Split('|');
 
-                if (properties.Length < 4) continue;
+                if (properties.Length < 8) continue;
 
-                Regex meetingRegex = new Regex("[A-Z][0-9]{4}");
+                Regex meetingRegex = new Regex("[A-Z][0-9]{4}", RegexOptions.Compiled);
                 if (!meetingRegex.IsMatch(properties[3])) continue;
 
-                string code = properties[0].TrimStart(' ').TrimEnd(' ');
+                Regex codeRegex = new Regex("(?<abbr>[A-Z]{3}[0-9]{3})(?<prefix>[HY][1])", RegexOptions.Compiled);
+                Match codeMatch = codeRegex.Match(properties[0]);
+                string abbr = codeMatch.Groups["abbr"].ToString();
+                string prefix = codeMatch.Groups["prefix"].ToString();
+
                 string semester = properties[1].TrimStart(' ').TrimEnd(' ');
                 string name = properties[2].TrimStart(' ').TrimEnd(' ');
                 string section = properties[3].TrimStart(' ').TrimEnd(' ');
                 string wait = properties[4].TrimStart(' ').TrimEnd(' ');
                 string time = properties[5].TrimStart(' ').TrimEnd(' ');
+                string location = properties[6].TrimStart(' ').TrimEnd(' ').Replace("&nbsp;", "");
+                string instructor = properties[7].TrimStart(' ').TrimEnd(' ').Replace("&nbsp;", "");
 
-                CourseSection courseSection = new CourseSection()
+                CourseSection courseSection = new UTCourseSection()
                 {
                     Name = section,
                     WaitList = wait.Equals("Y"),
-                    Time = time
+                    Time = time,
+                    Location = location,
+                    Instructor = instructor
                 };
 
                 // Only need to add a section
-                if (code.Equals("&nbsp;") || String.IsNullOrEmpty(code))
+                if (!codeMatch.Success)
                 {
-                    Course lastCourse = results.Last<Course>();
-                    lastCourse.Sections.Add(courseSection.Name, courseSection);
-                    Console.Write(" {0} ", courseSection.Name);
+                    if (results.Count > 0)
+                    {
+                        UTCourse lastCourse = results.Last<UTCourse>();
+                        lastCourse.Sections.Add(courseSection);
+                        Console.Write(" {0} ", courseSection.Name);
+                    }
                 }
                 // Need to create a course
                 else
                 {
-                    Course course = new Course()
+                    UTCourse course = new UTCourse()
                     {
-                        Code = code,
+                        Abbr = abbr,
                         Name = name,
-                        Semester = semester
+                        Semester = semester,
+                        SemesterPrefix = prefix
                     };
-                    course.Sections.Add(courseSection.Name, courseSection);
+                    course.Sections.Add(courseSection);
                     results.Add(course);
-                    Console.Write("\n{0} {1}", course.Code, courseSection.Name);
+                    Console.Write("\nCourse: {0} {1}", course.Abbr, courseSection.Name);
                 }
             }
             return results;

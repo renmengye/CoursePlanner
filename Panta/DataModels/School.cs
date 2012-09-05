@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Panta.Formatters;
+using Panta.Fetchers;
 using Panta.Indexing;
 
 namespace Panta.DataModels
@@ -12,59 +12,33 @@ namespace Panta.DataModels
     /// A school that offers courses to students
     /// </summary>
     [Serializable]
-    public class School
+    public class School : IName
     {
         public string Name { get; set; }
         public string Abbr { get; set; }
 
         /// <summary>
-        /// Signs a unique id to every course and store it
-        /// </summary>
-        public IdSigner Signer { get; set; }
-
-        /// <summary>
-        /// All the departments fetched from department reader.
-        /// Has method to fetch courses individually.
-        /// Not serialized because we don't need the department information any more.
-        /// </summary>
-        [NonSerialized]
-        public Dictionary<string, Department> Departments;
-
-        /// <summary>
-        /// Reads and returns all the department from a webpage.
-        /// Not serilized because we don't need the reader. 
-        /// </summary>
-        [NonSerialized]
-        public IWebpageFormatter<Department> DepartmentFormatter;
-
-        /// <summary>
         /// Final storage of the couses once got from the department
         /// </summary>
-        public Dictionary<uint, Course> Courses { get; set; }
+        protected Dictionary<uint, Course> CoursesCatalog { get; set; }
 
-        public School(string name, string abbr, IWebpageFormatter<Department> formatter)
+        public IEnumerable<Course> Courses { get { return CoursesCatalog.Values; } }
+
+        public School(string name, string abbr, IdSigner<Course> signer, IEnumerable<Course> courses)
         {
             this.Name = name;
             this.Abbr = abbr;
-            this.DepartmentFormatter = formatter;
-            this.Signer = new IdSigner();
-            this.Departments = new Dictionary<string, Department>();
-            this.Courses = new Dictionary<uint, Course>();
+            this.CoursesCatalog = new Dictionary<uint, Course>();
+            foreach (Course course in courses)
+            {
+                // Generate course universal id as the key (not the course name any more)
+                this.CoursesCatalog.Add(signer.SignId(course), course);
+            }
         }
 
-        // Read thw webpage and store departments in dictionary
-        public virtual void FetchDepartments()
+        public bool TryGetCourse(uint id, out Course course)
         {
-            foreach (Department dep in DepartmentFormatter.Read())
-            {
-                this.Departments.Add(dep.Abbr, dep);
-                dep.FetchCourses();
-                foreach (Course course in dep.Courses.Values)
-                {
-                    // Generate course universal id as the key (not the course name any more)
-                    this.Courses.Add((course.ID = Signer.SignId()), course);
-                }
-            }
+            return this.CoursesCatalog.TryGetValue(id, out course);
         }
 
         #region Read/Save

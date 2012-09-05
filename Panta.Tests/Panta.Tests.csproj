@@ -57,6 +57,7 @@
     <Compile Include="SuffixCorrectorTests.cs" />
     <Compile Include="InvertedWordIndexTests.cs" />
     <Compile Include="SearchExpressionTests.cs" />
+    <Compile Include="CourseSectionTimeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Panta\Panta.csproj">

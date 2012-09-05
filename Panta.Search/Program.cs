@@ -26,9 +26,9 @@ namespace Panta.Search
                 foreach (uint id in expression.Evaluate(index))
                 {
                     Course course;
-                    if (school.Courses.TryGetValue(id, out course))
+                    if (school.TryGetCourse(id, out course))
                     {
-                        Console.WriteLine(course.Code);
+                        Console.WriteLine("{0}: {1}", course.Abbr, course.Name);
                     }
                 }
             }

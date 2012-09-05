@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Panta.Indexing
 {
+    /// <summary>
+    /// A structure that can hold a prefix string and a root string.
+    /// Prefixes mainly for defining the type of root data, for more accurate search results
+    /// </summary>
     public struct IndexString
     {
         public string Prefix;
@@ -29,6 +33,10 @@ namespace Panta.Indexing
             return Prefix + Root;
         }
 
+        /// <summary>
+        /// Parse the root string and form the concatenation of prefix and the parsed parts of the root for inverted word index
+        /// </summary>
+        /// <returns>A list of part of the root with the same prefix</returns>
         public IEnumerable<string> ToSplittedStrings()
         {
             List<string> results = new List<string>();

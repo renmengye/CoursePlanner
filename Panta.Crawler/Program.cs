@@ -1,9 +1,8 @@
-﻿using System.IO;
-using System.Linq;
-using Panta.DataModels;
-using Panta.Formatters;
+﻿using Panta.DataModels;
+using Panta.DataModels.Extensions.UT;
+using Panta.Fetchers;
 using Panta.Indexing;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Panta
 {
@@ -17,8 +16,11 @@ namespace Panta
         public Program()
         {
             School UOfT;
-            UOfT = new School("University of Toronto", "uoft", new UTDepartmentFormatter());
-            UOfT.FetchDepartments();
+            IdSigner<Course> signer = new IdSigner<Course>();
+            IItemFetcher<UTCourse> artsciCourseFetcher = new UTArtsciCourseFetcher();
+            IItemFetcher<Course> engCourseFetcher = new UTEngCourseFetcher();
+
+            UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems());
             UOfT.Save();
         }
     }
