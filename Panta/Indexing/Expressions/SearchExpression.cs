@@ -25,7 +25,7 @@ namespace Panta.Indexing.Expressions
 
             foreach (string piece in pieces)
             {
-                IExpression expr;
+                IExpression expr = null;
 
                 // Scan the possibilities of AndNot and Or
                 if (piece.Length > 1)
@@ -35,9 +35,9 @@ namespace Panta.Indexing.Expressions
                         string[] orPieces = piece.Split('|');
                         foreach (string orPiece in orPieces)
                         {
-                            expr = Parse(orPiece, corrector);
-                            result = LogicOrExpression.Join(result, expr);
+                            expr = LogicOrExpression.Join(expr, Parse(orPiece, corrector));
                         }
+                        result = LogicAndExpression.Join(result, expr);
                         continue;
                     }
                     else if (piece[0] == '-')

@@ -9,9 +9,9 @@ namespace Panta.DataModels
     [Serializable]
     public struct CourseSectionTime
     {
-        public IEnumerable<CourseTimeSpan> MeetTimes;
+        public IEnumerable<CourseSectionTimeSpan> MeetTimes;
 
-        public CourseSectionTime(IEnumerable<CourseTimeSpan> times)
+        public CourseSectionTime(IEnumerable<CourseSectionTimeSpan> times)
         {
             this.MeetTimes = times;
         }
@@ -24,7 +24,7 @@ namespace Panta.DataModels
         {
             if (MeetTimes != null)
             {
-                return String.Join(" ", MeetTimes.Select<CourseTimeSpan, string>(span => span.ToString()));
+                return String.Join(" ", MeetTimes.Select<CourseSectionTimeSpan, string>(span => span.ToString()));
             }
             else
             {
@@ -34,7 +34,7 @@ namespace Panta.DataModels
     }
 
     [Serializable]
-    public struct CourseTimeSpan
+    public struct CourseSectionTimeSpan
     {
         public DayOfWeek Day;
 
@@ -42,10 +42,10 @@ namespace Panta.DataModels
         public byte Start;
         public byte End;
 
-        public CourseTimeSpan(DayOfWeek day, byte start, byte end)
+        public CourseSectionTimeSpan(DayOfWeek day, byte start, byte end)
         {
-            if (start < 0 || start > 47) throw new ArgumentException("Invalid start time");
-            if (end < 0 || end > 47) throw new ArgumentException("Invalid end time");
+            if (start < 0 || start > 95) throw new ArgumentException("Invalid start time");
+            if (end < 0 || end > 95) throw new ArgumentException("Invalid end time");
             this.Day = day;
             this.Start = start;
             this.End = end;

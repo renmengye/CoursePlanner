@@ -22,7 +22,7 @@ namespace Panta.Fetchers
 
         public IEnumerable<Course> FetchItems()
         {
-            throw new NotImplementedException();
+            return new UTEngCourseInfoFetcher(@"http://www.apsc.utoronto.ca/timetable/winter.html").FetchItems();
         }
     }
 }

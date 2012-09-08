@@ -28,7 +28,7 @@ namespace Panta.Tests
         {
             // No prefix
             IndexString test = new IndexString(null, "good-ok");
-            Assert.AreEqual("good ok", String.Join(" ", test.ToSplittedStrings()));
+            Assert.AreEqual("good-ok", String.Join(" ", test.ToSplittedStrings()));
         }
 
         [TestMethod]

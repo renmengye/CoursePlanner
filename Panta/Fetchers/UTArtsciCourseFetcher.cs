@@ -38,13 +38,14 @@ namespace Panta.Fetchers
                 {
                     // Add department info
                     course.Department = dep.Name;
-                    try
+                    string key=course.Abbr + course.SemesterPrefix + course.Semester;
+                    if (coursesCollection.ContainsKey(key))
                     {
-                        coursesCollection.Add(course.Abbr + course.SemesterPrefix + course.Semester, course);
+                        coursesCollection.Add(key, course);
                     }
-                    catch (AggregateException ex)
+                    else
                     {
-                        Console.WriteLine("Exception at {0}{1}{2}", course.Abbr, course.SemesterPrefix, course.Semester);
+                        Console.WriteLine("Duplicate naming: " + key);
                     }
                 }
 

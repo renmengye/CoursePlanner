@@ -65,7 +65,7 @@ namespace Panta.Fetchers
                 string section = properties[3].TrimStart(' ').TrimEnd(' ');
                 string wait = properties[4].TrimStart(' ').TrimEnd(' ');
                 string time = properties[5].TrimStart(' ').TrimEnd(' ');
-                string location = properties[6].TrimStart(' ').TrimEnd(' ').Replace("&nbsp;", "");
+                string location = properties[6].Replace("&nbsp;", "").Replace(" ","");
                 string instructor = properties[7].TrimStart(' ').TrimEnd(' ').Replace("&nbsp;", "");
 
                 CourseSection courseSection = new UTCourseSection()

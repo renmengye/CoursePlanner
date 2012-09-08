@@ -12,19 +12,15 @@ namespace Panta.Indexer
     public class Program
     {
         public const string UTSavePath = "uoft.bin";
-
+        
         public static void Main(string[] args)
         {
-            Program p = new Program();
-        }
-
-        public Program()
-        {
-            School UOfT;
-            if (File.Exists(UTSavePath))
+            School school;
+            string path = args.Length > 0 ? args[0] : UTSavePath;
+            if (File.Exists(path))
             {
-                UOfT = School.Read(UTSavePath);
-                Index(UOfT);
+                school = School.Read(path);
+                Index(school);
             }
             else
             {
@@ -32,7 +28,7 @@ namespace Panta.Indexer
             }
         }
 
-        public void Index(School school)
+        public static void Index(School school)
         {
             Indexer<Course> indexer = new Indexer<Course>(school.Abbr);
             indexer.Index(school.Courses);

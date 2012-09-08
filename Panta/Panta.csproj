@@ -44,12 +44,15 @@
     <Compile Include="DataModels\CourseSection.cs" />
     <Compile Include="DataModels\CourseSectionTime.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourseSectionTime.cs" />
+    <Compile Include="DataModels\Extensions\UT\UTEngCourseSection.cs" />
+    <Compile Include="DataModels\Extensions\UT\UTEngCourseSectionTime.cs" />
     <Compile Include="DataModels\IName.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourse.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourseSection.cs" />
     <Compile Include="Fetchers\IItemFetcher.cs" />
     <Compile Include="Fetchers\UTArtsciCourseFetcher.cs" />
     <Compile Include="Fetchers\UTEngCourseFetcher.cs" />
+    <Compile Include="Fetchers\UTEngCourseInfoFetcher.cs" />
     <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
     <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
     <Compile Include="Indexing\IdSigner.cs" />

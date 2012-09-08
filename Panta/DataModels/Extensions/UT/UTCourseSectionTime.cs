@@ -16,20 +16,20 @@ namespace Panta.DataModels.Extensions.UT
             Regex regex = new Regex("^(?<span>[A-Z][0-9:-]*)+$", RegexOptions.Compiled);
             if (!regex.IsMatch(raw)) throw new ArgumentException("Fail to parse the time: " + raw);
 
-            List<CourseTimeSpan> spans = new List<CourseTimeSpan>();
+            List<CourseSectionTimeSpan> spans = new List<CourseSectionTimeSpan>();
 
             foreach (Capture capture in regex.Match(raw).Groups["span"].Captures)
             {
-                CourseTimeSpan span;
+                CourseSectionTimeSpan span;
                 string rawSpan = capture.ToString();
-                if (!UTCourseTimeSpan.TryParseRawTimeSpan(rawSpan, out span)) return false;
+                if (!UTCourseSectionTimeSpan.TryParseRawTimeSpan(rawSpan, out span)) return false;
 
                 // Correct the abbreviation form, e.g. TF9 => T9F9
                 if (span.Start != 0 || span.End != 0)
                 {
                     for (int i = 0; i < spans.Count; i++)
                     {
-                        CourseTimeSpan prevSpan = spans[i];
+                        CourseSectionTimeSpan prevSpan = spans[i];
                         if (prevSpan.Start == 0 && prevSpan.End == 0)
                         {
                             prevSpan.Start = span.Start;
@@ -45,11 +45,58 @@ namespace Panta.DataModels.Extensions.UT
             time.MeetTimes = spans;
             return true;
         }
+
+        public static bool TryParseTimeString(string time, out CourseSectionTime result)
+        {
+            Regex regex = new Regex("((?<day>(monday)|(tuesday)|(wednesday)|(thursday)|(friday)) (?<start>[0-9][0-9]?:[0-9]{2})-(?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            MatchCollection collection = regex.Matches(time);
+            result = new CourseSectionTime();
+            List<CourseSectionTimeSpan> meetTimes = new List<CourseSectionTimeSpan>();
+            if (collection.Count > 0)
+            {
+                foreach (Match match in collection)
+                {
+                    CourseSectionTimeSpan span;
+                    DayOfWeek day;
+                    switch (match.Groups["day"].ToString().ToLowerInvariant())
+                    {
+                        case "monday":
+                            day = DayOfWeek.Monday;
+                            break;
+                        case "tuesday":
+                            day = DayOfWeek.Tuesday;
+                            break;
+                        case "wednesday":
+                            day = DayOfWeek.Wednesday;
+                            break;
+                        case "thursday":
+                            day = DayOfWeek.Thursday;
+                            break;
+                        case "friday":
+                            day = DayOfWeek.Friday;
+                            break;
+                        default:
+                            return false;
+                    }
+                    span.Day = day;
+
+                    byte start, end;
+                    if (!UTCourseSectionTimeSpan.TryParseTimeSpanInt(match.Groups["start"].ToString(), out start)) return false;
+                    if (!UTCourseSectionTimeSpan.TryParseTimeSpanInt(match.Groups["end"].ToString(), out end)) return false;
+
+                    meetTimes.Add(new CourseSectionTimeSpan(day, start, end));
+
+                }
+                result.MeetTimes = meetTimes;
+                return true;
+            }
+            return false;
+        }
     }
 
 
     [Serializable]
-    public static class UTCourseTimeSpan
+    public static class UTCourseSectionTimeSpan
     {
         /// <summary>
         /// Convert a raw time string to a standard integer accepted by CourseTimeSpan constructor
@@ -62,9 +109,6 @@ namespace Panta.DataModels.Extensions.UT
 
             if (!Byte.TryParse(half[0], out result)) return false;
 
-            // Only allow 12-hour time as others here
-            if (result == 12) result = 0;
-
             result *= 4;
 
             if (half.Length > 1)
@@ -72,6 +116,8 @@ namespace Panta.DataModels.Extensions.UT
                 if (half.Length > 2) return false;
                 switch (half[1])
                 {
+                    case "00":
+                        break;
                     case "15":
                         result += 1;
                         break;
@@ -93,9 +139,9 @@ namespace Panta.DataModels.Extensions.UT
         /// </summary>
         /// <param name="rawSpan">e.g. "M2-4"</param>
         /// <returns>CourseTimeSpan Monday 28 32</returns>
-        public static bool TryParseRawTimeSpan(string rawSpan, out CourseTimeSpan span)
+        public static bool TryParseRawTimeSpan(string rawSpan, out CourseSectionTimeSpan span)
         {
-            span = new CourseTimeSpan();
+            span = new CourseSectionTimeSpan();
 
             Regex regex = new Regex("^(?<day>[A-Z])" +
                 "(?:" +

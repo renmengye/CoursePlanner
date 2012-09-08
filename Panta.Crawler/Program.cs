@@ -20,7 +20,8 @@ namespace Panta
             IItemFetcher<UTCourse> artsciCourseFetcher = new UTArtsciCourseFetcher();
             IItemFetcher<Course> engCourseFetcher = new UTEngCourseFetcher();
 
-            UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems());
+            //UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems());
+            UOfT = new School("University of Toronto Engineering", "uofteng", signer, engCourseFetcher.FetchItems());
             UOfT.Save();
         }
     }

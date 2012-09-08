@@ -13,8 +13,9 @@ namespace Panta.Search
     {
         public static void Main(string[] args)
         {
-            InvertedWordIndex index = InvertedWordIndex.Read("uoft.idx");
-            School school = School.Read("uoft.bin");
+            string abbr = args.Length > 0 ? args[0] : "uoft";
+            InvertedWordIndex index = InvertedWordIndex.Read(abbr + ".idx");
+            School school = School.Read(abbr + ".bin");
             while (true)
             {
                 Console.Write("Please input a query: ");

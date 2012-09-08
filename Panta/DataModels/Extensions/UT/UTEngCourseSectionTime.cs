@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace Panta.DataModels.Extensions.UT
+{
+    public class UTEngCourseSectionTime
+    {
+        public static bool TryParseRawTime(string time, out CourseSectionTime result)
+        {
+            Regex regex = new Regex("((?<day>(mon)|(tue)|(wed)|(thu)|(fri)) (?<start>[0-9][0-9]?:[0-9]{2}) (?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            MatchCollection collection = regex.Matches(time);
+            result = new CourseSectionTime();
+            List<CourseSectionTimeSpan> meetTimes = new List<CourseSectionTimeSpan>();
+            if (collection.Count > 0)
+            {
+                foreach (Match match in collection)
+                {
+                    CourseSectionTimeSpan span;
+                    DayOfWeek day;
+                    switch (match.Groups["day"].ToString().ToLowerInvariant())
+                    {
+                        case "mon":
+                            day = DayOfWeek.Monday;
+                            break;
+                        case "tue":
+                            day = DayOfWeek.Tuesday;
+                            break;
+                        case "wed":
+                            day = DayOfWeek.Wednesday;
+                            break;
+                        case "thu":
+                            day = DayOfWeek.Thursday;
+                            break;
+                        case "fri":
+                            day = DayOfWeek.Friday;
+                            break;
+                        default:
+                            return false;
+                    }
+                    span.Day = day;
+
+                    byte start, end;
+                    if (!UTCourseSectionTimeSpan.TryParseTimeSpanInt(match.Groups["start"].ToString(), out start)) return false;
+                    if (!UTCourseSectionTimeSpan.TryParseTimeSpanInt(match.Groups["end"].ToString(), out end)) return false;
+
+                    meetTimes.Add(new CourseSectionTimeSpan(day, start, end));
+
+                }
+                result.MeetTimes = meetTimes;
+                return true;
+            }
+            return false;
+        }
+    }
+}

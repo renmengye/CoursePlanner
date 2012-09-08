@@ -31,7 +31,7 @@ namespace Panta.Indexing
 
             for (int i = 0; i < s.Length; i++)
             {
-                if (Char.IsLetterOrDigit(s[i]))
+                if (ShouldIndex(s[i]))
                 {
                     if (!inAlpha)
                     {
@@ -54,6 +54,11 @@ namespace Panta.Indexing
                 Add(s, alphaStart, s.Length - 1, results);
             }
             return results;
+        }
+
+        private static bool ShouldIndex(char c)
+        {
+            return Char.IsLetterOrDigit(c) || c == ':' || c == '-';
         }
 
         private static void Add(string s, int start, int end, ICollection<string> set)

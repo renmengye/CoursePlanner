@@ -7,27 +7,28 @@ namespace Panta.DataModels.Extensions.UT
     [Serializable]
     public class UTCourseSection : CourseSection
     {
+        private string _time;
         public override string Time
         {
             get
             {
-                return base.Time;
+                return this._time;
             }
             set
             {
-                base.Time = value;
+                this._time = value;
                 CourseSectionTime time;
-                if (UTCourseSectionTime.TryParseRawTime(value.ToUpperInvariant(), out time))
+                if (UTCourseSectionTime.TryParseRawTime(value.ToUpperInvariant().Replace(",", "").Replace(" ", ""), out time))
                 {
                     this.ParsedTime = time;
                 }
                 else
                 {
-                    throw new ArgumentException("Cannot parse time");
+                    throw new ArgumentException("Cannot parse time: " + value);
                 }
             }
         }
-        public CourseSectionTime ParsedTime { get; private set; }
+        public virtual CourseSectionTime ParsedTime { get; protected set; }
         public override string Name
         {
             get
@@ -40,18 +41,19 @@ namespace Panta.DataModels.Extensions.UT
                 this.IsLecture = value[0] == 'L';
             }
         }
-        public bool IsLecture { get; private set; }
+        public bool IsLecture { get; protected set; }
         public bool WaitList { get; set; }
 
         protected override IList<IndexString> GetIndexStrings()
         {
             IList<IndexString> strings = base.GetIndexStrings();
 
+            if (!String.IsNullOrEmpty(this.Location)) strings.Add(new IndexString("loc:", this.Location));
+            
             // Only index the time if the section is a lecture section
             if (this.IsLecture)
             {
-                if (!String.IsNullOrEmpty(this.Time)) strings.Add(new IndexString("time:", this.Time));
-                strings.Add(new IndexString("dtime:", this.ParsedTime.ToString()));
+                if (!String.IsNullOrEmpty(this.ParsedTime.ToString())) strings.Add(new IndexString("time:", this.ParsedTime.ToString()));
             }
             return strings;
         }

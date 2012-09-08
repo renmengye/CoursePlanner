@@ -34,6 +34,7 @@ namespace Panta.DataModels.Extensions.UT
         }
         public string SemesterDetail { get; private set; }
         public string SemesterPrefix { get; set; }
+        public string FullAbbr { get { return this.Abbr + this.SemesterPrefix + this.Semester; } }
         public IEnumerable<string> Prerequisites { get; set; }
         public IEnumerable<string> Exclusions { get; set; }
         public string DistributionRequirement { get; set; }
