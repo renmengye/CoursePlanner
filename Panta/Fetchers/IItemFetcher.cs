@@ -8,7 +8,6 @@ namespace Panta.Fetchers
 {
     public interface IItemFetcher<T>
     {
-        string Url { get; }
         IEnumerable<T> FetchItems();
     }
 }

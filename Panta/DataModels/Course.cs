@@ -9,7 +9,8 @@ namespace Panta.DataModels
     public class Course : IIndexable, IName
     {
         public uint ID { get; set; }
-        public string Abbr { get; set; }
+        private string _abbr;
+        public virtual string Abbr { get { return this._abbr; } set { this._abbr = value; } }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Department { get; set; }

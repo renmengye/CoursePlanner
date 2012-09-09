@@ -50,9 +50,11 @@
     <Compile Include="DataModels\Extensions\UT\UTCourse.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourseSection.cs" />
     <Compile Include="Fetchers\IItemFetcher.cs" />
-    <Compile Include="Fetchers\UTArtsciCourseFetcher.cs" />
-    <Compile Include="Fetchers\UTEngCourseFetcher.cs" />
-    <Compile Include="Fetchers\UTEngCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTEngCourseDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTEngCourseFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTEngCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\WebpageItemFetcher.cs" />
     <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
     <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
     <Compile Include="Indexing\IdSigner.cs" />
@@ -71,10 +73,10 @@
     <Compile Include="Indexing\Expressions\TermExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModels\School.cs" />
-    <Compile Include="Fetchers\UTArtsciCourseDetailFetcher.cs" />
-    <Compile Include="Fetchers\UTArtsciCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseInfoFetcher.cs" />
     <Compile Include="DataModels\Extensions\UT\UTDepartment.cs" />
-    <Compile Include="Fetchers\UTArtsciDepartmentFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciDepartmentFetcher.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

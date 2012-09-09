@@ -208,7 +208,7 @@ namespace Panta.DataModels.Extensions.UT
             // Heuristics:
             // Number smaller than 9:00 are afternoon
             // Number bigger than 9:00 (inclusive) are morning
-            if (time > 46 || time < 0) throw new ArgumentException("Invalid 12-hour time");
+            if (time > 95 || time < 0) throw new ArgumentException("Invalid 12-hour time");
             if (time < 36)
             {
                 return (byte)(time + 48);

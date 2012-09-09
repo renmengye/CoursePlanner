@@ -26,9 +26,9 @@ namespace Panta.DataModels.Extensions.UT
                 }
                 else
                 {
-                    if (String.IsNullOrEmpty(value))
+                    if (!String.IsNullOrEmpty(value) && !value.Equals("&nbsp"))
                     {
-                        throw new ArgumentException("Cannot parse time: " + value);
+                        //throw new ArgumentException("Cannot parse time: " + value);
                     }
                 }
             }

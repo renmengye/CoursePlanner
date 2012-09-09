@@ -7,7 +7,7 @@ namespace Panta.DataModels
 {
     public interface IName
     {
-        string Name { get; set; }
-        string Abbr { get; set; }
+        string Name { get; }
+        string Abbr { get; }
     }
 }

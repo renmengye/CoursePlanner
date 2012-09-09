@@ -6,14 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Panta.Fetchers
+namespace Panta.Fetchers.Extensions.UT
 {
     public class UTArtsciCourseFetcher : IItemFetcher<UTCourse>
     {
         /// <summary>
-        /// This property is not used here since it uses a couple little item fetchers
+        /// A dictionary stores all the courses fetched from small fetchers and preventing duplicate abbreviation naming for merging
         /// </summary>
-        public string Url { get; set; }
+        private Dictionary<string, UTCourse> CoursesCollection { get; set; }
+
+        public UTArtsciCourseFetcher()
+        {
+            this.CoursesCollection = new Dictionary<string, UTCourse>();
+        }
 
         public IEnumerable<UTCourse> FetchItems()
         {
@@ -32,38 +37,35 @@ namespace Panta.Fetchers
                 IEnumerable<UTCourse> courses = courseInfoFetcher.FetchItems();
                 IEnumerable<UTCourse> coursesDetail = courseDetailFetcher.FetchItems();
 
-                // Add course info items to a dictionary for matching the same ones with detail items
-                Dictionary<string, UTCourse> coursesCollection = new Dictionary<string, UTCourse>();
                 foreach (UTCourse course in courses)
                 {
                     // Add department info
                     course.Department = dep.Name;
-                    string key=course.Abbr + course.SemesterPrefix + course.Semester;
-                    if (coursesCollection.ContainsKey(key))
+                    course.Faculty = "Artsci";
+
+                    lock (this)
                     {
-                        coursesCollection.Add(key, course);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Duplicate naming: " + key);
+                        if (!CoursesCollection.ContainsKey(course.Abbr))
+                        {
+                            CoursesCollection.Add(course.Abbr, course);
+                        }
+                        else
+                        {
+                            //Console.WriteLine("Duplicate naming: " + course.Abbr);
+                        }
                     }
                 }
 
                 // Use a subbody TryMatchSemester to match the courses
                 foreach (UTCourse course in coursesDetail)
                 {
-                    TryMatchSemester(coursesCollection, course, "Y");
-                    TryMatchSemester(coursesCollection, course, "F");
-                    TryMatchSemester(coursesCollection, course, "S");
-                }
-
-                lock (this)
-                {
-                    results.AddRange(courses);
+                    TryMatchSemester(CoursesCollection, course, "Y");
+                    TryMatchSemester(CoursesCollection, course, "F");
+                    TryMatchSemester(CoursesCollection, course, "S");
                 }
             });
-
-            return results;
+            //}
+            return CoursesCollection.Values;
         }
 
         /// <summary>
@@ -72,17 +74,22 @@ namespace Panta.Fetchers
         /// <param name="course">Couse without semester information</param>
         /// <param name="semester">A semester of guess</param>
         /// <returns></returns>
-        private bool TryMatchSemester(Dictionary<string, UTCourse> courseCollection, UTCourse course, string semester)
+        private bool TryMatchSemester(Dictionary<string, UTCourse> coursesCollection, UTCourse course, string semester)
         {
             UTCourse existedCourse;
-            if (courseCollection.TryGetValue(course.Abbr + course.SemesterPrefix + semester, out existedCourse))
+
+            lock (this)
             {
-                existedCourse.Description = course.Description;
-                existedCourse.Prerequisites = course.Prerequisites;
-                existedCourse.Exclusions = course.Exclusions;
-                existedCourse.DistributionRequirement = course.DistributionRequirement;
-                existedCourse.BreadthRequirement = course.BreadthRequirement;
-                return true;
+                if (coursesCollection.TryGetValue(course.Code + course.SemesterPrefix + semester, out existedCourse))
+                {
+                    existedCourse.Description = course.Description;
+                    existedCourse.Corequisites = course.Corequisites;
+                    existedCourse.Prerequisites = course.Prerequisites;
+                    existedCourse.Exclusions = course.Exclusions;
+                    existedCourse.DistributionRequirement = course.DistributionRequirement;
+                    existedCourse.BreadthRequirement = course.BreadthRequirement;
+                    return true;
+                }
             }
             return false;
         }

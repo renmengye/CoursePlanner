@@ -1,6 +1,7 @@
 ﻿using Panta.DataModels;
 using Panta.DataModels.Extensions.UT;
 using Panta.Fetchers;
+using Panta.Fetchers.Extensions.UT;
 using Panta.Indexing;
 using System.Linq;
 
@@ -18,10 +19,9 @@ namespace Panta
             School UOfT;
             IdSigner<Course> signer = new IdSigner<Course>();
             IItemFetcher<UTCourse> artsciCourseFetcher = new UTArtsciCourseFetcher();
-            IItemFetcher<Course> engCourseFetcher = new UTEngCourseFetcher();
+            IItemFetcher<UTCourse> engCourseFetcher = new UTEngCourseFetcher();
 
-            //UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems());
-            UOfT = new School("University of Toronto Engineering", "uofteng", signer, engCourseFetcher.FetchItems());
+            UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems().Concat<UTCourse>(engCourseFetcher.FetchItems()));
             UOfT.Save();
         }
     }
