@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Panta.DataModels.Extensions.UT
 {
+    [DataContract]
     [Serializable]
     public class UTEngCourseSection : UTCourseSection
     {
@@ -33,6 +35,8 @@ namespace Panta.DataModels.Extensions.UT
                 }
             }
         }
+
+        [DataMember]
         public override string Name
         {
             get

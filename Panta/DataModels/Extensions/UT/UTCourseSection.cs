@@ -1,9 +1,12 @@
 ﻿using Panta.Indexing;
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Panta.DataModels.Extensions.UT
 {
+    [DataContract]
+    [KnownType(typeof(UTEngCourseSection))]
     [Serializable]
     public class UTCourseSection : CourseSection
     {
@@ -28,7 +31,10 @@ namespace Panta.DataModels.Extensions.UT
                 }
             }
         }
+        [DataMember]
         public virtual CourseSectionTime ParsedTime { get; protected set; }
+
+        [DataMember]
         public override string Name
         {
             get

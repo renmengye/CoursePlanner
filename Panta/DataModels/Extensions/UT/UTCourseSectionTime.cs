@@ -8,17 +8,25 @@ namespace Panta.DataModels.Extensions.UT
     [Serializable]
     public static class UTCourseSectionTime
     {
+        private static Regex rawTimeRegex;
+        private static Regex timeStringRegex;
+
+        static UTCourseSectionTime()
+        {
+            rawTimeRegex = new Regex("^(?<span>[A-Z][0-9:-]*)+$", RegexOptions.Compiled);
+            timeStringRegex = new Regex("((?<day>(monday)|(tuesday)|(wednesday)|(thursday)|(friday)) (?<start>[0-9][0-9]?:[0-9]{2})-(?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        }
+
         public static bool TryParseRawTime(string raw, out CourseSectionTime time)
         {
             time = new CourseSectionTime();
             if (raw.Equals("TBA")) return true;
 
-            Regex regex = new Regex("^(?<span>[A-Z][0-9:-]*)+$", RegexOptions.Compiled);
-            if (!regex.IsMatch(raw)) throw new ArgumentException("Fail to parse the time: " + raw);
+            if (!rawTimeRegex.IsMatch(raw)) throw new ArgumentException("Fail to parse the time: " + raw);
 
             List<CourseSectionTimeSpan> spans = new List<CourseSectionTimeSpan>();
 
-            foreach (Capture capture in regex.Match(raw).Groups["span"].Captures)
+            foreach (Capture capture in rawTimeRegex.Match(raw).Groups["span"].Captures)
             {
                 CourseSectionTimeSpan span;
                 string rawSpan = capture.ToString();
@@ -48,8 +56,7 @@ namespace Panta.DataModels.Extensions.UT
 
         public static bool TryParseTimeString(string time, out CourseSectionTime result)
         {
-            Regex regex = new Regex("((?<day>(monday)|(tuesday)|(wednesday)|(thursday)|(friday)) (?<start>[0-9][0-9]?:[0-9]{2})-(?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            MatchCollection collection = regex.Matches(time);
+            MatchCollection collection = timeStringRegex.Matches(time);
             result = new CourseSectionTime();
             List<CourseSectionTimeSpan> meetTimes = new List<CourseSectionTimeSpan>();
             if (collection.Count > 0)
@@ -98,6 +105,18 @@ namespace Panta.DataModels.Extensions.UT
     [Serializable]
     public static class UTCourseSectionTimeSpan
     {
+        private static Regex rawSpanRegex;
+
+        static UTCourseSectionTimeSpan()
+        {
+            rawSpanRegex = new Regex("^(?<day>[A-Z])" +
+                "(?:" +
+                "(?<start>[0-9]+(?:[:][0-9]{2})?)" +
+                "(?:[-]" +
+                "(?<end>[0-9]+(?:[:][0-9]{2})?)" +
+                ")?)?$", RegexOptions.Compiled);
+        }
+
         /// <summary>
         /// Convert a raw time string to a standard integer accepted by CourseTimeSpan constructor
         /// </summary>
@@ -143,15 +162,8 @@ namespace Panta.DataModels.Extensions.UT
         {
             span = new CourseSectionTimeSpan();
 
-            Regex regex = new Regex("^(?<day>[A-Z])" +
-                "(?:" +
-                "(?<start>[0-9]+(?:[:][0-9]{2})?)" +
-                "(?:[-]" +
-                "(?<end>[0-9]+(?:[:][0-9]{2})?)" +
-                ")?)?$", RegexOptions.Compiled);
-
-            if (!regex.IsMatch(rawSpan)) throw new ArgumentException("Fail to parse the span: " + rawSpan);
-            Match match = regex.Match(rawSpan);
+            if (!rawSpanRegex.IsMatch(rawSpan)) throw new ArgumentException("Fail to parse the span: " + rawSpan);
+            Match match = rawSpanRegex.Match(rawSpan);
 
             // Process day
             DayOfWeek day;
@@ -192,7 +204,7 @@ namespace Panta.DataModels.Extensions.UT
                     if (endTime == 48) endTime = 0;
                 }
                 span.Start = To24HourTime(startTime);
-                span.End = To24HourTime(endTime);
+                span.End = To24HourTime(endTime, span.Start >= 48);
             }
 
             return true;
@@ -203,13 +215,13 @@ namespace Panta.DataModels.Extensions.UT
         /// </summary>
         /// <param name="time">A 12-hour time using integer 0-23</param>
         /// <returns>A 24-hour time using 0-47</returns>
-        private static byte To24HourTime(byte time)
+        private static byte To24HourTime(byte time, bool fixAfternoon = false)
         {
             // Heuristics:
-            // Number smaller than 9:00 are afternoon
-            // Number bigger than 9:00 (inclusive) are morning
+            // Number smaller than 8:00 are afternoon
+            // Number bigger than 8:00 (inclusive) are morning
             if (time > 95 || time < 0) throw new ArgumentException("Invalid 12-hour time");
-            if (time < 36)
+            if (time < 36 || fixAfternoon)
             {
                 return (byte)(time + 48);
             }

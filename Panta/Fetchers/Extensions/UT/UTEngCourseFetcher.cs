@@ -40,17 +40,25 @@ namespace Panta.Fetchers.Extensions.UT
 
             foreach (UTCourse detail in coursesDetail)
             {
-                MergeCourses(this.CoursesCollection, detail);
+                TryMatchSemester(CoursesCollection, detail, "Y");
+                TryMatchSemester(CoursesCollection, detail, "F");
+                TryMatchSemester(CoursesCollection, detail, "S");
             }
 
             return CoursesCollection.Values;
         }
 
-        private bool MergeCourses(Dictionary<string, UTCourse> coursesCollection, UTCourse course)
+        /// <summary>
+        /// Try match the existing course in the dictionary with a course that has no semester information
+        /// </summary>
+        /// <param name="course">Couse without semester information</param>
+        /// <param name="semester">A semester of guess</param>
+        /// <returns></returns>
+        private bool TryMatchSemester(Dictionary<string, UTCourse> coursesCollection, UTCourse course, string semester)
         {
             UTCourse existedCourse;
 
-            if (coursesCollection.TryGetValue(course.Abbr, out existedCourse))
+            if (coursesCollection.TryGetValue(course.Code + course.SemesterPrefix + semester, out existedCourse))
             {
                 existedCourse.Name = course.Name;
                 existedCourse.Description = course.Description;

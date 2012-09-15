@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Panta.DataModels
 {
+    [DataContract]
     [Serializable]
     public struct CourseSectionTime
     {
@@ -33,6 +35,7 @@ namespace Panta.DataModels
         }
     }
 
+    [DataContract]
     [Serializable]
     public struct CourseSectionTimeSpan
     {

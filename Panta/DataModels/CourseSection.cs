@@ -3,15 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Panta.Indexing;
+using System.Runtime.Serialization;
+using Panta.DataModels.Extensions.UT;
 
 namespace Panta.DataModels
 {
+    [DataContract]
+    [KnownType(typeof(UTCourseSection))]
     [Serializable]
     public class CourseSection
     {
         public virtual string Time { get; set; }
+
+        [DataMember]
         public virtual string Name { get; set; }
+
+        [DataMember]
         public string Instructor { get; set; }
+
+        [DataMember]
         public string Location { get; set; }
 
         /// <summary>

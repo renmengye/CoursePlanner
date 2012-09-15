@@ -63,14 +63,41 @@ namespace Panta.Indexing.Expressions
         /// <returns>IExpression contains the original term and the suggestions of the word</returns>
         private static IExpression ParseTerm(string term, ITermCorrector corrector)
         {
-            IExpression result;
-            result = new TermExpression(term);
+            IExpression result=null;
+            if (term.Length >= 2)
+            {
+                result = new TermExpression(term);
+            }
             if (corrector != null)
             {
                 foreach (string correction in corrector.Correct(term))
                 {
                     IExpression expr = new TermExpression(correction);
                     result = LogicOrExpression.Join(result, expr);
+                }
+            }
+            return result;
+        }
+
+        public static IExpression ParseEachTermWithPrefix(string query, string prefix, ITermCorrector corrector)
+        {
+            IExpression result=null;
+            string[] pieces = query.Split(' ', '\t', '\n', '\r');
+            foreach (string piece in pieces)
+            {
+                // Make sure no already prefixed item to be add a new prefix
+                if (piece.Split(':').Length == 1)
+                {
+                    if (piece.Length >= 2)
+                    {
+                        string newQuery = query + " " + prefix + piece;
+                        IExpression part = Parse(newQuery, corrector);
+                        result = LogicAndExpression.Join(result, part);
+                    }
+                }
+                else
+                {
+                    result = LogicAndExpression.Join(result, new TermExpression(piece));
                 }
             }
             return result;

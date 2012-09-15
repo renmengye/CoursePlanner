@@ -55,6 +55,8 @@ namespace Panta.Tests
             Assert.AreEqual("Monday 14:00-16:00", span.ToString());
             UTCourseSectionTimeSpan.TryParseRawTimeSpan("W10:30-12", out span);
             Assert.AreEqual("Wednesday 10:30-12:00", span.ToString());
+            UTCourseSectionTimeSpan.TryParseRawTimeSpan("W7-9", out span);
+            Assert.AreEqual("Wednesday 19:00-21:00", span.ToString());
         }
 
         [TestMethod]

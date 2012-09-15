@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -61,6 +62,7 @@
     <Compile Include="Indexing\Expressions\IExpression.cs" />
     <Compile Include="Indexing\IIdProvider.cs" />
     <Compile Include="Indexing\IIndexable.cs" />
+    <Compile Include="Indexing\IIndexableCollection.cs" />
     <Compile Include="Indexing\Indexer.cs" />
     <Compile Include="Indexing\IndexString.cs" />
     <Compile Include="Indexing\InvertedWordIndex.cs" />
@@ -77,6 +79,8 @@
     <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseInfoFetcher.cs" />
     <Compile Include="DataModels\Extensions\UT\UTDepartment.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciDepartmentFetcher.cs" />
+    <Compile Include="Searching\MatchRanker.cs" />
+    <Compile Include="Searching\SearchEngine.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

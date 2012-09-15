@@ -26,9 +26,9 @@ namespace Panta.Fetchers.Extensions.UT
             DepartmentRegex = new Regex("<a name=\"Course[0-9]+\"></a><h2>(?<department>[^<]*)</h2>(?<courses>.*?)(?=(<a name=\"Course)|(<div id=\"footer\">))", RegexOptions.Compiled);
             CourseRegex = new Regex("<a name=\"[A-Z]{3}[0-9]{3}[HY][0-9]\"></a>(?<detail>.*?)(?=(<a name=\")|($))", RegexOptions.Compiled);
             CourseDetailRegex = new Regex("<span class=\"strong\">(?<code>[A-Z]{3}[0-9]{3})(?<prefix>[HY][0-9])&nbsp;(?<semester>([FSY])|(F/S))</span></td><td>" +
-                "<span class=\"strong\">(?<name>[^<]+)</span>.*?(?=<a href)" +
-                "<a href[^>]+>(?<program>.*?)</table>" +
-                "(?<description>[^<]*)", RegexOptions.Compiled);
+                "<span class=\"strong\">(?<name>[^<]+)</span>" +
+                "(?<program>.*?)</table>" +
+                "(?<description>.*?)(?=(</p>)|(<br>))", RegexOptions.Compiled);
             AngleRegex = new Regex("<[^>]+>", RegexOptions.Compiled);
             CodeRegex = new Regex("(?<code>[A-Z]{3}[0-9]{3})(?<prefix>[HY][1])", RegexOptions.Compiled);
             ProgramRegex = new Regex("[A-Z]{8,}", RegexOptions.Compiled);
@@ -49,6 +49,7 @@ namespace Panta.Fetchers.Extensions.UT
             Parallel.ForEach<Match>(matches.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match match)
             //foreach (Match match in matches)
             {
+                List<UTCourse> partialResults = new List<UTCourse>();
                 MatchCollection courseMatches = CourseRegex.Matches(match.Groups["courses"].ToString());
                 string department = match.Groups["department"].ToString().Trim(' ');
 
@@ -70,55 +71,51 @@ namespace Panta.Fetchers.Extensions.UT
                     string distribution = null;
 
                     string[] properties = text.Split('|');
-                    if (properties.Length > 1)
+                    for (int i = 0; i < properties.Length; i++)
                     {
-                        for (int i = 1; i < properties.Length; i++)
+                        if (properties[i].StartsWith("Prerequisite:"))
                         {
-                            if (properties[i].StartsWith("Prerequisite:"))
-                            {
-                                prerequisites = String.Join(" ", GetMatchedValues(CodeRegex.Matches(properties[i])));
-                            }
-                            else if (properties[i].StartsWith("Corequisite:"))
-                            {
-                                corequisites = String.Join(" ", GetMatchedValues(CodeRegex.Matches(properties[i])));
-                            }
-                            else if (properties[i].StartsWith("Exclusion:"))
-                            {
-                                exclusions = String.Join(" ", GetMatchedValues(CodeRegex.Matches(properties[i])));
-                            }
-                            else if (properties[i].StartsWith("Distribution Requirement Status:"))
-                            {
-                                distribution = properties[i].Substring("Distribution Requirement Status:".Length).Trim(' ');
-                            }
+                            prerequisites = properties[i].Substring("Prerequisite:".Length).Trim(' ').Replace("/"," / ");
+                        }
+                        else if (properties[i].StartsWith("Corequisite:"))
+                        {
+                            corequisites = properties[i].Substring("Corequisite:".Length).Trim(' ').Replace("/", " / ");
+                        }
+                        else if (properties[i].StartsWith("Exclusion:"))
+                        {
+                            exclusions = properties[i].Substring("Exclusion:".Length).Trim(' ').Replace("/", " / ");
+                        }
+                        else if (properties[i].StartsWith("Distribution Requirement Status:"))
+                        {
+                            distribution = properties[i].Substring("Distribution Requirement Status:".Length).Trim(' ');
                         }
                     }
-
                     string semester = detailMatch.Groups["semester"].ToString();
+
+                    partialResults.Add(new UTCourse()
+                    {
+                        Code = detailMatch.Groups["code"].ToString(),
+                        SemesterPrefix = detailMatch.Groups["prefix"].ToString(),
+                        Name = detailMatch.Groups["name"].ToString().Trim(' ').Replace("&amp;", "&"),
+                        Description = AngleRegex.Replace(detailMatch.Groups["description"].ToString().Trim(' '), String.Empty),
+                        Prerequisites = prerequisites,
+                        Corequisites = corequisites,
+                        Exclusions = exclusions,
+                        DistributionRequirement = distribution,
+                        Program = String.Join(" ", GetMatchedValues(ProgramRegex.Matches(AngleRegex.Replace(detailMatch.Groups["program"].ToString(), String.Empty)))),
+                        Department = department
+                    });
+
                     if (semester.Equals("F/S"))
                     {
-                        lock (this)
-                        {
-                            results.Add(new UTCourse()
-                            {
-                                Code = detailMatch.Groups["code"].ToString(),
-                                SemesterPrefix = detailMatch.Groups["prefix"].ToString(),
-                                Semester = "F",
-                                Name = detailMatch.Groups["name"].ToString().Trim(' '),
-                                Description = detailMatch.Groups["description"].ToString().Trim(' '),
-                                Prerequisites = prerequisites,
-                                Corequisites = corequisites,
-                                Exclusions = exclusions,
-                                DistributionRequirement = distribution,
-                                Program = String.Join(" ", GetMatchedValues(ProgramRegex.Matches(AngleRegex.Replace(detailMatch.Groups["program"].ToString(), String.Empty)))),
-                                Department = department
-                            });
-                            results.Add(new UTCourse()
+                        partialResults.Last<UTCourse>().Semester = "F";
+                        partialResults.Add(new UTCourse()
                         {
                             Code = detailMatch.Groups["code"].ToString(),
-                            SemesterPrefix = detailMatch.Groups["prefix"].ToString(),
                             Semester = "S",
-                            Name = detailMatch.Groups["name"].ToString().Trim(' '),
-                            Description = detailMatch.Groups["description"].ToString().Trim(' '),
+                            SemesterPrefix = detailMatch.Groups["prefix"].ToString(),
+                            Name = detailMatch.Groups["name"].ToString().Trim(' ').Replace("&amp;", "&"),
+                            Description = AngleRegex.Replace(detailMatch.Groups["description"].ToString().Trim(' '), String.Empty),
                             Prerequisites = prerequisites,
                             Corequisites = corequisites,
                             Exclusions = exclusions,
@@ -126,28 +123,15 @@ namespace Panta.Fetchers.Extensions.UT
                             Program = String.Join(" ", GetMatchedValues(ProgramRegex.Matches(AngleRegex.Replace(detailMatch.Groups["program"].ToString(), String.Empty)))),
                             Department = department
                         });
-                        }
                     }
                     else
                     {
-                        lock (this)
-                        {
-                            results.Add(new UTCourse()
-                            {
-                                Code = detailMatch.Groups["code"].ToString(),
-                                SemesterPrefix = detailMatch.Groups["prefix"].ToString(),
-                                Semester = semester,
-                                Name = detailMatch.Groups["name"].ToString().Trim(' '),
-                                Description = detailMatch.Groups["description"].ToString().Trim(' '),
-                                Prerequisites = prerequisites,
-                                Corequisites = corequisites,
-                                Exclusions = exclusions,
-                                DistributionRequirement = distribution,
-                                Program = String.Join(" ", GetMatchedValues(ProgramRegex.Matches(AngleRegex.Replace(detailMatch.Groups["program"].ToString(), String.Empty)))),
-                                Department = department
-                            });
-                        }
+                        partialResults.Last<UTCourse>().Semester = semester;
                     }
+                }
+                lock (this)
+                {
+                    results.AddRange(partialResults);
                 }
             });
 

@@ -12,7 +12,7 @@ namespace Panta.DataModels
     /// A school that offers courses to students
     /// </summary>
     [Serializable]
-    public class School : IName
+    public class School : IName, IIndexableCollection<Course>
     {
         public string Name { get; set; }
         public string Abbr { get; set; }
@@ -20,25 +20,25 @@ namespace Panta.DataModels
         /// <summary>
         /// Final storage of the couses once got from the department
         /// </summary>
-        protected Dictionary<uint, Course> CoursesCatalog { get; set; }
+        public Dictionary<uint, Course> IndexableItemsCatalog { get; set; }
 
-        public IEnumerable<Course> Courses { get { return CoursesCatalog.Values; } }
+        public IEnumerable<Course> Courses { get { return IndexableItemsCatalog.Values; } }
 
         public School(string name, string abbr, IdSigner<Course> signer, IEnumerable<Course> courses)
         {
             this.Name = name;
             this.Abbr = abbr;
-            this.CoursesCatalog = new Dictionary<uint, Course>();
+            this.IndexableItemsCatalog = new Dictionary<uint, Course>();
             foreach (Course course in courses)
             {
                 // Generate course universal id as the key (not the course name any more)
-                this.CoursesCatalog.Add(signer.SignId(course), course);
+                this.IndexableItemsCatalog.Add(signer.SignId(course), course);
             }
         }
 
-        public bool TryGetCourse(uint id, out Course course)
+        public bool TryGetItem(uint id, out Course course)
         {
-            return this.CoursesCatalog.TryGetValue(id, out course);
+            return this.IndexableItemsCatalog.TryGetValue(id, out course);
         }
 
         #region Read/Save

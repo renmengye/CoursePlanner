@@ -38,7 +38,7 @@ namespace Panta.Indexing.Correctors
 
             for (int i = startIndex; i < SortedWords.Length; i++)
             {
-                if (SortedWords[i].StartsWith(term))
+                if (SortedWords[i].Replace("-","").StartsWith(term.Replace("-","")))
                 {
                     yield return SortedWords[i];
                 }
