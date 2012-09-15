@@ -59,9 +59,10 @@
         }
 
         #sideBar #resultView .matchCollectionTitle {
+            height: 20px;
             padding-left: 10px;
-            padding-top: 2px;
-            padding-bottom: 2px;
+            /*padding-top: 2px;
+            padding-bottom: 2px;*/
             font-weight: 800;
             cursor: pointer;
             background-color: rgb(232, 232, 232);
@@ -158,4 +159,12 @@
     #courseInfo div {
         margin-top: 2px;
         margin-bottom: 2px;
+    }
+
+    #courseInfo .section {
+        display: inline-block;
+        margin-left: 2px;
+        margin-right: 2px;
+        cursor: pointer;
+        color: green;
     }

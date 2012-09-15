@@ -1,6 +1,7 @@
 ﻿var searchStringTemp = "";
 var onAnimation = false;
 var calendar;
+var courseInfo;
 
 $(document).ready(function () {
     $(window).resize(layout);
@@ -19,11 +20,6 @@ $(document).ready(function () {
 
     calendarViews.innerHTML = "<div id='tempCalendar' class='singleCalendar'></div>"
     calendar = new Calendar(document.getElementById("tempCalendar"));
-
-    calendar.addItem({ Name: "MAT292H1F", ID: 0, Day: 1, StartTime: 32, EndTime: 36 });
-    calendar.addItem({ Name: "MAT292H1F", ID: 1, Day: 2, StartTime: 34, EndTime: 40 });
-    calendar.addItem({ Name: "MAT292H1F", ID: 2, Day: 5, StartTime: 40, EndTime: 56 });
-
 
     layout();
 });
@@ -56,45 +52,13 @@ function runSearch(query) {
 }
 
 function searchCourseInfo(id, target) {
-    $.getJSON("api/search?id=" + parseInt(id.substring(1)), function (course) { showCourseInfo(course, target); });
+    $.getJSON("api/search?id=" + parseInt(id.substring(1)), function (course) { courseInfo = new CourseInfo($("#courseInfo"), course, target); });
 }
 
-function showResults(result) {
-
-    var content = "";
-
-    function addCollectionToContent(collection, name, title, collapsed) {
-        if (collection) {
-            content += "<div class='matchCollection" + (collapsed ? " collapsed" : "") +
-                "'><div class='matchCollectionTitle'>" + title + "</div><ul id='" + name + "'>" + collection + "</ul></div>";
-        }
-    }
-
-    addCollectionToContent(result.CodeNameMatches, "codeNameMatches", "", false);
-    addCollectionToContent(result.DescriptionMatches, "desMatches", "Relevant Description", true);
-    addCollectionToContent(result.DepartmentMatches, "depMatches", "Relevant Department", true);
-    addCollectionToContent(result.PrerequisiteMatches, "preqMatches", "Relevant Prerequisite", true);
-    addCollectionToContent(result.RawMatches, "rawMatches", "Other Relevant Courses", true);
-
-    $("#resultView").html(content);
-    $(".courseResult").click(function (e) {
-        searchCourseInfo($(e.target).attr("id"), $(e.target));
-    });
-
-    $(".matchCollectionTitle").click(function (e) {
-        toggleMatchCollection($(e.target));
-    });
-    $(".matchCollection.collapsed").height(20);
-}
-
+// ResultView object
 function ResultView(placeholder, result) {
     this.placeholder = placeholder;
     this.result = result;
-    //this.codeNameMatches = null;
-    //this.descriptionMatches = null;
-    //this.departmentMatches = null;
-    //this.prerequisiteMatches = null;
-    //this.rawMatches = null;
     this.formatElements(placeholder, result);
 }
 
@@ -108,7 +72,7 @@ ResultView.prototype.formatElements = function (placeholder, result) {
         }
     }
 
-    addCollection(result.CodeNameMatches, "codeNameMatches", "", false);
+    addCollection(result.CodeNameMatches, "codeNameMatches", "Search Result", false);
     addCollection(result.DescriptionMatches, "desMatches", "Relevant Description", true);
     addCollection(result.DepartmentMatches, "depMatches", "Relevant Department", true);
     addCollection(result.PrerequisiteMatches, "preqMatches", "Relevant Prerequisite", true);
@@ -117,6 +81,7 @@ ResultView.prototype.formatElements = function (placeholder, result) {
     $(".matchCollection.collapsed").height(20);
 }
 
+// ResultView > MatchCollection object
 function MatchCollection(placeholder, name, collection) {
     this.placeholder = placeholder;
     this.collection = this.rearrangeCollection(collection);
@@ -125,7 +90,7 @@ function MatchCollection(placeholder, name, collection) {
 
     $(this.placeholder).html(content);
     $(this.placeholder).children(".matchCollectionTitle").click(this.onTitleClick);
-    $(this.placeholder).children(".courseResult").click(function (e) {
+    $(this.placeholder).children("ul").children(".courseResult").click(function (e) {
         searchCourseInfo($(e.target).attr("id"), $(e.target));
     });
 }
@@ -164,17 +129,43 @@ MatchCollection.prototype.onTitleClick = function (e) {
     }
 }
 
-// TODO make course info page an object
-function showCourseInfo(course, target) {
+// CourseInfo object
+function CourseInfo(placeholder, course, alignment) {
+    this.course = course;
+    this.placeholder = placeholder;
+
+    $(this.placeholder).html(this.getHtml(this.course));
+    var top = $(alignment).offset()["top"];
+    if (top + $(this.placeholder).height() > window.innerHeight - 10) {
+        $(this.placeholder).css("top", top - $(this.placeholder).height() + 20);
+    } else {
+        $(this.placeholder).css("top", top);
+    }
+    $(this.placeholder).show();
+}
+
+CourseInfo.prototype.getHtml = function (course) {
     var content;
-    var courseInfo = $("#courseInfo");
     content = "<div id='courseInfoTitle'><b>" + course.Abbr + ": " + course.Name + "</b></div>";
     if (course.Description) {
         content += "<div class='courseInfoDescription'>" + course.Description + "</div>";
     }
-    content += "<div id='courseInfoSections'><b>Sections:</b>";
+
+    // Add lecture sections
+    content += "<div id='courseInfoLectureSections'><b>Sections:</b>";
     for (var i = 0; i < course.Sections.length; i++) {
-        content += " " + course.Sections[i].Name;
+        if (course.Sections[i].IsLecture) {
+            content += "<div class='section' onclick='courseInfo.addSection(" + i + ")'>" + course.Sections[i].Name + "</div>";
+        }
+    }
+    content += "</div>";
+
+    // Add non-lecture sections
+    content += "<div id='courseInfoOtherSections'>";
+    for (var i = 0; i < course.Sections.length; i++) {
+        if (!course.Sections[i].IsLecture) {
+            content += "<div class='section' onclick='courseInfo.addSection(" + i + ")'>" + course.Sections[i].Name + "</div>";
+        }
     }
     content += "</div>";
 
@@ -187,34 +178,19 @@ function showCourseInfo(course, target) {
     if (course.Exclusions) {
         content += "<div class='courseInfoDescription'><b>Exclusions: </b>" + course.Exclusions + "</div>";
     }
-
-    courseInfo.html(content);
-    var top = target.offset()["top"];
-    if (top + courseInfo.height() > window.innerHeight - 10) {
-        courseInfo.css("top", top - courseInfo.height() + 20);
-    } else {
-        courseInfo.css("top", top);
-    }
-    courseInfo.show();
+    return content;
 }
 
-function toggleMatchCollection(target) {
-    if (target.parent().hasClass("collapsed")) {
-        target.parent().animate({ height: target.next().children().length * 24 + 20 }, 200, function () {
-
-            var scrollTop = target.parent().parent().scrollTop();
-            var top = target.position()["top"];
-
-            if (target.parent().height() > $("#resultView").height()) {
-                target.parent().parent().scrollTop(scrollTop + top - 40);
-            } else {
-                target.parent().parent().scrollTop(scrollTop + top - $("#resultView").height() + target.parent().height());
-            }
+CourseInfo.prototype.addSection = function (i) {
+    var meetTimes = this.course.Sections[i].ParsedTime.MeetTimes;
+    for (var j = 0; j < meetTimes.length; j++) {
+        calendar.addItem({
+            Name: this.course.Abbr + ": " + this.course.Name,
+            ID: this.course.ID + this.course.Sections[i].Name,
+            Day: meetTimes[j].Day,
+            StartTime: meetTimes[j].Start,
+            EndTime: meetTimes[j].End
         });
-        target.parent().removeClass("collapsed");
-    } else {
-        target.parent().animate({ height: 20 }, 200);
-        target.parent().addClass("collapsed");
     }
 }
 

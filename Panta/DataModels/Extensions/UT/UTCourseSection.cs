@@ -47,6 +47,8 @@ namespace Panta.DataModels.Extensions.UT
                 this.IsLecture = value[0] == 'L';
             }
         }
+
+        [DataMember]
         public bool IsLecture { get; protected set; }
         public bool WaitList { get; set; }
 

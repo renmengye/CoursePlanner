@@ -1,4 +1,20 @@
-﻿function Calendar(placeholder) {
+﻿function GUID() {
+    var S4 = function () {
+        return Math.floor(
+                Math.random() * 0x10000 /* 65536 */
+            ).toString(16);
+    };
+
+    return (
+            S4() + S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + "-" +
+            S4() + S4() + S4()
+        );
+}
+
+function Calendar(placeholder) {
     this.items = [];
     this.placeholder = placeholder;
     this.placeholder.innerHTML = this.getBaseCalendar();
@@ -15,10 +31,11 @@
 Calendar.prototype.addItem = function (item) {
     var top = $(".t" + (item.StartTime - 32)).position()["top"];
     var bottom = $(".t" + (item.EndTime - 32)).position()["top"];
-    var height = bottom - top - 4;
-    var width = $(".timeGrid").width() - 4;
-    var left = $(".w" + (item.Day - 1)).position()["left"];
-    var content = "<div class='calendarItem cal" + item.ID + "' style='height:" + height + "px;width:" + width +
+    var height = bottom - top - 5;
+    var width = $(".timeGrid").width() - 15;
+    var left = $(".w" + (item.Day - 1)).position()["left"] + 5;
+    item.UID = GUID();
+    var content = "<div class='calendarItem cal" + item.ID + "' id='" + item.UID + "' style='height:" + height + "px;width:" + width +
         "px;top:" + top + "px;left:" + left + "px;'>" + item.Name + "</div>";
     $(this.placeholder).children("table").append(content);
     this.items.push(item);
@@ -48,12 +65,10 @@ Calendar.prototype.getBaseCalendar = function () {
 Calendar.prototype.resize = function () {
     $(".timeGrid").width(($(this.placeholder).width() - 40) / 5);
     for (var i = 0; i < this.items.length; i++) {
-        var allItems=$(".cal" + this.items[i].ID);
-        for(var j=0;j<allItems.length;j++){
-            var width = $(".timeGrid").width() - 4;
-            var left = $(".w" + (this.items[i].Day - 1)).position()["left"];
-            $(allItems[j]).width(width);
-            $(allItems[j]).css("left", left);
-        }
+        var item = $("#" + this.items[i].UID);
+        var width = $(".timeGrid").width() - 15;
+        var left = $(".w" + (this.items[i].Day - 1)).position()["left"] + 5;
+        $(item).width(width);
+        $(item).css("left", left);
     }
 }

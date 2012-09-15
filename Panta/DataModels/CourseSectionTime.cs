@@ -11,6 +11,7 @@ namespace Panta.DataModels
     [Serializable]
     public struct CourseSectionTime
     {
+        [DataMember]
         public IEnumerable<CourseSectionTimeSpan> MeetTimes;
 
         public CourseSectionTime(IEnumerable<CourseSectionTimeSpan> times)
@@ -39,10 +40,13 @@ namespace Panta.DataModels
     [Serializable]
     public struct CourseSectionTimeSpan
     {
+        [DataMember]
         public DayOfWeek Day;
 
         // An integer from 0 to 95 (counts every quarter)
+        [DataMember]
         public byte Start;
+        [DataMember]
         public byte End;
 
         public CourseSectionTimeSpan(DayOfWeek day, byte start, byte end)
