@@ -2,6 +2,7 @@
 using Panta.DataModels;
 using Panta.DataModels.Extensions.UT;
 using System;
+using System.Linq;
 
 namespace Panta.Tests
 {
@@ -71,6 +72,10 @@ namespace Panta.Tests
             Assert.AreEqual("Tuesday 9:00-10:00 Friday 9:00-10:00", time.ToString());
             UTCourseSectionTime.TryParseRawTime("W10-12:15TF1:30", out time);
             Assert.AreEqual("Wednesday 10:00-12:15 Tuesday 13:30-14:30 Friday 13:30-14:30", time.ToString());
+            UTCourseSectionTime.TryParseRawTime("MWF2", out time);
+            Assert.AreEqual(3, time.MeetTimes.Count());
+            UTCourseSectionTime.TryParseRawTime("WRF12", out time);
+            Assert.AreEqual("Wednesday 12:00-13:00 Thursday 12:00-13:00 Friday 12:00-13:00", time.ToString());
         }
 
         [TestMethod]

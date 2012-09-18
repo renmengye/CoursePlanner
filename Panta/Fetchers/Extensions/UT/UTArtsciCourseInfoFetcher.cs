@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using Panta.DataModels;
+﻿using Panta.DataModels;
 using Panta.DataModels.Extensions.UT;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Panta.Fetchers.Extensions.UT
 {
@@ -33,7 +31,7 @@ namespace Panta.Fetchers.Extensions.UT
             if (this.Content == null) return results;
 
             this.Content = this.Content.Replace("\r\n", String.Empty);
-            
+
             MatchCollection matches = CourseRegex.Matches(this.Content);
 
             // Used to accumulating course meet times
@@ -58,22 +56,29 @@ namespace Panta.Fetchers.Extensions.UT
                 string name = properties[2].Trim(' ');
                 string section = properties[3].Trim(' ');
                 string wait = properties[4].Trim(' ');
-                string time = properties[5].Trim(' ');
-                string location = properties[6].Replace("&nbsp;", "").Replace(" ", "");
+                string time = properties[5].Replace(" ", "").Replace(",", "");
+                string location = properties[6].Replace(" ", "");
                 string instructor = properties[7].Trim(' ').Replace("&nbsp;", "");
+
+                CourseSectionTime ptime;
+                string matchedLocation = "";
+                if (UTCourseSectionTime.TryParseRawTime(time, out ptime))
+                {
+                    if (!location.Equals("&nbsp;"))
+                    {
+                        matchedLocation = location;
+                        for (int i = 1; i < ptime.MeetTimes.Count(); i++)
+                        {
+                            matchedLocation = String.Join(" ", matchedLocation, location);
+                        }
+                    }
+                }
 
                 // For some exceptions, section time is not written in one string, need to accumulating meet times
                 if (section.Equals("&nbsp;"))
                 {
-                    // Avoid duplication
-                    if (!tempTime.Contains(time))
-                    {
-                        tempTime += time;
-                    }
-                    if (!tempLocation.Contains(location))
-                    {
-                        tempLocation = String.Join("/", tempLocation, location);
-                    }
+                    tempTime += time;
+                    tempLocation = String.Join(" ", tempLocation, matchedLocation);
                 }
                 else
                 {
@@ -81,7 +86,9 @@ namespace Panta.Fetchers.Extensions.UT
                     {
                         Name = section,
                         WaitList = wait.Equals("Y"),
-                        Instructor = instructor
+                        Instructor = instructor,
+                        Time = time,
+                        Location = location
                     };
 
                     UTCourse lastCourse = null;
@@ -97,7 +104,7 @@ namespace Panta.Fetchers.Extensions.UT
                     }
 
                     tempTime = time;
-                    tempLocation = location;
+                    tempLocation = matchedLocation;
 
                     if (lastCourse != null)
                     {
@@ -125,6 +132,10 @@ namespace Panta.Fetchers.Extensions.UT
                     results.Add(course);
                     Console.Write("{0}Course: {1} {2}", Environment.NewLine, course.Abbr, courseSection.Name);
                 }
+                // Commit the last change to the last section
+                CourseSection lastSec = results.Last<UTCourse>().Sections.Last<CourseSection>();
+                lastSec.Time = tempTime;
+                lastSec.Location = tempLocation;
             }
             return results;
         }

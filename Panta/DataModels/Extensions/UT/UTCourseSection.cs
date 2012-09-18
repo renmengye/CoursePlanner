@@ -11,6 +11,7 @@ namespace Panta.DataModels.Extensions.UT
     public class UTCourseSection : CourseSection
     {
         private string _time;
+
         public override string Time
         {
             get
@@ -31,6 +32,7 @@ namespace Panta.DataModels.Extensions.UT
                 }
             }
         }
+
         [DataMember]
         public virtual CourseSectionTime ParsedTime { get; protected set; }
 
@@ -57,13 +59,30 @@ namespace Panta.DataModels.Extensions.UT
             IList<IndexString> strings = base.GetIndexStrings();
 
             if (!String.IsNullOrEmpty(this.Location)) strings.Add(new IndexString("loc:", this.Location));
-            
-            // Only index the time if the section is a lecture section
+
+            //// Only index the time if the section is a lecture section
+            //if (this.IsLecture)
+            //{
+            //    if (!String.IsNullOrEmpty(this.ParsedTime.ToString())) strings.Add(new IndexString("time:", this.ParsedTime.ToString()));
+            //}
+            return strings;
+        }
+
+        public override IList<string> GetSplittedIndexStrings()
+        {
+            IList<string> result = base.GetSplittedIndexStrings();
             if (this.IsLecture)
             {
-                if (!String.IsNullOrEmpty(this.ParsedTime.ToString())) strings.Add(new IndexString("time:", this.ParsedTime.ToString()));
+                if (!String.IsNullOrEmpty(this.ParsedTime.ToString()))
+                {
+                    foreach (string timeString in this.ParsedTime.ToString().Split(' '))
+                    {
+                        result.Add(timeString);
+                        result.Add("time:" + timeString);
+                    }
+                }
             }
-            return strings;
+            return result;
         }
     }
 }

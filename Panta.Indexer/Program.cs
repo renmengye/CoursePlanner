@@ -11,16 +11,30 @@ namespace Panta.Indexer
 {
     public class Program
     {
-        public const string UTSavePath = "uoft.bin";
-        
+        public const string UTCoursesSavePath = "uoft_courses.bin";
+        public const string UTProgramsSavePath = "uoft_progs.bin";
+
         public static void Main(string[] args)
         {
-            School school;
-            string path = args.Length > 0 ? args[0] : UTSavePath;
-            if (File.Exists(path))
+            DefaultIIndexableCollection<Course> school;
+            DefaultIIndexableCollection<SchoolProgram> pschool;
+            string cpath = args.Length > 0 ? args[0] : UTCoursesSavePath;
+            string ppath = args.Length > 1 ? args[1] : UTProgramsSavePath;
+
+            if (File.Exists(cpath))
             {
-                school = School.Read(path);
-                Index(school);
+                school = DefaultIIndexableCollection<Course>.Read(cpath);
+                Index<Course>(school);
+            }
+            else
+            {
+                throw new FileNotFoundException("Data file not found");
+            }
+
+            if (File.Exists(ppath))
+            {
+                pschool = DefaultIIndexableCollection<SchoolProgram>.Read(ppath);
+                Index<SchoolProgram>(pschool);
             }
             else
             {
@@ -28,10 +42,10 @@ namespace Panta.Indexer
             }
         }
 
-        public static void Index(School school)
+        public static void Index<T>(DefaultIIndexableCollection<T> school) where T : IIndexable
         {
-            Indexer<Course> indexer = new Indexer<Course>(school.Abbr);
-            indexer.Index(school.Courses);
+            Indexer<T> indexer = new Indexer<T>(school.Abbr);
+            indexer.Index(school.Items);
         }
     }
 }

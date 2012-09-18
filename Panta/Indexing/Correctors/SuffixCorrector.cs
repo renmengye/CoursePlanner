@@ -33,12 +33,12 @@ namespace Panta.Indexing.Correctors
 
         public IEnumerable<string> FindStartsWith(string term)
         {
-            int startIndex = Array.BinarySearch<string>(SortedWords, term, StringComparer.Ordinal);
+            int startIndex = Array.BinarySearch<string>(SortedWords, term, StringComparer.OrdinalIgnoreCase);
             if (startIndex < 0) startIndex = ~startIndex;
 
             for (int i = startIndex; i < SortedWords.Length; i++)
             {
-                if (SortedWords[i].Replace("-","").StartsWith(term.Replace("-","")))
+                if (SortedWords[i].StartsWith(term))
                 {
                     yield return SortedWords[i];
                 }

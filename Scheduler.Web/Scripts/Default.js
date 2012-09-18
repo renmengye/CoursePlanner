@@ -1,58 +1,84 @@
 ﻿var searchStringTemp = "";
+var progSearchStringTemp = "";
 var onAnimation = false;
 var calendar;
 var courseInfo;
 
 $(document).ready(function () {
     $(window).resize(layout);
+
+    calendar = new CalendarCollection(document.getElementById("calendarViews"));
+    programInfo = new ProgramInfo(document.getElementById("programInfo"));
+
     $("#searchBox").keyup(function () {
         searchStringTemp = $("#searchBox").val();
         setTimeout(function () {
             if ($("#searchBox").val() === searchStringTemp) {
-                runSearch(searchStringTemp);
+                searchCourse(searchStringTemp);
+            }
+        }, 200);
+    });
+
+    $("#programSearchBox").keyup(function () {
+        progSearchStringTemp = $("#programSearchBox").val();
+        setTimeout(function () {
+            if ($("#programSearchBox").val() === progSearchStringTemp) {
+                searchProgram(progSearchStringTemp);
             }
         }, 200);
     });
 
     $(document).click(function (e) {
-        $("#courseInfo").hide();
+        if ($(e.target).attr("id") !== "courseInfo" && $(e.target).parent().attr("id") !== "courseInfo" && $(e.target).parent().parent().attr("id") !== "courseInfo") {
+            $("#courseInfo").hide();
+        }
     });
 
-    calendarViews.innerHTML = "<div id='tempCalendar' class='singleCalendar'></div>"
-    calendar = new Calendar(document.getElementById("tempCalendar"));
-
+    $("#programInfoButton").click(function (e) {
+        if ($(this).hasClass("expand")) {
+            $("#programInfo").hide();
+            $(this).removeClass("expand");
+        } else {
+            $("#programInfo").css("left", window.innerWidth - $("#programInfo").width() - 5);
+            $("#programInfo").show();
+            $(this).addClass("expand");
+        }
+    });
     layout();
 });
 
 function layout() {
-    $("#pageWrapper").height(window.innerHeight - 20);
+    $("#pageWrapper").height(window.innerHeight - 50);
     $("#resultView").height($("#sideBar").height() - 30);
     $("#searchBox").width($("#sideBar").width() - 11);
     $("#calendarViews").width(window.innerWidth - $("#sideBar").width() - 10);
     $("#calendarViews").height($("#sideBar").height());
-
-    $(".singleCalendar").width($("#calendarViews").width() - 5);
-    $(".singleCalendar").height($("#calendarViews").height() - 10);
 
     if (calendar) {
         calendar.resize();
     }
 }
 
-function runSearch(query) {
+function searchCourse(query) {
     if (query.length > 1) {
         var fac = getUrlParameters()["faculty"];
         if (fac) {
             query += " fac:" + fac;
         }
-        $.getJSON("api/search?q=" + escape(query), function (result) {
+        $.getJSON("api/course?q=" + escape(query), function (result) {
             new ResultView($("#resultView")[0], result);
         });
     }
 }
 
+function searchProgram(query) {
+    if (query.length > 1) {
+        $.getJSON("api/program?q=" + escape(query), programInfo.loadSearches);
+    }
+}
+
 function searchCourseInfo(id, target) {
-    $.getJSON("api/search?id=" + parseInt(id.substring(1)), function (course) { courseInfo = new CourseInfo($("#courseInfo"), course, target); });
+    $.getJSON("api/course?id=" + parseInt(id.substring(1)), function (course) { courseInfo = new CourseInfo($("#courseInfo"), course, target); });
 }
 
 // ResultView object
@@ -73,9 +99,10 @@ ResultView.prototype.formatElements = function (placeholder, result) {
     }
 
     addCollection(result.CodeNameMatches, "codeNameMatches", "Search Result", false);
+    addCollection(result.PostrequisiteMatches, "postMatches", "Relevant Prerequisite", false);
     addCollection(result.DescriptionMatches, "desMatches", "Relevant Description", true);
     addCollection(result.DepartmentMatches, "depMatches", "Relevant Department", true);
-    addCollection(result.PrerequisiteMatches, "preqMatches", "Relevant Prerequisite", true);
+    addCollection(result.PrerequisiteMatches, "preqMatches", "Relevant Postrequisite", true);
     addCollection(result.RawMatches, "rawMatches", "Other Relevant Courses", true);
 
     $(".matchCollection.collapsed").height(20);
@@ -142,6 +169,16 @@ function CourseInfo(placeholder, course, alignment) {
         $(this.placeholder).css("top", top);
     }
     $(this.placeholder).show();
+
+    $(".section").hover(function () {
+        courseInfo.addSection($(this).attr("order"), false);
+    }, function () {
+        calendar.tempRemove();
+    });
+    $(".section").click(function () {
+        courseInfo.addSection($(this).attr("order"), true);
+    });
+    this.refrechConflict();
 }
 
 CourseInfo.prototype.getHtml = function (course) {
@@ -155,7 +192,8 @@ CourseInfo.prototype.getHtml = function (course) {
     content += "<div id='courseInfoLectureSections'><b>Sections:</b>";
     for (var i = 0; i < course.Sections.length; i++) {
         if (course.Sections[i].IsLecture) {
-            content += "<div class='section' onclick='courseInfo.addSection(" + i + ")'>" + course.Sections[i].Name + "</div>";
+            content += "<div class='section' order=" + i + ">"
+                + course.Sections[i].Name + "</div>";
         }
     }
     content += "</div>";
@@ -164,7 +202,20 @@ CourseInfo.prototype.getHtml = function (course) {
     content += "<div id='courseInfoOtherSections'>";
     for (var i = 0; i < course.Sections.length; i++) {
         if (!course.Sections[i].IsLecture) {
-            content += "<div class='section' onclick='courseInfo.addSection(" + i + ")'>" + course.Sections[i].Name + "</div>";
+            var item = this.getSectionObject(i, 0);
+            content += "<div class='section' order=" + i + ">"
+                + course.Sections[i].Name + "</div>";
+        }
+    }
+    content += "</div>";
+
+    // Add instructors
+    content += "<div class='courseInfoDescription'><b>Instructor: </b>";
+    for (var i = 0; i < course.Sections.length; i++) {
+        if (course.Sections[i].IsLecture) {
+            if (course.Sections[i].Instructor !== "") {
+                content += course.Sections[i].Instructor + " (" + course.Sections[i].Name + ") ";
+            }
         }
     }
     content += "</div>";
@@ -178,20 +229,86 @@ CourseInfo.prototype.getHtml = function (course) {
     if (course.Exclusions) {
         content += "<div class='courseInfoDescription'><b>Exclusions: </b>" + course.Exclusions + "</div>";
     }
+    if (course.BreadthRequirement) {
+        content += "<div class='courseInfoDescription'><b>Breadth: </b>" + course.BreadthRequirement + "</div>";
+    }
+    if (course.DistributionRequirement) {
+        content += "<div class='courseInfoDescription'><b> Distribution: </b>" + course.DistributionRequirement + "</div>";
+    }
     return content;
 }
 
-CourseInfo.prototype.addSection = function (i) {
-    var meetTimes = this.course.Sections[i].ParsedTime.MeetTimes;
-    for (var j = 0; j < meetTimes.length; j++) {
-        calendar.addItem({
-            Name: this.course.Abbr + ": " + this.course.Name,
-            ID: this.course.ID + this.course.Sections[i].Name,
-            Day: meetTimes[j].Day,
-            StartTime: meetTimes[j].Start,
-            EndTime: meetTimes[j].End
-        });
+CourseInfo.prototype.addSection = function (i, permanent) {
+    // Avoid duplicate
+    if (permanent) {
+        calendar.tempRemove();
     }
+    if ($(".cal" + this.course.ID + this.course.Sections[i].Name).length > 0) return;
+
+    var meetTimes = this.course.Sections[i].ParsedTime.MeetTimes;
+    var ID = this.course.ID + this.course.Sections[i].Name;
+    for (var j = 0; j < meetTimes.length; j++) {
+        if (permanent) {
+            calendar.addItem(this.getSectionObject(i, j, ID));
+        } else {
+            calendar.tempAdd(this.getSectionObject(i, j, ID));
+        }
+    }
+    if (permanent) {
+        this.refrechConflict();
+    }
+}
+
+CourseInfo.prototype.getSectionObject = function (i, j, ID) {
+    var meetTimes = this.course.Sections[i].ParsedTime.MeetTimes;
+    var item = {};
+    item.Name = this.course.Abbr + ": " + this.course.Name + " " + this.course.Sections[i].Name,
+    item.ID = ID,
+    item.Day = meetTimes[j].Day,
+    item.StartTime = meetTimes[j].Start,
+    item.EndTime = meetTimes[j].End,
+    item.Semester = this.course.Semester,
+    item.Time = this.course.Sections[i].ParsedTime.StringFormat,
+    item.Location = this.course.Sections[i].Location,
+    item.Order = j;
+    return item;
+}
+
+CourseInfo.prototype.refrechConflict = function () {
+    $sections = $(".section");
+    for (var i = 0; i < $sections.length; i++) {
+        var order = $($sections[i]).attr("order");
+        var section = this.course.Sections[order];
+        if (section.ParsedTime.MeetTimes) {
+            for (var j = 0; j < section.ParsedTime.MeetTimes.length; j++) {
+                var item = this.getSectionObject(order, j, 0);
+                if (calendar.isConflicted(item)) {
+                    if (!$($sections[i]).hasClass("conflict")) {
+                        $($sections[i]).addClass("conflict");
+                    }
+                } else {
+                    if ($($sections[i]).hasClass("conflict")) {
+                        $($sections[i]).removeClass("conflict");
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ProgramInfo object
+function ProgramInfo(placeholder) {
+    this.placeholder = placeholder;
+    $(this.placeholder).append("<div id='programSearchResult'></div>");
+    $(this.placeholder).append("<div id='programDetail'></div>");
+}
+
+ProgramInfo.prototype.getHtml = function () {
+    var content = "";
+}
+
+ProgramInfo.prototype.loadSearches = function (result) {
+    $("#programSearchResult").html(result.Matches);
 }
 
 /* Method to Parse Url Parameters */

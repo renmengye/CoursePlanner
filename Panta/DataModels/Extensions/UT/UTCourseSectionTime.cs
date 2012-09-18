@@ -204,7 +204,7 @@ namespace Panta.DataModels.Extensions.UT
                     if (endTime == 48) endTime = 0;
                 }
                 span.Start = To24HourTime(startTime);
-                span.End = To24HourTime(endTime, span.Start >= 48);
+                span.End = To24HourTime(endTime, span.Start >= 52);
             }
 
             return true;

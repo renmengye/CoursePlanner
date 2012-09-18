@@ -118,7 +118,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\ProgramController.cs" />
+    <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -128,6 +129,7 @@
     <Content Include="Default.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Images\close.png" />
     <Content Include="Scripts\Calendar.js" />
     <Content Include="Scripts\Default.js" />
     <Content Include="Styles\Default.css" />

@@ -42,7 +42,7 @@ namespace Panta.DataModels
         /// Parse/Split the roots and store them with prefixes and without prefixes
         /// </summary>
         /// <returns>A list of strings ready to be written into indexes</returns>
-        public IEnumerable<string> GetSplittedIndexStrings()
+        public virtual IList<string> GetSplittedIndexStrings()
         {
             IEnumerable<IndexString> indexStrings = GetIndexStrings();
             List<string> results = new List<string>();

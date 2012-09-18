@@ -16,14 +16,21 @@ namespace Panta
 
         public Program()
         {
-            School UOfT;
-            IdSigner<Course> signer = new IdSigner<Course>();
+            DefaultIIndexableCollection<Course> UOfTCourses;
+            DefaultIIndexableCollection<SchoolProgram> UOfTPrograms;
+            IdSigner<Course> courseSigner = new IdSigner<Course>();
+            IdSigner<SchoolProgram> progSigner = new IdSigner<SchoolProgram>();
+            
             IItemFetcher<UTCourse> artsciCourseFetcher = new UTArtsciCourseFetcher();
             IItemFetcher<UTCourse> engCourseFetcher = new UTEngCourseFetcher();
 
-            UOfT = new School("University of Toronto", "uoft", signer, artsciCourseFetcher.FetchItems().Concat<UTCourse>(engCourseFetcher.FetchItems()));
-            //UOfT = new School("University of Toronto", "uoft", signer, engCourseFetcher.FetchItems());
-            UOfT.Save();
+            UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses", courseSigner, artsciCourseFetcher.FetchItems().Concat<UTCourse>(engCourseFetcher.FetchItems()));
+            UOfTCourses.Save();
+
+
+            IItemFetcher<SchoolProgram> artsciProgramFetcher = new UTArtsciProgramFetcher();
+            UOfTPrograms = new DefaultIIndexableCollection<SchoolProgram>("University of Toronto", "uoft_progs", progSigner, artsciProgramFetcher.FetchItems());
+            UOfTPrograms.Save();
         }
     }
 }

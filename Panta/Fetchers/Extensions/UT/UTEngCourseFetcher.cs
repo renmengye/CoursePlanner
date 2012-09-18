@@ -4,12 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Panta.Fetchers.Extensions.UT
 {
     public class UTEngCourseFetcher : IItemFetcher<UTCourse>
     {
         private Dictionary<string, UTCourse> CoursesCollection { get; set; }
+        private static Regex CodeRegex;
+
+        static UTEngCourseFetcher()
+        {
+            CodeRegex = new Regex("(?<code>[A-Z]{3}[0-9]{3})(?<prefix>[HY][1])", RegexOptions.Compiled);
+        }
 
         public UTEngCourseFetcher()
         {
@@ -45,6 +52,22 @@ namespace Panta.Fetchers.Extensions.UT
                 TryMatchSemester(CoursesCollection, detail, "S");
             }
 
+
+            // Match the prerequisites to postrequisites
+            foreach (UTCourse course in CoursesCollection.Values)
+            {
+                if (!String.IsNullOrEmpty(course.Prerequisites))
+                {
+                    foreach (Match match in CodeRegex.Matches(course.Prerequisites))
+                    {
+                        string abbr = match.Value;
+                        TryMatchPreq(this.CoursesCollection, course.Abbr, abbr, "F");
+                        TryMatchPreq(this.CoursesCollection, course.Abbr, abbr, "S");
+                        TryMatchPreq(this.CoursesCollection, course.Abbr, abbr, "Y");
+                    }
+                }
+            }
+
             return CoursesCollection.Values;
         }
 
@@ -67,6 +90,25 @@ namespace Panta.Fetchers.Extensions.UT
                 existedCourse.Exclusions = course.Exclusions;
                 existedCourse.DistributionRequirement = course.DistributionRequirement;
                 existedCourse.Program = course.Program;
+                return true;
+            }
+            return false;
+        }
+
+        private bool TryMatchPreq(Dictionary<string, UTCourse> coursesCollection, string courseAbbr, string searchAbbr, string semester)
+        {
+            UTCourse preqCourse;
+
+            if (coursesCollection.TryGetValue(searchAbbr + semester, out preqCourse))
+            {
+                if (String.IsNullOrEmpty(preqCourse.Postrequisites))
+                {
+                    preqCourse.Postrequisites = courseAbbr;
+                }
+                else
+                {
+                    preqCourse.Postrequisites = String.Join(" ", preqCourse.Postrequisites, courseAbbr);
+                }
                 return true;
             }
             return false;

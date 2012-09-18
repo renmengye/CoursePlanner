@@ -18,40 +18,76 @@ namespace Scheduler.Web
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
-        private const string IndexFileName = @"uoft.idx";
-        private const string SchoolFileName = @"uoft.bin";
+        private const string CoursesIndexFileName = @"uoft_courses.idx";
+        private const string CoursesFileName = @"uoft_courses.bin";
 
-        internal CourseSearchPresenter Presenter
+        private const string ProgramsIndexFileName = @"uoft_progs.idx";
+        private const string ProgramsFileName = @"uoft_progs.bin";
+
+        internal IIndexablePresenter<Course> CoursePresenter
         {
             get
             {
-                return (CourseSearchPresenter)Application["Presenter"];
+                return (IIndexablePresenter<Course>)Application["CoursePresenter"];
             }
             set
             {
-                Application["Presenter"] = value;
+                Application["CoursePresenter"] = value;
             }
         }
-        internal School UOfT
+        internal DefaultIIndexableCollection<Course> UOfTCourses
         {
             get
             {
-                return (School)Application["School"];
+                return (DefaultIIndexableCollection<Course>)Application["Courses"];
             }
             set
             {
-                Application["School"] = value;
+                Application["Courses"] = value;
             }
         }
-        internal InvertedWordIndex Index
+        internal InvertedWordIndex CourseIndex
         {
             get
             {
-                return (InvertedWordIndex)Application["Index"];
+                return (InvertedWordIndex)Application["CourseIndex"];
             }
             set
             {
-                Application["Index"] = value;
+                Application["CourseIndex"] = value;
+            }
+        }
+        internal IIndexablePresenter<SchoolProgram> ProgramPresenter
+        {
+            get
+            {
+                return (IIndexablePresenter<SchoolProgram>)Application["ProgramPresenter"];
+            }
+            set
+            {
+                Application["ProgramPresenter"] = value;
+            }
+        }
+        internal DefaultIIndexableCollection<SchoolProgram> UOfTPrograms
+        {
+            get
+            {
+                return (DefaultIIndexableCollection<SchoolProgram>)Application["Programs"];
+            }
+            set
+            {
+                Application["Programs"] = value;
+            }
+        }
+        internal InvertedWordIndex ProgramIndex
+        {
+            get
+            {
+                return (InvertedWordIndex)Application["ProgramIndex"];
+            }
+            set
+            {
+                Application["ProgramIndex"] = value;
             }
         }
         private Thread StateThread;
@@ -66,9 +102,13 @@ namespace Scheduler.Web
 
             string path = Server.MapPath("Data");
 
-            this.UOfT = School.Read(Path.Combine(path, SchoolFileName));
-            this.Index = InvertedWordIndex.Read(Path.Combine(path, IndexFileName));
-            this.Presenter = new CourseSearchPresenter(this.Index, this.UOfT);
+            this.UOfTCourses = DefaultIIndexableCollection<Course>.Read(Path.Combine(path, CoursesFileName));
+            this.CourseIndex = InvertedWordIndex.Read(Path.Combine(path, CoursesIndexFileName));
+            this.CoursePresenter = new CourseSearchPresenter(this.CourseIndex, this.UOfTCourses);
+
+            this.UOfTPrograms = DefaultIIndexableCollection<SchoolProgram>.Read(Path.Combine(path, ProgramsFileName));
+            this.ProgramIndex = InvertedWordIndex.Read(Path.Combine(path, ProgramsIndexFileName));
+            this.ProgramPresenter = new ProgramSearchPresenter(this.ProgramIndex, this.UOfTPrograms);
             
             // Start a background thread to load and maintain the index, user map, and history
             this.StateThread = new Thread(new ThreadStart(MaintainState));

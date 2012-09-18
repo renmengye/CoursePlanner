@@ -17,7 +17,7 @@ namespace Panta.Search
         {
             string abbr = args.Length > 0 ? args[0] : "uoft";
             InvertedWordIndex index = InvertedWordIndex.Read(abbr + ".idx");
-            School school = School.Read(abbr + ".bin");
+            DefaultIIndexableCollection<Course> school = DefaultIIndexableCollection<Course>.Read(abbr + ".bin");
             CourseSearchPresenter searchEngine = new CourseSearchPresenter(index, school);
 
             while (true)

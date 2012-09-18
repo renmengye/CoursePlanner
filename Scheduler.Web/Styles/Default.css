@@ -19,8 +19,40 @@
     user-select: none;
 }
 
+
+#pageHeader {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 30px;
+    border-bottom: 1px solid black;
+    width: 100%;
+}
+
+    #pageHeader #title {
+        margin-top: 5px;
+        margin-left: 10px;
+        font-family: Consolas,'Lucida Console',Arial;
+        font-weight: 600;
+        font-size: 14pt;
+        display: inline-block;
+    }
+
+    #pageHeader .headerLinks {
+        float: right;
+        display: inline-block;
+        font-size: 10pt;
+        margin-top: 5px;
+        margin-right: 10px;
+        cursor: pointer;
+        color: blue;
+    }
+
+    #pageHeader #programButton {
+    }
+
 #pageWrapper {
-    padding-top: 10px;
+    padding-top: 40px;
     padding-bottom: 10px;
     height: 100%;
     width: 100%;
@@ -101,21 +133,28 @@
 }
 
     #calendarViews .singleCalendar {
-        position: absolute;
+        position: relative;
         left: 0px;
         top: 15px;
         margin-left: auto;
         margin-right: auto;
         overflow-y: scroll;
         overflow-x: hidden;
+        display: inline-block;
+        clear: both;
     }
+
+        #calendarViews .singleCalendar .splitted {
+            width: 50%;
+        }
 
     #calendarViews table {
         overflow-y: hidden;
+        position: absolute;
     }
 
     #calendarViews td {
-        height: 10px;
+        height: 15px;
         width: 0px;
         margin: 0;
         padding: 0;
@@ -126,7 +165,30 @@
         padding: 2px;
         background: white;
         position: absolute;
+        overflow: hidden;
     }
+
+        #calendarViews .calendarItem .itemInfo {
+            width: 80%;
+            display: inline-block;
+            clear: both;
+        }
+
+        #calendarViews .calendarItem .removeItem {
+            display: none;
+            width: 20%;
+            vertical-align: top;
+        }
+
+        #calendarViews .calendarItem.hover {
+            background-color: rgb(232, 232, 232);
+        }
+
+            #calendarViews .calendarItem.hover .removeItem {
+                display: inline-block;
+                cursor: pointer;
+                color: red;
+            }
 
     #calendarViews tr.calendarHeader {
         text-align: center;
@@ -154,6 +216,9 @@
     display: none;
     padding: 5px;
     overflow-wrap: break-word;
+    opacity: 0.8;
+    max-height: 400px;
+    overflow: auto;
 }
 
     #courseInfo div {
@@ -167,4 +232,48 @@
         margin-right: 2px;
         cursor: pointer;
         color: green;
+    }
+
+        #courseInfo .section.conflict {
+            color: red;
+        }
+
+#programInfo {
+    border: 1px solid black;
+    position: absolute;
+    top: 30px;
+    left: 70%;
+    display: none;
+    width: 200px;
+    font-size: 10pt;
+    background-color: white;
+    opacity: 0.8;
+}
+
+    #programInfo #programSearchBox {
+        width: 100%;
+        border: 0;
+    }
+
+    #programInfo #programSearchResult {
+        max-height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        border-top: 1px solid black;
+    }
+
+        #programInfo #programSearchResult li {
+            list-style: none;
+            padding: 2px;
+            border-bottom: 1px solid black;
+            cursor: pointer;
+        }
+
+            #programInfo #programSearchResult li:hover {
+                color: white;
+                background-color: blue;
+            }
+
+    #programInfo #programDetail {
+        display: none;
     }

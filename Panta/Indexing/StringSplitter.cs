@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Panta.Indexing
 {
@@ -58,7 +59,7 @@ namespace Panta.Indexing
 
         private static bool ShouldIndex(char c)
         {
-            return Char.IsLetterOrDigit(c) || c == ':' || c == '-';
+            return Char.IsLetterOrDigit(c);
         }
 
         private static void Add(string s, int start, int end, ICollection<string> set)

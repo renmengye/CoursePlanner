@@ -48,6 +48,9 @@ namespace Panta.Fetchers.Extensions.UT
                 List<UTCourse> partialResults = new List<UTCourse>();
                 MatchCollection courseMatches = CourseRegex.Matches(match.Value);
 
+
+                UTCourse lastCourse = null;
+                CourseSection lastSection = null;
                 // Accumulating course meet times
                 string tempTime = "";
                 string tempLocation = "";
@@ -85,10 +88,7 @@ namespace Panta.Fetchers.Extensions.UT
                         if (!tempTime.Contains(time))
                         {
                             tempTime = String.Join(" ", tempTime, time);
-                        }
-                        if (!tempLocation.Contains(location))
-                        {
-                            tempLocation = String.Join("/", tempLocation, location);
+                            tempLocation = String.Join(" ", tempLocation, location);
                         }
                     }
                     else
@@ -96,17 +96,17 @@ namespace Panta.Fetchers.Extensions.UT
                         CourseSection courseSection = new UTEngCourseSection()
                         {
                             Name = section,
-                            Instructor = instructor
+                            Instructor = instructor,
+                            Time = time,
+                            Location = location
                         };
-
-                        UTCourse lastCourse = null;
 
                         if (partialResults.Count > 0)
                         {
                             lastCourse = partialResults.Last<UTCourse>();
 
                             // Update the last tempTime and tempLocation
-                            CourseSection lastSection = lastCourse.Sections.Last<CourseSection>();
+                            lastSection = lastCourse.Sections.Last<CourseSection>();
                             lastSection.Time = tempTime;
                             lastSection.Location = tempLocation;
                         }
@@ -138,12 +138,20 @@ namespace Panta.Fetchers.Extensions.UT
                         Console.WriteLine("Engineering Course: {0}", course.Abbr);
                     }
                 }
+
+                if (partialResults.Count > 0)
+                {
+                    // Commit the last change to the last section
+                    lastSection = partialResults.Last<UTCourse>().Sections.Last<CourseSection>();
+                    lastSection.Time = tempTime;
+                    lastSection.Location = tempLocation;
+                }
+
                 lock (this)
                 {
                     results.AddRange(partialResults);
                 }
             });
-
             return results;
         }
     }

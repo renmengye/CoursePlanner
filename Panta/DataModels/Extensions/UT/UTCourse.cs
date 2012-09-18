@@ -47,6 +47,9 @@ namespace Panta.DataModels.Extensions.UT
         public string Prerequisites { get; set; }
 
         [DataMember]
+        public string Postrequisites { get; set; }
+
+        [DataMember]
         public string Corequisites { get; set; }
 
         [DataMember]
@@ -65,6 +68,7 @@ namespace Panta.DataModels.Extensions.UT
             IList<IndexString> strings = base.GetIndexStrings();
             if (!String.IsNullOrEmpty(this.SemesterDetail)) strings.Add(new IndexString("sems:", this.SemesterDetail));
             if (!String.IsNullOrEmpty(this.Prerequisites)) strings.Add(new IndexString("preq:", this.Prerequisites));
+            if (!String.IsNullOrEmpty(this.Postrequisites)) strings.Add(new IndexString("post:", this.Postrequisites));
             if (!String.IsNullOrEmpty(this.Corequisites)) strings.Add(new IndexString("creq:", this.Prerequisites));
             if (!String.IsNullOrEmpty(this.Exclusions)) strings.Add(new IndexString("excl:", this.Exclusions));
             if (!String.IsNullOrEmpty(this.BreadthRequirement)) strings.Add(new IndexString("bred:", this.BreadthRequirement));
@@ -78,10 +82,10 @@ namespace Panta.DataModels.Extensions.UT
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder(base.ToString());
-            foreach (CourseSection section in this.Sections)
-            {
-                builder.AppendLine("Section: "+section.Name+" Time: " + (section as UTCourseSection).ParsedTime.ToString());
-            }
+            //foreach (CourseSection section in this.Sections)
+            //{
+            //    builder.AppendLine("Section: "+section.Name+" Time: " + (section as UTCourseSection).ParsedTime.ToString());
+            //}
             builder.AppendLine("Semester: " + this.Semester);
             builder.AppendLine("Prerequisites: " + this.Prerequisites);
             builder.AppendLine("Corequisites: " + this.Corequisites);
@@ -91,5 +95,7 @@ namespace Panta.DataModels.Extensions.UT
 
             return builder.ToString();
         }
+
+
     }
 }
