@@ -1,279 +1,915 @@
 ﻿body {
     position: absolute;
-    left: 0;
     top: 0;
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
+    left: 0;
     overflow: hidden;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+}
+
+a img {
+    border: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #999;
+}
+
+::-webkit-scrollbar-button {
+    display: none;
 }
 
 .unselectable {
-    -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
-    -o-user-select: none;
     -ms-user-select: none;
+    -o-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
+    cursor: default;
 }
 
+.courseCode {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.searchTip {
+    color: rgb(180,180,180);
+}
+
+.widgetTitle {
+    padding-top: 7px;
+    padding-right: 30px;
+    padding-left: 10px;
+    height: 22px;
+    font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+    background-color: #eee;
+    background: #eee url(images/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
+    font-weight: 600;
+    font-size: 10pt;
+}
+
+.widget {
+    border: 2px solid #ddd;
+}
+
+.delete {
+    /*position: absolute;*/
+    display: inline-block;
+    float: right;
+    left: 93%;
+    top: 7%;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    zoom: 1;
+    -ms-zoom: 1;
+    background-image: url("images/ui-icons_004276_256x240.png");
+    background-position-x: -96px;
+    background-position-y: -128px;
+    background-repeat: no-repeat;
+    display: none;
+}
+
+.listItem {
+    display: -moz-inline-stack;
+    display: inline-block;
+    *display: inline;
+    clear: both;
+    width: 70%;
+    height: 20px;
+    zoom: 1;
+    -ms-zoom: 1;
+}
+
+.hasTooltip:before {
+    position: absolute;
+    top: 30px;
+    left: 20px;
+    z-index: 100;
+    visibility: hidden;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #404040;
+    border-left: 5px solid transparent;
+    content: "";
+}
+
+.dropDown:before {
+    position: absolute;
+    top: -5px;
+    left: 20px;
+    z-index: 100;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid rgba(100,100,100,0.5);
+    border-left: 5px solid transparent;
+    content: "";
+}
+
+.dropDown:after {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    padding: 5px 15px;
+    border-radius: 10px;
+    background: rgba(100,100,100,0.5);
+    white-space: nowrap;
+}
+
+.hasTooltip:after, .dropDown:after {
+    position: absolute;
+    top: 35px;
+    left: 0px;
+    z-index: 100;
+    visibility: hidden;
+    padding: 5px 15px;
+    border-radius: 10px;
+    background: #404040;
+    color: white;
+    content: attr(data-tooltip);
+    white-space: nowrap;
+}
+
+::-ms-clear {
+      display: none;
+  }
+
+.borderless {
+    border: none;
+    outline: none;
+}
+
+img.loading {
+    float: right;
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin: 5px 10px 0 0;
+}
+
+.magnify {
+    background: url('/images/magnify.PNG') no-repeat;
+    display: inline-block;
+    height: 20px;
+    position: relative;
+    text-indent: -9999px;
+    top: 1px;
+    width: 20px;
+    float: right;
+    right: 10px;
+}
 
 #pageHeader {
     position: absolute;
-    left: 0;
     top: 0;
-    height: 30px;
-    border-bottom: 1px solid black;
+    left: 0;
     width: 100%;
-}
-
-    #pageHeader #title {
-        margin-top: 5px;
-        margin-left: 10px;
-        font-family: Consolas,'Lucida Console',Arial;
-        font-weight: 600;
-        font-size: 14pt;
-        display: inline-block;
-    }
-
-    #pageHeader .headerLinks {
-        float: right;
-        display: inline-block;
-        font-size: 10pt;
-        margin-top: 5px;
-        margin-right: 10px;
-        cursor: pointer;
-        color: blue;
-    }
-
-    #pageHeader #programButton {
-    }
-
-#pageWrapper {
-    padding-top: 40px;
-    padding-bottom: 10px;
-    height: 100%;
-    width: 100%;
-}
-
-#sideBar {
-    width: 300px;
-    height: 100%;
-    border: 1px solid black;
-    display: inline-block;
-    clear: both;
-}
-
-    #sideBar #searchBox {
-        width: 100%;
-        height: 24px;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 10px;
-        border: 0;
-    }
-
-    #sideBar #resultView {
-        width: 100%;
-        height: auto;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        font-size: 10pt;
-        cursor: default;
-        border-top: 1px solid black;
-    }
-
-        #sideBar #resultView .matchCollection {
-            overflow-y: hidden;
-            overflow-x: hidden;
-        }
-
-        #sideBar #resultView .matchCollectionTitle {
-            height: 20px;
-            padding-left: 10px;
-            /*padding-top: 2px;
-            padding-bottom: 2px;*/
-            font-weight: 800;
-            cursor: pointer;
-            background-color: rgb(232, 232, 232);
-        }
-
-        #sideBar #resultView ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #sideBar #resultView li {
-            width: 700px;
-            height: 20px;
-            list-style: none;
-            padding-left: 10px;
-            padding-top: 2px;
-            padding-bottom: 2px;
-            cursor: pointer;
-        }
-
-            #sideBar #resultView li:hover {
-                background-color: rgb(232, 232, 232);
-            }
-
-#calendarViews {
-    position: absolute;
-    left: 310px;
-    width: auto;
-    height: 100%;
-    border: 1px solid black;
-    display: inline-block;
-    vertical-align: top;
-    font-size: 9pt;
+    height: 35px;
+    border-bottom: 2px #e18103 solid;
+    background: #ff9000;
+    /*box-shadow: 0px 2px 1px 1px #999;*/
+    cursor: default;
     overflow: hidden;
 }
 
+    #pageHeader #beta {
+        display: inline;
+        color: #fff;
+        font-size: 8pt;
+    }
+
+    #pageHeader #title {
+        display: inline;
+        margin-left: 10px;
+        color: white;
+        font-weight: 600;
+        font-size: 15pt;
+        font-family: Consolas,"Open Sans", 'Lucida Console', Arial;
+        line-height: 35px;
+    }
+
+    #pageHeader #year-info {
+        display: inline;
+        color: white;
+        font-size: 8pt;
+    }
+
+    #pageHeader #subtitle {
+        display: inline;
+        margin-right: 30px;
+        margin-left: 30px;
+        color: #8b3c0d;
+        font-weight: 600;
+        font-size: 10pt;
+    }
+
+    #pageHeader #updateTime {
+        display: inline;
+        color: #8b3c0d;
+        font-weight: 600;
+        font-size: 10pt;
+    }
+
+
+    #pageHeader .headerLinks {
+        display: inline;
+        *display: inline;
+        float: right;
+        padding-top: 13px;
+        padding-right: 10px;
+        padding-left: 10px;
+        height: 23px;
+        border-left: 1px solid #fbbc58;
+        color: white;
+        font-weight: 700;
+        font-size: 9pt;
+        cursor: pointer;
+    }
+
+        #pageHeader .headerLinks:hover {
+            color: #8b3c0d;
+        }
+
+#pageWrapper {
+    padding-top: 45px;
+    padding-bottom: 10px;
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+}
+
+#sideBar {
+    display: -moz-inline-stack;
+    display: inline-block;
+    *display: inline;
+    clear: both;
+    margin-left: 10px;
+    width: 300px;
+    /*height: 100%;*/
+    -ms-zoom: 1;
+    /*math-zoom: 1;*/
+    background: #fff;
+    max-height: 800px;
+    position: relative;
+    overflow: hidden;
+}
+
+    #sideBar #searchWidget .widgetTitle {
+        height: 30px;
+    }
+
+.searchBoxWrapper {
+    outline: 3px medium #ff9900;
+    border: solid 2px #ccc;
+}
+
+#sideBar #searchBox {
+    margin-right: auto;
+    margin-left: 2px;
+    margin-top: 0px;
+    padding-left: 10px;
+    width: 100%;
+    height: 24px;
+    border: none;
+    outline: none;
+    vertical-align: middle;
+    /*border: 2px solid #ff9900;*/
+    /*box-shadow: #bbb 1px 1px;*/
+}
+
+#resultViewWrapper {
+    height: auto;
+    max-height: 400px;
+    position: absolute;
+    padding-bottom: 10px;
+    left: 0;
+    top: 30px;
+    background-color: white;
+    border: 2px solid #ddd;
+    display: none;
+}
+
+#sideBar #resultView {
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+    width: 295px;
+    height: auto;
+    max-height: 400px;
+    font-size: 10pt;
+    cursor: default;
+    z-index: 100;
+    background-color: white;
+    /*background-color: #fef8f1;*/
+}
+
+    #sideBar #resultView .matchCollection {
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    #sideBar #resultView .matchCollectionTitle {
+        padding-left: 10px;
+        height: 20px;
+        border-left: 5px solid #ff9000;
+        font-weight: 800;
+        font-family: "Open Sans","lucida grande","Segoe UI";
+        cursor: pointer;
+    }
+
+    #sideBar #resultView ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    #sideBar #resultView li {
+        overflow: hidden;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 10px;
+        width: 100%;
+        height: 20px;
+        list-style: none;
+        font-size: 9pt;
+        line-height: 20px;
+        cursor: pointer;
+        background-color: white;
+    }
+
+        #sideBar #resultView li:hover {
+            background-color: #ffe7bb;
+        }
+
+        #sideBar #resultView li.selected {
+            background-color: #ff9000;
+            color: white;
+        }
+
+#sideBar #addedCoursesList {
+    margin: 0;
+    margin-top: 10px;
+    padding: 0;
+    width: 100%;
+    height: auto;
+    font-size: 9pt;
+    border: none;
+}
+
+    #sideBar #addedCoursesList #courseList {
+        overflow-x: hidden;
+        overflow-y: auto;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    #sideBar #addedCoursesList .listItem {
+        overflow-x: hidden;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 10px;
+        padding-right: 5px;
+        width: 90%;
+        line-height: 20px;
+        min-height: 40px;
+        height: auto;
+        cursor: default;
+        border: 2px solid #dec9b3;
+        border-left: 8px solid #dec9b3;
+        margin: 4px 0px 4px 0px;
+        background-color: white;
+        z-index: 1;
+    }
+
+        #sideBar #addedCoursesList .listItem:hover {
+            border-color: #ffe7bb;
+        }
+
+        #sideBar #addedCoursesList .listItem.selected {
+            border-color: #ff9000;
+            /*color: white;*/
+        }
+
+        #sideBar #addedCoursesList .listItem .listItem-title {
+            display: inline-block;
+            font-weight: 700;
+            width: 80%;
+        }
+
+#calendarViews {
+    position: absolute;
+    left: 320px;
+    display: -moz-inline-stack;
+    display: inline-block;
+    *display: inline;
+    overflow: hidden;
+    width: auto;
+    height: 100%;
+    vertical-align: top;
+    font-size: 9pt;
+    zoom: 1;
+    min-width: 500px;
+    min-height: 400px;
+    -ms-zoom: 1;
+    border-top: none;
+}
+
+    #calendarViews #calendarControlBar {
+        display: block;
+        height: 30px;
+        background-color: #eee;
+        background: #eee url(images/ui-bg_highlight-hard_100_eeeeee_1x100.png) 50% 50% repeat-x;
+        font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+    }
+
+    #calendarViews .calendarControls {
+        display: -moz-inline-stack;
+        display: inline-block;
+        *display: inline;
+        float: right;
+        padding: 5px;
+        font-weight: 700;
+        cursor: pointer;
+        -ms-zoom: 1;
+        zoom: 1;
+        border: 2px solid transparent;
+    }
+
+        #calendarViews .calendarControls:hover {
+            border-color: #ffe7bb;
+        }
+
+        #calendarViews .calendarControls.selected {
+            border-color: #ff9000;
+        }
+
+    #calendarViews #downloadIcs {
+        float: left;
+        /*background-image: url("../Images/calendar.png");*/
+        -moz-background-size: 20px;
+        -o-background-size: 20px;
+        -webkit-background-size: 20px;
+        background-size: 20px;
+        background-repeat: no-repeat;
+    }
+
+    #calendarViews #shareLink {
+        float: left;
+    }
+
+    /*#calendarViews #downloadIcs:hover:before, #calendarViews #downloadIcs:hover:after {
+            visibility: visible;
+        }*/
+
     #calendarViews .singleCalendar {
         position: relative;
-        left: 0px;
-        top: 15px;
-        margin-left: auto;
-        margin-right: auto;
-        overflow-y: scroll;
-        overflow-x: hidden;
+        top: 0;
+        left: 0;
+        display: -moz-inline-stack;
         display: inline-block;
+        *display: inline;
         clear: both;
+        overflow-x: hidden;
+        overflow-y: visible;
+        padding-left: 10px;
+        -ms-zoom: 1;
+        zoom: 1;
     }
+
+        #calendarViews .singleCalendar .name {
+            width: 28px;
+        }
 
         #calendarViews .singleCalendar .splitted {
             width: 50%;
         }
 
-    #calendarViews table {
-        overflow-y: hidden;
-        position: absolute;
-    }
+        /*#calendarViews .singleCalendar .calendarWrapper {
+            position: relative;
+        }*/
 
-    #calendarViews td {
-        height: 15px;
-        width: 0px;
-        margin: 0;
-        padding: 0;
-    }
-
-    #calendarViews .calendarItem {
-        border: 1px solid black;
-        padding: 2px;
-        background: white;
-        position: absolute;
-        overflow: hidden;
-    }
-
-        #calendarViews .calendarItem .itemInfo {
-            width: 80%;
-            display: inline-block;
-            clear: both;
+        #calendarViews .singleCalendar table {
+            position: static;
+            border-collapse: collapse;
+            border-bottom: 1px solid #ccc;
         }
 
-        #calendarViews .calendarItem .removeItem {
-            display: none;
-            width: 20%;
-            vertical-align: top;
+        #calendarViews .singleCalendar .calendarContentStatic {
+            position: static;
+            overflow-y: scroll;
+        }
+
+        #calendarViews .singleCalendar .calendarContentWrapper {
+            position: relative;
+        }
+
+        #calendarViews .singleCalendar .calendarContent {
+            border: none;
+        }
+
+        #calendarViews .singleCalendar table .t0 td {
+            border: none;
+        }
+
+        #calendarViews .singleCalendar table td {
+            margin: 0;
+            padding: 0;
+            width: 0px;
+            height: 14px;
+            color: #999;
+        }
+
+        #calendarViews .singleCalendar td.highlightGrid {
+            background-color: rgb(202, 227, 248);
+        }
+
+    #calendarViews .calendarItem {
+        position: absolute;
+        overflow: hidden;
+        padding: 2px 0 0 4px;
+        border: 1px solid rgb(5, 181, 248);
+        background-color: rgb(227, 245, 251);
+    }
+
+        #calendarViews .calendarItem.UTM {
+            border: 1px solid rgb(174, 102, 255);
+            background-color: rgb(245, 231, 251);
+        }
+
+        #calendarViews .calendarItem.UTSC {
+            border: 1px solid rgb(50, 150, 95);
+            background-color: rgb(216, 241, 224);
+        }
+
+        #calendarViews .calendarItem.highlight {
+            background-color: rgb(195, 240, 252);
+        }
+
+            #calendarViews .calendarItem.highlight.UTM {
+                background-color: rgb(236, 204, 251);
+            }
+
+            #calendarViews .calendarItem.highlight.UTSC {
+                background-color: rgb(181, 228, 196);
+            }
+
+        #calendarViews .calendarItem.conflict {
+            border: 1px solid red;
+            background-color: rgb(248, 199, 199);
+        }
+
+            #calendarViews .calendarItem.conflict:hover,
+            #calendarViews .calendarItem.conflict.highlight,
+            #calendarViews .calendarItem.conflict.hover,
+            #calendarViews .calendarItem.conflict.UTM.hover,
+            #calendarViews .calendarItem.conflict.UTSC.hover {
+                background-color: rgb(246, 174, 174);
+            }
+
+        #calendarViews .calendarItem .itemInfo {
+            /*display: -moz-inline-stack;
+            display: inline-block;
+            zoom: 1;
+            *display: inline;*/
+            /*clear: both;*/
+            width: 200px;
         }
 
         #calendarViews .calendarItem.hover {
-            background-color: rgb(232, 232, 232);
+            background-color: rgb(195, 240, 252);
         }
 
-            #calendarViews .calendarItem.hover .removeItem {
-                display: inline-block;
-                cursor: pointer;
-                color: red;
+            #calendarViews .calendarItem.hover.UTM {
+                background-color: rgb(236, 204, 251);
             }
 
+            #calendarViews .calendarItem.hover.UTSC {
+                background-color: rgb(181, 228, 196);
+            }
+
+                #calendarViews .calendarItem.hover .removeItem,
+                #calendarViews .calendarItem.hover.UTSC .removeItem,
+                #calendarViews .calendarItem.hover.UTM .removeItem {
+                    display: -moz-inline-stack;
+                    display: inline-block;
+                    *display: inline;
+                    color: red;
+                    cursor: pointer;
+                    -ms-zoom: 1;
+                    zoom: 1;
+                }
+
     #calendarViews tr.calendarHeader {
+        height: 30px;
+        vertical-align: bottom;
         text-align: center;
-        height: 20px;
     }
 
-    #calendarViews tr.line td {
-        border-top: 1px solid #999;
+    #calendarViews .singleCalendar td.timeDisplay {
+        border-top: 1px solid #ddd;
+    }
+
+    #calendarViews .singleCalendar td.name {
+        color: black;
+        vertical-align: bottom;
+        text-align: left;
+        font-weight: 800;
+    }
+
+    #calendarViews .singleCalendar td.line {
+        border-top: 1px solid #ddd;
     }
 
     #calendarViews td.timeDisplay {
         width: 40px;
+        color: #aaa;
         vertical-align: top;
         text-align: left;
     }
 
 #courseInfo {
-    width: 300px;
+    /*overflow-wrap: break-word;*/
     position: absolute;
-    left: 302px;
+    padding: 10px 0 10px 10px;
     top: 0;
-    border: 1px solid black;
+    left: 309px;
+    display: none;
     font-size: 10pt;
     background-color: #fff;
-    display: none;
-    padding: 5px;
-    overflow-wrap: break-word;
-    opacity: 0.8;
-    max-height: 400px;
-    overflow: auto;
 }
 
+    #courseInfo .wrapper {
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 10px;
+        width: 300px;
+        height: auto;
+        max-height: 400px;
+    }
+
     #courseInfo div {
-        margin-top: 2px;
-        margin-bottom: 2px;
+        padding-top: 2px;
+        padding-bottom: 2px;
     }
 
     #courseInfo .section {
+        display: -moz-inline-stack;
         display: inline-block;
-        margin-left: 2px;
+        *display: inline;
         margin-right: 2px;
-        cursor: pointer;
+        margin-left: 2px;
+        padding-right: 1px;
+        padding-left: 1px;
+        border: 1px solid green;
         color: green;
+        cursor: pointer;
+        -ms-zoom: 1;
+        zoom: 1;
     }
 
         #courseInfo .section.conflict {
+            border: 1px solid red;
             color: red;
         }
 
+        #courseInfo .section.added {
+            border: 1px solid green;
+            background-color: green;
+            color: white;
+        }
+
+            #courseInfo .section.added.conflict {
+                border: 1px solid red;
+                background-color: red;
+                color: white;
+            }
+
 #programInfo {
-    border: 1px solid black;
     position: absolute;
-    top: 30px;
+    top: 37px;
     left: 70%;
     display: none;
-    width: 200px;
-    font-size: 10pt;
+    padding: 10px;
+    width: 340px; /*border: 1px solid black;*/
     background-color: white;
-    opacity: 0.8;
+    font-size: 10pt;
+    opacity: 1;
 }
 
     #programInfo #programSearchBox {
-        width: 100%;
-        border: 0;
+        margin-left: 10px;
+        width: 80%;
+        height: 25px;
     }
 
     #programInfo #programSearchResult {
-        max-height: 400px;
-        overflow-y: auto;
         overflow-x: hidden;
-        border-top: 1px solid black;
+        overflow-y: auto;
+        padding-right: 5px;
+        max-height: 450px;
     }
-
-        #programInfo #programSearchResult li {
-            list-style: none;
-            padding: 2px;
-            border-bottom: 1px solid black;
-            cursor: pointer;
-        }
-
-            #programInfo #programSearchResult li:hover {
-                color: white;
-                background-color: blue;
-            }
 
     #programInfo #programDetail {
         display: none;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding: 4px;
+        max-height: 500px;
+        text-align: justify;
+    }
+
+        #programInfo #programDetail #title {
+            display: -moz-inline-stack;
+            display: inline-block;
+            *display: inline;
+            clear: both;
+            -ms-zoom: 1;
+            zoom: 1;
+        }
+
+        #programInfo #programDetail #back {
+            display: inline;
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+    #programInfo #programSearchResult li {
+        padding: 4px;
+        list-style: none;
+        cursor: pointer;
+    }
+
+        #programInfo #programSearchResult li:hover {
+            background-color: #ffe7bb;
+        }
+
+#advancedOptions {
+    position: absolute;
+    top: 37px;
+    left: 85%;
+    display: none;
+    padding: 10px;
+    width: 300px;
+    background-color: white;
+    color: #333;
+    font-size: 10pt;
+    font-family: 'Segoe UI', "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    ;
+    opacity: 1;
+    padding: 0;
+    cursor: default;
+}
+
+.ui-tabs-nav {
+    border: none;
+    background-color: #fff;
+}
+
+#advancedOptions .tabTitle {
+    font-family: Arial, 'DejaVu Sans', 'Liberation Sans', Freesans, sans-serif;
+    font-size: 9pt;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
+}
+
+#advancedOptions .tabContent {
+    font-family: 'Segoe UI', "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    font-size: 10pt;
+    padding: 0px;
+    padding-top: 3px;
+    border: none;
+}
+
+#advancedOptions #advancedOptionsNoTabs {
+    padding: 4px;
+}
+
+#aboutPanel {
+    position: absolute;
+    top: 37px;
+    left: 85%;
+    display: none;
+    padding: 10px;
+    width: 150px;
+    background-color: white;
+    font-size: 10pt;
+    opacity: 0.85;
+    cursor: default;
+}
+
+#calItemInfo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    padding: 5px;
+    width: 150px;
+    background: white;
+    font-size: 9pt;
+    border: 2px solid #ddd;
+    cursor: default;
+}
+
+    /*#calItemInfo:before {
+        position: absolute;
+        top: -10px;
+        left: 10px;
+        z-index: 100;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid white;
+        border-left: 10px solid transparent;
+        content: "";
+    }*/
+
+    #calItemInfo .removeItem {
+        width: 20%;
+        color: red;
+        vertical-align: top;
+        cursor: pointer;
+    }
+
+#campusDialog {
+    font-family: 'Segoe UI', "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    font-size: 10pt !important;
+}
+
+.ui-dialog {
+    padding: 0;
+}
+
+.ui-dialog-titlebar {
+    font-family: 'Segoe UI', "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    font-size: 10pt !important;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    margin: 0;
+    padding: 0;
+}
+
+    .ui-dialog .ui-dialog-buttonpane button {
+        padding: 0;
+        margin: 5px;
+        float: left;
+    }
+
+.ui-button-text {
+    font-family: 'Segoe UI', "Open Sans","lucida grande","Segoe UI",arial,verdana,"lucida sans unicode",tahoma,sans-serif;
+    font-size: 10pt;
+}
+
+.ui-widget-header {
+    background-image: none;
+}
+
+
+footer {
+    color: #aaa;
+    font-size: 10pt;
+    text-align: center;
+    top: 500px;
+}
+
+    footer a {
+        text-decoration: none;
+        color: #999;
+    }
+
+#advancedOptions #advancedOptions .tabTitle .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited {
+    color: #8b3c0d;
+}
+
+#advancedOptions #advancedOptions .tabTitle .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: #8b3c0d;
+}
+
+#advancedOptions #advancedOptions .tabTitle .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+    color: #ff9900;
+}
+
+#shareLinkDropDown {
+    position: absolute;
+    background: rgba(100,100,100,0.5);
+    /*border-radius: 5px;*/
+    padding: 5px;
+}
+
+    #shareLinkDropDown .shareLinks {
+        margin-right: 2px;
     }

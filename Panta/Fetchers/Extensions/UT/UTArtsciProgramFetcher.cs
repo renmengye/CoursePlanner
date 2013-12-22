@@ -27,6 +27,10 @@ namespace Panta.Fetchers.Extensions.UT
                 }
             });
 
+            // Acturial science
+            //IItemFetcher<SchoolProgram> actProgramFetcher = new UTArtsciProgramDetailFetcher("http://www.artsandscience.utoronto.ca/ofr/calendar/crs_act.htm");
+            //results.AddRange(actProgramFetcher.FetchItems());
+
             return results;
         }
     }

@@ -129,7 +129,8 @@ namespace Panta.Fetchers.Extensions.UT
                         {
                             Code = code,
                             Semester = semester,
-                            SemesterPrefix = prefix
+                            SemesterPrefix = prefix,
+                            Campus = "UTSG"
                         };
                         course.Sections.Add(courseSection);
 

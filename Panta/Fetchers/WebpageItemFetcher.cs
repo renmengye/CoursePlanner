@@ -7,31 +7,56 @@ using System.Text;
 
 namespace Panta.Fetchers
 {
-    public class WebpageItemFetcher<T> : IItemFetcher<T>
+    public abstract class WebpageItemFetcher<T> : IItemFetcher<T>
     {
         public string Url { get; private set; }
 
         public string Content { get; protected set; }
 
+        /// <summary>
+        /// Use normal/get data method to fetch webpage data
+        /// </summary>
+        /// <param name="url">Url to fetch from</param>
         public WebpageItemFetcher(string url)
         {
             this.Url = url;
-            WebClient client = new WebClient();
-
-            try
+            using (WebClient client = new WebClient())
             {
-                this.Content = client.DownloadString(this.Url);
-            }
-            catch (WebException ex)
-            {
-                ex.Source = "Unable to fetch: " + Url;
-                Trace.WriteLine(ex.ToString());
+                try
+                {
+                    this.Content = client.DownloadString(this.Url);
+                }
+                catch (WebException ex)
+                {
+                    ex.Source = "Unable to fetch: " + this.Url;
+                    Trace.WriteLine(ex.ToString());
+                }
             }
         }
 
-        public virtual IEnumerable<T> FetchItems()
+        /// <summary>
+        /// Use post data method to fetch webpage data
+        /// </summary>
+        /// <param name="url">Url to fetch from</param>
+        /// <param name="parameters">Parameters</param>
+        public WebpageItemFetcher(string url, string parameters)
         {
-            return new List<T>();
+            this.Url = url;
+            using (WebClient client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                try
+                {
+                    this.Content = client.UploadString(this.Url, parameters);
+                }
+                catch (WebException ex)
+                {
+                    ex.Source = "Unable to fetch: " + this.Url;
+                    Trace.WriteLine(ex.ToString());
+                }
+            }   
         }
+
+        public abstract IEnumerable<T> FetchItems();
     }
 }

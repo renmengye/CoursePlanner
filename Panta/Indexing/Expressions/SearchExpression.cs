@@ -55,6 +55,65 @@ namespace Panta.Indexing.Expressions
             return result;
         }
 
+        public static IExpression PraseWithBracket(string query, ITermCorrector corrector)
+        {
+            if (String.IsNullOrEmpty(query)) return new TermExpression(String.Empty);
+            Queue<string> backetStack = new Queue<string>();
+
+            int nonBracket = 0;
+            foreach (char c in query)
+            {
+                if (c != '(')
+                {
+                    nonBracket++;
+                }
+                else
+                {
+                    if (query[query.Length - 1] == ')')
+                    {
+                        if (nonBracket == 0)
+                        {
+
+                            return PraseWithBracket(query.Substring(1, query.Length - 2), corrector);
+
+                        }
+                        else
+                        {
+                            IExpression first = Parse(query.Substring(0, nonBracket), corrector);
+                            switch (query[nonBracket])
+                            {
+                                case (' '):
+                                    {
+                                        
+                                        break;
+                                    }
+                                case ('|'):
+                                    {
+                                        break;
+                                    }
+                                case ('-'):
+                                    {
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        break;
+                                    }
+
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                        throw new FormatException("Unbalanced brackets");
+                    }
+                }
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Parse a single piece of the entire search query into an Expression form using corrector
         /// </summary>
@@ -63,17 +122,16 @@ namespace Panta.Indexing.Expressions
         /// <returns>IExpression contains the original term and the suggestions of the word</returns>
         private static IExpression ParseTerm(string term, ITermCorrector corrector)
         {
-            IExpression result=null;
-            if (term.Length >= 2)
-            {
-                result = new TermExpression(term);
-            }
+            IExpression result = new TermExpression(term);
             if (corrector != null)
             {
                 foreach (string correction in corrector.Correct(term))
                 {
-                    IExpression expr = new TermExpression(correction);
-                    result = LogicOrExpression.Join(result, expr);
+                    if (correction != term)
+                    {
+                        IExpression expr = new TermExpression(correction);
+                        result = LogicOrExpression.Join(result, expr);
+                    }
                 }
             }
             return result;
@@ -81,8 +139,10 @@ namespace Panta.Indexing.Expressions
 
         public static IExpression ParseEachTermWithPrefix(string query, string prefix, ITermCorrector corrector)
         {
-            IExpression result=null;
+            IExpression result = Parse(query, corrector);
+            IExpression prefixExpression = null;
             string[] pieces = query.Split(' ', '\t', '\n', '\r');
+
             foreach (string piece in pieces)
             {
                 // Make sure no already prefixed item to be add a new prefix
@@ -90,17 +150,19 @@ namespace Panta.Indexing.Expressions
                 {
                     if (piece.Length >= 2)
                     {
-                        string newQuery = query + " " + prefix + piece;
-                        IExpression part = Parse(newQuery, corrector);
-                        result = LogicAndExpression.Join(result, part);
+                        IExpression part = Parse(prefix + piece, corrector);
+                        prefixExpression = LogicOrExpression.Join(prefixExpression, part);
                     }
                 }
-                else
-                {
-                    result = LogicAndExpression.Join(result, new TermExpression(piece));
-                }
             }
-            return result;
+            if (prefixExpression != null)
+            {
+                return LogicAndExpression.Join(result, prefixExpression);
+            }
+            else
+            {
+                return new TermExpression("");
+            }
         }
     }
 }

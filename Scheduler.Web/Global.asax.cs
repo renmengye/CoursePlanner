@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using Panta.Searching;
-using Panta.DataModels;
+﻿using Panta.DataModels;
 using Panta.Indexing;
-using Panta.DataModels.Extensions.UT;
+using Panta.Searching;
+using Scheduler.Common;
+using System;
 using System.IO;
 using System.Threading;
-using Scheduler.Common;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace Scheduler.Web
 {
@@ -91,6 +85,7 @@ namespace Scheduler.Web
             }
         }
         private Thread StateThread;
+        private Thread UpdateThread;
 
         protected void Application_Start()
         {
@@ -101,15 +96,15 @@ namespace Scheduler.Web
             );
 
             string path = Server.MapPath("Data");
+            Application["Path"] = path;
+            ReadData(path);
+            Application["Updating"] = false;
+            Application["LastChange"] = new FileInfo(Path.Combine(path, CoursesFileName)).LastWriteTimeUtc;
 
-            this.UOfTCourses = DefaultIIndexableCollection<Course>.Read(Path.Combine(path, CoursesFileName));
-            this.CourseIndex = InvertedWordIndex.Read(Path.Combine(path, CoursesIndexFileName));
-            this.CoursePresenter = new CourseSearchPresenter(this.CourseIndex, this.UOfTCourses);
+            // Start a background thread to update data
+            this.UpdateThread = new Thread(new ThreadStart(UpdateData));
+            this.UpdateThread.Start();
 
-            this.UOfTPrograms = DefaultIIndexableCollection<SchoolProgram>.Read(Path.Combine(path, ProgramsFileName));
-            this.ProgramIndex = InvertedWordIndex.Read(Path.Combine(path, ProgramsIndexFileName));
-            this.ProgramPresenter = new ProgramSearchPresenter(this.ProgramIndex, this.UOfTPrograms);
-            
             // Start a background thread to load and maintain the index, user map, and history
             this.StateThread = new Thread(new ThreadStart(MaintainState));
             this.StateThread.Start();
@@ -120,10 +115,50 @@ namespace Scheduler.Web
             while (true)
             {
                 // Wait 15 seconds to re-check. Ask the GC to free up unused memory
-                Thread.Sleep(75000);
                 GC.Collect();
-                Thread.Sleep(75000);
+                if (!(bool)Application["Updating"])
+                {
+                    this.CoursePresenter.GetIDMatches("mat", null, null);
+                    this.ProgramPresenter.GetIDMatches("mat", null, null);
+                }
+                Thread.Sleep(150000);
             }
+        }
+
+        protected void UpdateData()
+        {
+            while (true)
+            {
+                DateTime lastChange = DateTime.MinValue;
+                if (Application["LastChange"] != null)
+                {
+                    lastChange = (DateTime)Application["LastChange"];
+                }
+
+                string path = (string)Application["Path"];
+
+                FileInfo file = new FileInfo(Path.Combine(path, CoursesFileName));
+                if (file.LastWriteTimeUtc > lastChange)
+                {
+                    Application["Updating"] = true;
+                    ReadData(path);
+                    Application["LastChange"] = file.LastWriteTimeUtc;
+                    Application["Updating"] = false;
+                }
+
+                Thread.Sleep(new TimeSpan(0, 0, 15));
+            }
+        }
+
+        protected void ReadData(string path)
+        {
+            this.UOfTCourses = DefaultIIndexableCollection<Course>.ReadBin(Path.Combine(path, CoursesFileName));
+            this.CourseIndex = InvertedWordIndex.Read(Path.Combine(path, CoursesIndexFileName));
+            this.CoursePresenter = new CourseSearchPresenter(this.CourseIndex, this.UOfTCourses);
+
+            this.UOfTPrograms = DefaultIIndexableCollection<SchoolProgram>.ReadBin(Path.Combine(path, ProgramsFileName));
+            this.ProgramIndex = InvertedWordIndex.Read(Path.Combine(path, ProgramsIndexFileName));
+            this.ProgramPresenter = new ProgramSearchPresenter(this.ProgramIndex, this.UOfTPrograms);
         }
     }
 }

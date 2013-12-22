@@ -10,6 +10,14 @@ namespace Panta.DataModels.Extensions.UT
     {
         public static bool TryParseRawTime(string time, out CourseSectionTime result)
         {
+            if (time == "TBA")
+            {
+                result = new CourseSectionTime()
+                {
+                    TBA = true
+                };
+                return true;
+            }
             Regex regex = new Regex("((?<day>(mon)|(tue)|(wed)|(thu)|(fri)) (?<start>[0-9][0-9]?:[0-9]{2}) (?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection collection = regex.Matches(time);
             result = new CourseSectionTime();

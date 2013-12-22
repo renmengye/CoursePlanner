@@ -1,34 +1,143 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <link type="text/css" href="Styles/Default.css" rel="stylesheet" />
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
-    <!--<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>-->
-    <script type="text/javascript" src="Scripts/Calendar.js"></script>
-    <script type="text/javascript" src="Scripts/Default.js"></script>
-    <title></title>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link type="text/css" href="/Styles/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" />
+    <link type="text/css" href="/Styles/Default.min.css" rel="stylesheet" />
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+    <script type="text/javascript" src="/Scripts/Base64.min.js"></script>
+    <script type="text/javascript" src="/Scripts/Calendar.js"></script>
+    <script type="text/javascript" src="/Scripts/Default.js"></script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-7905505-4', 'griddy.org');
+        ga('send', 'pageview');
+
+    </script>
+    <title>Griddy</title>
 </head>
 <body>
-    <div id="pageHeader">
-        <div id="title">coursebow</div>
-        <!--<input id="programSearchBox" />-->
-            <div id="programInfoButton" class="headerLinks">
-                Program
-            </div>
-    </div>
+    <div id="fb-root"></div>
+    <script>(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'famatcebook-jssdk'));</script>
+
+    <header id="pageHeader" class="unselectable">
+
+        <div id="programInfoButton" class="headerLinks unselectable">
+            Program
+        </div>
+        <div id="advancedButton" class="headerLinks unselectable">
+            Settings
+        </div>
+        <div class="fb-like" style="float: right; margin-right: 30px; margin-top: 8px; background-color: #ff9900" data-href="https://www.facebook.com/griddycalendar" data-send="false" data-layout="button_count" data-width="50" data-show-faces="true" data-font="segoe ui"></div>
+        <div id="title" class="unselectable">griddy</div>
+        <div id="year-info" class="unselectable">2013-14</div>
+        <div id="beta" class="unselectable">beta</div>
+        <div id="subtitle" class="unselectable">efficient course planning</div>
+    </header>
     <div id="pageWrapper">
         <div id="sideBar">
-            <input id="searchBox" />
-            <div id="resultView" class="unselectable">
+            <div id="searchWidget" class="widget2">
+                <div class="searchBoxWrapper" id="courseWrapper">
+                    <input id="searchBox" class="borderless" /><div class="magnify"></div>
+                </div>
+                <div id="resultViewWrapper" style="overflow: hidden;">
+                    <div id="resultView" class="unselectable">
+                    </div>
+                </div>
+            </div>
+            <div id="addedCoursesList" class="unselectable widget">
             </div>
         </div>
 
-        <div id="calendarViews"></div>
+        <div id="calendarViews" class="widget unselectable"></div>
     </div>
 
-    <div id="courseInfo"></div>
-    <div id="programInfo"><input id='programSearchBox'/></div>
+    <div id="courseInfo" class="widget"></div>
+    <div id="programInfo" class="widget">
+        <div class="searchBoxWrapper" id="programWrapper">
+            <input id="programSearchBox" class="borderless" /><div class="magnify"></div>
+        </div>
+    </div>
+    <div id="advancedOptions" class="widget unselectable">
 
+        <div id="advancedOptionsTabs">
+            <ul>
+                <li class="tabTitle"><a href="#utsg">St. George</a></li>
+                <li class="tabTitle"><a href="#utsc">Scarborough</a></li>
+                <li class="tabTitle"><a href="#utm">Mississauga</a></li>
+            </ul>
+            <div id="utsg" class="tabContent">
+                <input type="checkbox" id="enableUtsg" checked="checked" class="options unselectable" />Enable Search in UTSG<br />
+                <input type="checkbox" id="artsci" checked="checked" class="options unselectable" />Arts & Science courses<br />
+                <input type="checkbox" id="engineer" checked="checked" class="options unselectable" />Engineering courses<br />
+                <input type="checkbox" id="cs" class="options unselectable" />Only Complementary studies (CS)<br />
+                <input type="checkbox" id="hss" class="options unselectable" />Only Humanities & Social Science (HSS)<br />
+            </div>
+            <div id="utsc" class="tabContent">
+                <input type="checkbox" id="enableUtsc" checked="checked" class="options unselectable" />Enable Search in UTSC<br />
+            </div>
+            <div id="utm" class="tabContent">
+                <input type="checkbox" id="enableUtm" checked="checked" class="options unselectable" />Enable Search in UTM<br />
+                <input type="checkbox" id="sci" checked="checked" class="options unselectable" />Science courses<br />
+                <input type="checkbox" id="ssc" checked="checked" class="options unselectable" />Social Science courses<br />
+                <input type="checkbox" id="hum" checked="checked" class="options unselectable" />Humanity courses<br />
+            </div>
+        </div>
+        <div id="advancedOptionsNoTabs">
+            <input type="checkbox" id="fall" checked="checked" class="options unselectable" />Fall courses<br />
+            <input type="checkbox" id="winter" checked="checked" class="options unselectable" />Winter courses<br />
+            <input type="checkbox" id="year" checked="checked" class="options unselectable" />Year courses<br />
+        </div>
+    </div>
+    <div id="calItemInfo"></div>
+    <div id="campusDialog" title="Choose your U of T campus">
+        Your campus:
+        <select id="campusSelect">
+            <option value="utsg">St. George</option>
+            <option value="utsc">Scarborough</option>
+            <option value="utm">Mississauga</option>
+        </select><br />
+        (You can change it later in Settings)<br />
+        <br />
+        <input id="rememberCampus" type="checkbox" checked="checked" />Remember my choice<br />
+    </div>
+    <div id='shareLinkDropDown' class="dropDown">
+        <input type='text' id='shareLinkText' />
+        <div id="shareDestinations" style="padding: 4px 2px 0 2px;">
+            <a id="fbLink" class="shareLinks" href="">
+                <img src='/Images/fb16.jpg' title="Facebook" /></a>
+            <a id="twLink" class="shareLinks" href="https://twitter.com/share" class="twitter-share-button" data-url="" data-via="Griddy" data-lang="en">
+                <img src="https://twitter.com/favicons/favicon.ico" title="Twitter" width="16" height="16" />
+            </a>
+            <a id="rrLink" class="shareLinks" href="">
+                <img src="/Images/renren.ico" title="Renren" width="16" height="16" />
+            </a>
+            <a id="wbLink" class="shareLinks" href="">
+                <img src="/Images/weibo.ico" title="Weibo" width="16" height="16" />
+            </a>
+        </div>
+    </div>
+    <footer>
+        &copy; 2013 - Griddy.org - 
+        Developed by <a href="mailto:m.ren@mail.utoronto.ca">Mengye Ren</a>. <span id="updateTime"></span>.
+    </footer>
+    <iframe id="hiddenDownloader" style="display: none"></iframe>
 </body>
 </html>

@@ -1,5 +1,6 @@
 ﻿using Panta.DataModels;
 using Panta.DataModels.Extensions.UT;
+using Panta.Indexing.Extensions.UT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,28 +29,29 @@ namespace Panta.Fetchers.Extensions.UT
             IItemFetcher<UTCourse> fallCourseFetcher = new UTEngCourseInfoFetcher(@"http://www.apsc.utoronto.ca/timetable/fall.html");
             IItemFetcher<UTCourse> winterCourseFetcher = new UTEngCourseInfoFetcher(@"http://www.apsc.utoronto.ca/timetable/winter.html");
             IEnumerable<UTCourse> allCourses = fallCourseFetcher.FetchItems().Concat<UTCourse>(winterCourseFetcher.FetchItems());
+            IEnumerable<UTCourse> coursesDetail = new UTEngCourseDetailFetcher(@"http://www.apsc.utoronto.ca/Calendars/2013-2014/Course_Descriptions.html").FetchItems();
 
+            // Merge course info and course detail
+            allCourses = allCourses.GroupJoin(coursesDetail,
+                    (x => x.Abbr),
+                    (x => x.Abbr),
+                    ((x, y) => this.CombineInfoDetail(x, y.FirstOrDefault())),
+                    new UTCourseAbbrComparer());
+
+            UTEngHssCsChecker checker = new UTEngHssCsChecker();
             foreach (UTCourse course in allCourses)
             {
                 course.Faculty = "Engineering";
+
+                if (checker.CheckEngCs(course.Code))
+                {
+                    course.AddCategory("cs");
+                }
 
                 if (!CoursesCollection.ContainsKey(course.Abbr))
                 {
                     CoursesCollection.Add(course.Abbr, course);
                 }
-                else
-                {
-                    //Console.WriteLine("Duplicate naming: " + course.Abbr);
-                }
-            }
-
-            IEnumerable<UTCourse> coursesDetail = new UTEngCourseDetailFetcher(@"http://www.apsc.utoronto.ca/Calendars/2012-2013/Course_Descriptions.html").FetchItems();
-
-            foreach (UTCourse detail in coursesDetail)
-            {
-                TryMatchSemester(CoursesCollection, detail, "Y");
-                TryMatchSemester(CoursesCollection, detail, "F");
-                TryMatchSemester(CoursesCollection, detail, "S");
             }
 
 
@@ -71,28 +73,19 @@ namespace Panta.Fetchers.Extensions.UT
             return CoursesCollection.Values;
         }
 
-        /// <summary>
-        /// Try match the existing course in the dictionary with a course that has no semester information
-        /// </summary>
-        /// <param name="course">Couse without semester information</param>
-        /// <param name="semester">A semester of guess</param>
-        /// <returns></returns>
-        private bool TryMatchSemester(Dictionary<string, UTCourse> coursesCollection, UTCourse course, string semester)
+        private UTCourse CombineInfoDetail(UTCourse info, UTCourse detail)
         {
-            UTCourse existedCourse;
-
-            if (coursesCollection.TryGetValue(course.Code + course.SemesterPrefix + semester, out existedCourse))
+            if (detail != null)
             {
-                existedCourse.Name = course.Name;
-                existedCourse.Description = course.Description;
-                existedCourse.Corequisites = course.Corequisites;
-                existedCourse.Prerequisites = course.Prerequisites;
-                existedCourse.Exclusions = course.Exclusions;
-                existedCourse.DistributionRequirement = course.DistributionRequirement;
-                existedCourse.Program = course.Program;
-                return true;
+                info.Name = detail.Name;
+                info.Description = detail.Description;
+                info.Corequisites = detail.Corequisites;
+                info.Prerequisites = detail.Prerequisites;
+                info.Exclusions = detail.Exclusions;
+                info.DistributionRequirement = detail.DistributionRequirement;
+                info.Program = detail.Program;
             }
-            return false;
+            return info;
         }
 
         private bool TryMatchPreq(Dictionary<string, UTCourse> coursesCollection, string courseAbbr, string searchAbbr, string semester)

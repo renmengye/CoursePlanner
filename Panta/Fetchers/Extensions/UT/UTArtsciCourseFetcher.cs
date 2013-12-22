@@ -6,9 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Panta.Indexing.Extensions.UT;
 
 namespace Panta.Fetchers.Extensions.UT
 {
+
     public class UTArtsciCourseFetcher : IItemFetcher<UTCourse>
     {
         /// <summary>
@@ -29,9 +31,11 @@ namespace Panta.Fetchers.Extensions.UT
 
         public IEnumerable<UTCourse> FetchItems()
         {
-            List<UTCourse> results = new List<UTCourse>();
-
             IItemFetcher<UTDepartment> depFetcher = new UTArtsciDepartmentFetcher();
+
+            List<UTCourse> courses = new List<UTCourse>();
+            List<UTCourse> coursesDetail = new List<UTCourse>();
+            List<UTDepartment> deps = new List<UTDepartment>(depFetcher.FetchItems());
 
             // Parallel threads for fetching each department
             Parallel.ForEach<UTDepartment>(depFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTDepartment dep)
@@ -41,37 +45,47 @@ namespace Panta.Fetchers.Extensions.UT
                 IItemFetcher<UTCourse> courseDetailFetcher = new UTArtsciCourseDetailFetcher(dep.DetailUrl);
 
                 // Going to merge the info fetched from courseDetail and courseInfo
-                IEnumerable<UTCourse> courses = courseInfoFetcher.FetchItems();
-                IEnumerable<UTCourse> coursesDetail = courseDetailFetcher.FetchItems();
+                IEnumerable<UTCourse> tempCourses = courseInfoFetcher.FetchItems();
 
-                foreach (UTCourse course in courses)
+                // Add hss/cs/department info
+                UTEngHssCsChecker checker = new UTEngHssCsChecker();
+                foreach (UTCourse course in tempCourses)
                 {
                     // Add department info
                     course.Department = dep.Name;
                     course.Faculty = "Artsci";
 
-                    lock (this)
+                    // Check cs/hss requirement for engineering students
+                    if (checker.CheckHss(course.Code + course.SemesterPrefix))
                     {
-                        if (!CoursesCollection.ContainsKey(course.Abbr))
-                        {
-                            CoursesCollection.Add(course.Abbr, course);
-                        }
-                        else
-                        {
-                            //Console.WriteLine("Duplicate naming: " + course.Abbr);
-                        }
+                        course.AddCategory("hss");
+                    }
+                    if (checker.CheckArtsciCs(course.Code + course.SemesterPrefix))
+                    {
+                        course.AddCategory("cs");
                     }
                 }
 
-                // Use a subbody TryMatchSemester to match the courses
-                foreach (UTCourse course in coursesDetail)
-                {
-                    TryMatchSemester(CoursesCollection, course, "Y");
-                    TryMatchSemester(CoursesCollection, course, "F");
-                    TryMatchSemester(CoursesCollection, course, "S");
-                }
+                courses.AddRange(tempCourses);
+                coursesDetail.AddRange(courseDetailFetcher.FetchItems());
             });
             //}
+
+            // Merge course info and course detail
+            IEnumerable<UTCourse> coursesTotal = courses.GroupJoin(coursesDetail,
+                (x => x.Abbr),
+                (x => x.Abbr),
+                ((x, y) => this.CombineInfoDetail(x, y.FirstOrDefault())),
+                new UTCourseAbbrComparer());
+
+            // Add to unique dictionary
+            foreach (UTCourse course in coursesTotal)
+            {
+                if (!CoursesCollection.ContainsKey(course.Abbr))
+                {
+                    CoursesCollection.Add(course.Abbr, course);
+                }
+            }
 
             // Match the prerequisites to postrequisites
             foreach (UTCourse course in CoursesCollection.Values)
@@ -91,33 +105,28 @@ namespace Panta.Fetchers.Extensions.UT
             return CoursesCollection.Values;
         }
 
-        /// <summary>
-        /// Try match the existing course in the dictionary with a course that has no semester information
-        /// </summary>
-        /// <param name="course">Couse without semester information</param>
-        /// <param name="semester">A semester of guess</param>
-        /// <returns></returns>
-        private bool TryMatchSemester(Dictionary<string, UTCourse> coursesCollection, UTCourse course, string semester)
+        private UTCourse CombineInfoDetail(UTCourse info, UTCourse detail)
         {
-            UTCourse existedCourse;
-
-            lock (this)
+            if (detail != null)
             {
-                if (coursesCollection.TryGetValue(course.Code + course.SemesterPrefix + semester, out existedCourse))
-                {
-                    existedCourse.Description = course.Description;
-                    existedCourse.Corequisites = course.Corequisites;
-                    existedCourse.Prerequisites = course.Prerequisites;
-                    existedCourse.Exclusions = course.Exclusions;
-                    existedCourse.DistributionRequirement = course.DistributionRequirement;
-                    existedCourse.BreadthRequirement = course.BreadthRequirement;
-                    return true;
-                }
+                info.Description = detail.Description;
+                info.Corequisites = detail.Corequisites;
+                info.Prerequisites = detail.Prerequisites;
+                info.Exclusions = detail.Exclusions;
+                info.DistributionRequirement = detail.DistributionRequirement;
+                info.BreadthRequirement = detail.BreadthRequirement;
             }
-            return false;
+            return info;
         }
 
-
+        /// <summary>
+        /// Try match the prerequisite to the postrequisite course
+        /// </summary>
+        /// <param name="coursesCollection"></param>
+        /// <param name="courseAbbr"></param>
+        /// <param name="searchCode"></param>
+        /// <param name="semester"></param>
+        /// <returns></returns>
         private bool TryMatchPreq(Dictionary<string, UTCourse> coursesCollection, string courseAbbr, string searchCode, string semester)
         {
             UTCourse preqCourse;

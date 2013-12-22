@@ -62,6 +62,13 @@ namespace Panta.DataModels.Extensions.UT
         public string BreadthRequirement { get; set; }
         public string Program { get; set; }
         public string Faculty { get; set; }
+        public string Categories { get; set; }
+
+        [DataMember]
+        public string Campus { get; set; }
+
+        [DataMember]
+        public UTCourseEvaluation Evaluation { get; set; }
 
         protected override IList<IndexString> GetIndexStrings()
         {
@@ -75,17 +82,33 @@ namespace Panta.DataModels.Extensions.UT
             if (!String.IsNullOrEmpty(this.DistributionRequirement)) strings.Add(new IndexString("dist:", this.DistributionRequirement));
             if (!String.IsNullOrEmpty(this.Program)) strings.Add(new IndexString("prog:", this.Program));
             if (!String.IsNullOrEmpty(this.Faculty)) strings.Add(new IndexString("fac:", this.Faculty));
+            if (!String.IsNullOrEmpty(this.Campus)) strings.Add(new IndexString("camp:", this.Campus));
+            if (!String.IsNullOrEmpty(this.Categories))
+            {
+                foreach (string category in this.Categories.Split(','))
+                {
+                    strings.Add(new IndexString("cat:", category));
+                }
+            }
 
             return strings;
+        }
+
+        public void AddCategory(string category)
+        {
+            if (String.IsNullOrEmpty(this.Categories))
+            {
+                this.Categories = category;
+            }
+            else
+            {
+                this.Categories = String.Join(",", this.Categories, category);
+            }
         }
 
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder(base.ToString());
-            //foreach (CourseSection section in this.Sections)
-            //{
-            //    builder.AppendLine("Section: "+section.Name+" Time: " + (section as UTCourseSection).ParsedTime.ToString());
-            //}
             builder.AppendLine("Semester: " + this.Semester);
             builder.AppendLine("Prerequisites: " + this.Prerequisites);
             builder.AppendLine("Corequisites: " + this.Corequisites);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Panta.Fetchers;
@@ -36,6 +37,10 @@ namespace Panta.DataModels
             }
         }
 
+        public DefaultIIndexableCollection()
+        {
+        }
+
         public bool TryGetItem(uint id, out T item)
         {
             return this.IIndexableItemsCatalog.TryGetValue(id, out item);
@@ -43,7 +48,7 @@ namespace Panta.DataModels
 
         #region Read/Save
         // Read a school from a serialized binary file
-        public static DefaultIIndexableCollection<T> Read(string path)
+        public static DefaultIIndexableCollection<T> ReadBin(string path)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -53,13 +58,14 @@ namespace Panta.DataModels
         }
 
         // Save the instance to a serialized binary file
-        public void Save()
+        public void SaveBin()
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(this.Abbr + ".bin", FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, this);
             stream.Close();
         }
+
         #endregion
     }
 }

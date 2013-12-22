@@ -13,16 +13,21 @@ namespace Panta.DataModels.Extensions.UT
 
         static UTCourseSectionTime()
         {
-            rawTimeRegex = new Regex("^(?<span>[A-Z][0-9:-]*)+$", RegexOptions.Compiled);
+            rawTimeRegex = new Regex("^(?<span>[A-Z][0-9:-]*)+", RegexOptions.Compiled);
             timeStringRegex = new Regex("((?<day>(monday)|(tuesday)|(wednesday)|(thursday)|(friday)) (?<start>[0-9][0-9]?:[0-9]{2})-(?<end>[0-9][0-9]?:[0-9]{2}))+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         public static bool TryParseRawTime(string raw, out CourseSectionTime time)
         {
             time = new CourseSectionTime();
-            if (raw.Equals("TBA")) return true;
+            if (raw.Equals("TBA"))
+            {
+                time.MeetTimes = new List<CourseSectionTimeSpan>();
+                time.TBA = true; 
+                return true;
+            }
 
-            if (!rawTimeRegex.IsMatch(raw)) throw new ArgumentException("Fail to parse the time: " + raw);
+            if (!rawTimeRegex.IsMatch(raw)) return false;
 
             List<CourseSectionTimeSpan> spans = new List<CourseSectionTimeSpan>();
 
@@ -203,7 +208,7 @@ namespace Panta.DataModels.Extensions.UT
                     endTime = (byte)(startTime + 4);
                     if (endTime == 48) endTime = 0;
                 }
-                span.Start = To24HourTime(startTime);
+                span.Start = To24HourTime(startTime, endTime == 36);
                 span.End = To24HourTime(endTime, span.Start >= 52);
             }
 
@@ -220,8 +225,12 @@ namespace Panta.DataModels.Extensions.UT
             // Heuristics:
             // Number smaller than 8:00 are afternoon
             // Number bigger than 8:00 (inclusive) are morning
-            if (time > 95 || time < 0) throw new ArgumentException("Invalid 12-hour time");
-            if (time < 36 || fixAfternoon)
+            if (time > 95 || time < 0)
+            {
+                return 0;
+                //throw new ArgumentException("Invalid 12-hour time");
+            }
+            if (time < 32 || fixAfternoon)
             {
                 return (byte)(time + 48);
             }

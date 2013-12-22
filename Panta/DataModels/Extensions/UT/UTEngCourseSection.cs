@@ -20,18 +20,24 @@ namespace Panta.DataModels.Extensions.UT
             }
             set
             {
-                this._time = value;
-                CourseSectionTime time;
-                if (UTEngCourseSectionTime.TryParseRawTime(value, out time))
+                if (value != null)
                 {
-                    this.ParsedTime = time;
+                    this._time = value;
+                    CourseSectionTime time;
+                    if (UTEngCourseSectionTime.TryParseRawTime(value, out time))
+                    {
+                        this.ParsedTime = time;
+                    }
+                    else
+                    {
+                        this.Time = "TBA";
+                        //throw new ArgumentException("Cannot parse time: " + value);
+                    }
                 }
                 else
                 {
-                    if (!String.IsNullOrEmpty(value) && !value.Equals("&nbsp"))
-                    {
-                        //throw new ArgumentException("Cannot parse time: " + value);
-                    }
+                    this.Time = "TBA";
+                    //throw new ArgumentException("Cannot parse time: " + value);
                 }
             }
         }

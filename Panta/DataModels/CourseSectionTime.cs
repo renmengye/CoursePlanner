@@ -15,9 +15,16 @@ namespace Panta.DataModels
         public IEnumerable<CourseSectionTimeSpan> MeetTimes;
 
         [DataMember]
-        public string StringFormat { get { return this.ToString(); } }
+        public string StringFormat
+        {
+            get { return this.ToString(); }
+        }
+
+        [DataMember]
+        public bool TBA { get; set; }
 
         public CourseSectionTime(IEnumerable<CourseSectionTimeSpan> times)
+            : this()
         {
             this.MeetTimes = times;
         }

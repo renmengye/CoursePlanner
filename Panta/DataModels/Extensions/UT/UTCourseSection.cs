@@ -20,21 +20,30 @@ namespace Panta.DataModels.Extensions.UT
             }
             set
             {
-                this._time = value;
-                CourseSectionTime time;
-                if (UTCourseSectionTime.TryParseRawTime(value.ToUpperInvariant().Replace(",", "").Replace(" ", ""), out time))
+                if (value != null)
                 {
-                    this.ParsedTime = time;
+                    this._time = value;
+                    CourseSectionTime time;
+                    if (UTCourseSectionTime.TryParseRawTime(value.ToUpperInvariant().Replace(",", "").Replace(" ", ""), out time))
+                    {
+                        this.ParsedTime = time;
+                    }
+                    else
+                    {
+                        this.Time = "TBA";
+                        //throw new ArgumentException("Cannot parse time: " + value);
+                    }
                 }
                 else
                 {
-                    throw new ArgumentException("Cannot parse time: " + value);
+                    this.Time = "TBA";
+                    //throw new ArgumentException("Cannot parse time: " + value);
                 }
             }
         }
 
         [DataMember]
-        public virtual CourseSectionTime ParsedTime { get; protected set; }
+        public virtual CourseSectionTime ParsedTime { get; set; }
 
         [DataMember]
         public override string Name
@@ -77,8 +86,8 @@ namespace Panta.DataModels.Extensions.UT
                 {
                     foreach (string timeString in this.ParsedTime.ToString().Split(' '))
                     {
-                        result.Add(timeString);
-                        result.Add("time:" + timeString);
+                        result.Add(timeString.ToLowerInvariant());
+                        result.Add("time:" + timeString.ToLowerInvariant());
                     }
                 }
             }

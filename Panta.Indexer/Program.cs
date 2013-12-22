@@ -23,7 +23,7 @@ namespace Panta.Indexer
 
             if (File.Exists(cpath))
             {
-                school = DefaultIIndexableCollection<Course>.Read(cpath);
+                school = DefaultIIndexableCollection<Course>.ReadBin(cpath);
                 Index<Course>(school);
             }
             else
@@ -33,7 +33,7 @@ namespace Panta.Indexer
 
             if (File.Exists(ppath))
             {
-                pschool = DefaultIIndexableCollection<SchoolProgram>.Read(ppath);
+                pschool = DefaultIIndexableCollection<SchoolProgram>.ReadBin(ppath);
                 Index<SchoolProgram>(pschool);
             }
             else

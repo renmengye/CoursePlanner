@@ -15,16 +15,17 @@ namespace Panta.Search
     {
         public static void Main(string[] args)
         {
-            string abbr = args.Length > 0 ? args[0] : "uoft";
+            string abbr = args.Length > 0 ? args[0] : "uoft_courses";
             InvertedWordIndex index = InvertedWordIndex.Read(abbr + ".idx");
-            DefaultIIndexableCollection<Course> school = DefaultIIndexableCollection<Course>.Read(abbr + ".bin");
+            DefaultIIndexableCollection<Course> school = DefaultIIndexableCollection<Course>.ReadBin(abbr + ".bin");
             CourseSearchPresenter searchEngine = new CourseSearchPresenter(index, school);
 
             while (true)
             {
                 Console.Write("Please input a query: ");
                 string query = Console.ReadLine();
-
+                CourseSearchResult result = searchEngine.GetItemList(query) as CourseSearchResult;
+                Console.WriteLine(result.CodeNameMatches);
                 //CourseSearchResult result = searchEngine.GetCourseList(query);
 
                 //if (result.CodeNameMatches.Count > 0)

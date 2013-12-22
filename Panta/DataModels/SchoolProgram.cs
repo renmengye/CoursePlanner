@@ -12,7 +12,7 @@ namespace Panta.DataModels
     public class SchoolProgram : IIndexable
     {
         [DataMember]
-        public uint ID{get;set;}
+        public uint ID { get; set; }
 
         [DataMember]
         public string Name { get; set; }
@@ -20,12 +20,16 @@ namespace Panta.DataModels
         [DataMember]
         public string Description { get; set; }
 
+        [DataMember]
+        public string Campus { get; set; }
+
         protected virtual IList<IndexString> GetIndexStrings()
         {
             IList<IndexString> strings = new List<IndexString>();
             strings.Add(new IndexString("id:", this.ID.ToString()));
             strings.Add(new IndexString("name:", this.Name));
             strings.Add(new IndexString("des:", this.Description));
+            strings.Add(new IndexString("camp:", this.Campus));
 
             return strings;
         }

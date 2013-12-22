@@ -22,15 +22,20 @@ namespace Panta.Searching
             this.Corrector = new SuffixCorrector(this.Index.SortedKeys);
         }
 
-        public HashSet<uint> GetIDMatches(string query, string prefix = null)
+        public HashSet<uint> GetIDMatches(string query, string prefix)
+        {
+            return GetIDMatches(query, prefix, this.Corrector);
+        }
+
+        public HashSet<uint> GetIDMatches(string query, string prefix, ITermCorrector corrector)
         {
             if (prefix == null)
             {
-                return SearchExpression.Parse(query, this.Corrector).Evaluate(this.Index);
+                return SearchExpression.Parse(query, corrector).Evaluate(this.Index);
             }
             else
             {
-                return SearchExpression.ParseEachTermWithPrefix(query, prefix, this.Corrector).Evaluate(this.Index);
+                return SearchExpression.ParseEachTermWithPrefix(query, prefix, corrector).Evaluate(this.Index);
             }
         }
 

@@ -13,8 +13,8 @@ namespace Panta.Searching
         InvertedWordIndex Index { get; set; }
         IIndexableCollection<T> ItemCollection { get; set; }
         ITermCorrector Corrector { get; set; }
-
-        HashSet<uint> GetIDMatches(string query, string prefix = null);
+        
+        HashSet<uint> GetIDMatches(string query, string prefix, ITermCorrector corrector);
         IEnumerable<T> GetItemsFromIDs(IEnumerable<uint> ids);
         string FormatList(IEnumerable<T> items);
         SearchResult GetItemList(string query);

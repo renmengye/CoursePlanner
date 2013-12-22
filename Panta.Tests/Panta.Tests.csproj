@@ -58,6 +58,13 @@
     <Compile Include="InvertedWordIndexTests.cs" />
     <Compile Include="SearchExpressionTests.cs" />
     <Compile Include="CourseSectionTimeTests.cs" />
+    <Compile Include="ArtsciProgramFetcherTests.cs" />
+    <Compile Include="HssFetcherTests.cs" />
+    <Compile Include="SeminarTests.cs" />
+    <Compile Include="UTEngFetcherTest.cs" />
+    <Compile Include="UTSCFetcher.cs" />
+    <Compile Include="UTMFetcher.cs" />
+    <Compile Include="UTArtsciAntiCalendarTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Panta\Panta.csproj">

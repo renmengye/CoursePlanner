@@ -33,7 +33,8 @@ namespace Panta.Fetchers
             }
 
             departmentContent = departmentContent.Replace("\r\n", String.Empty);
-            Regex departmentRegex = new Regex("<li><a href=[\"]?(?<address>[^\"<]*)[\"]?>(?<name>[^\u005b]*)[\u005b](?<abbr>[A-Z]{3})\u0020courses.*?</a>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            departmentContent = departmentContent.Replace("<a href=csb.html></a>  <a href=\"cine.html\">", "<a href=\"cine.html\">");
+            Regex departmentRegex = new Regex("<li><a href=[\"]?(?<address>[^\"<]*)[\"]?>(?<name>[^\u005b]*)[\u005b](?<abbr>[A-Z]{3}).*?</a>", RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
             MatchCollection matches = departmentRegex.Matches(departmentContent);
 
             foreach (Match match in matches)
@@ -61,6 +62,7 @@ namespace Panta.Fetchers
 
                 results.Add(dep);
             }
+
             return results;
         }
     }

@@ -13,13 +13,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Scheduler.Web</RootNamespace>
     <AssemblyName>Scheduler.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,25 +40,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\Dependencies\DDay\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.Collections">
+      <HintPath>..\Dependencies\DDay\DDay.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="DDay.iCal">
+      <HintPath>..\Dependencies\DDay\DDay.iCal.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web.Entity" />
-    <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Web.Routing" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -89,13 +85,11 @@
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Providers">
-      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.1\lib\net40\System.Web.Providers.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20710.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
@@ -108,6 +102,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
@@ -123,44 +118,82 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Handlers\ICalHandler.ashx.cs">
+      <DependentUpon>ICalHandler.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="Handlers\UpdateHandler.ashx.cs">
+      <DependentUpon>UpdateHandler.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Data\web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Default.html" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Images\close.png" />
+    <Content Include="Images\ajax-loader.gif" />
+    <Content Include="Images\calendar.png" />
+    <Content Include="Images\calendar.svg" />
+    <Content Include="Images\fb16.jpg" />
+    <Content Include="Images\magnify.PNG" />
+    <Content Include="Images\renren.ico" />
+    <Content Include="Images\weibo.ico" />
+    <Content Include="Scripts\Base64.js" />
+    <Content Include="Scripts\Base64.min.js">
+      <DependentUpon>Base64.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Calendar.js" />
+    <Content Include="Scripts\Calendar.min.js">
+      <DependentUpon>Calendar.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Default.js" />
+    <Content Include="Scripts\Default.min.js">
+      <DependentUpon>Default.js</DependentUpon>
+    </Content>
     <Content Include="Styles\Default.css" />
-    <Content Include="Web.config" />
+    <Content Include="Styles\Default.min.css">
+      <DependentUpon>Default.css</DependentUpon>
+    </Content>
+    <Content Include="Styles\images\ui-bg_diagonals-thick_75_f3d8d8_40x40.png" />
+    <Content Include="Styles\images\ui-bg_dots-small_65_a6a6a6_2x2.png" />
+    <Content Include="Styles\images\ui-bg_flat_0_333333_40x100.png" />
+    <Content Include="Styles\images\ui-bg_flat_65_ffffff_40x100.png" />
+    <Content Include="Styles\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Styles\images\ui-bg_glass_55_fbf8ee_1x400.png" />
+    <Content Include="Styles\images\ui-bg_highlight-hard_100_eeeeee_1x100.png" />
+    <Content Include="Styles\images\ui-bg_highlight-hard_100_f6f6f6_1x100.png" />
+    <Content Include="Styles\images\ui-bg_highlight-soft_15_ff9900_1x100.png" />
+    <Content Include="Styles\images\ui-icons_004276_256x240.png" />
+    <Content Include="Styles\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Styles\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Images\accent.png" />
-    <Content Include="Images\bullet.png" />
-    <Content Include="Images\heroAccent.png" />
-    <Content Include="Images\orderedList0.png" />
-    <Content Include="Images\orderedList1.png" />
-    <Content Include="Images\orderedList2.png" />
-    <Content Include="Images\orderedList3.png" />
-    <Content Include="Images\orderedList4.png" />
-    <Content Include="Images\orderedList5.png" />
-    <Content Include="Images\orderedList6.png" />
-    <Content Include="Images\orderedList7.png" />
-    <Content Include="Images\orderedList8.png" />
-    <Content Include="Images\orderedList9.png" />
-    <Content Include="Views\Web.config" />
-    <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
+    <Content Include="Handlers\ICalHandler.ashx" />
+    <Content Include="Handlers\UpdateHandler.ashx" />
+    <None Include="Properties\PublishProfiles\griddy - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\griddy - Web Deploy.pubxml">
+      <SubType>Designer</SubType>
+    </None>
+    <Content Include="Scripts\Default.min.js.map">
+      <DependentUpon>Default.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Calendar.min.js.map">
+      <DependentUpon>Calendar.js</DependentUpon>
+    </Content>
+    <Content Include="Scripts\Base64.min.js.map">
+      <DependentUpon>Base64.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -174,6 +207,12 @@
       <Project>{f48239cc-662d-4f2a-8545-b154b02ada53}</Project>
       <Name>Scheduler.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\uoft_courses.bin" />
+    <Content Include="Data\uoft_courses.idx" />
+    <Content Include="Data\uoft_progs.bin" />
+    <Content Include="Data\uoft_progs.idx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -49,6 +52,7 @@
     <Compile Include="DataModels\Course.cs" />
     <Compile Include="DataModels\CourseSection.cs" />
     <Compile Include="DataModels\CourseSectionTime.cs" />
+    <Compile Include="DataModels\Extensions\UT\UTCourseEvaluation.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourseSectionTime.cs" />
     <Compile Include="DataModels\Extensions\UT\UTEngCourseSection.cs" />
     <Compile Include="DataModels\Extensions\UT\UTEngCourseSectionTime.cs" />
@@ -56,8 +60,28 @@
     <Compile Include="DataModels\IName.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourse.cs" />
     <Compile Include="DataModels\Extensions\UT\UTCourseSection.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMCourseFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMProgramDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMProgramFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMProgramUrlFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTM\UTMTimeParser.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCCourseDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCCourseFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCDepartmentFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArsciProgramDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciAntiCalendarCourseEvaluationFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciAntiCalendarDepartmentFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciFirstYearSeminarDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciFirstYearSeminarInfoFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciProgramFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciSeminarFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTCourseAbbrComparer.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTEngHssCsFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTEngProgramFetcher.cs" />
     <Compile Include="Fetchers\IItemFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseDetailFetcher.cs" />
@@ -66,6 +90,7 @@
     <Compile Include="Fetchers\WebpageItemFetcher.cs" />
     <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
     <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
+    <Compile Include="Indexing\Extensions\UT\UTEngHssCsChecker.cs" />
     <Compile Include="Indexing\IdSigner.cs" />
     <Compile Include="Indexing\Expressions\IExpression.cs" />
     <Compile Include="Indexing\IIdProvider.cs" />
@@ -87,13 +112,16 @@
     <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseInfoFetcher.cs" />
     <Compile Include="DataModels\Extensions\UT\UTDepartment.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciDepartmentFetcher.cs" />
+    <Compile Include="Searching\CourseSearchResult.cs" />
     <Compile Include="Searching\DefaultIIndexablePresenter.cs" />
     <Compile Include="Searching\IIndexablePresenter.cs" />
     <Compile Include="Searching\MatchRanker.cs" />
     <Compile Include="Searching\SearchEngine.cs" />
     <Compile Include="Searching\SearchResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
