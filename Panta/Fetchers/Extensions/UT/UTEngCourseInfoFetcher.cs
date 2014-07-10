@@ -72,12 +72,12 @@ namespace Panta.Fetchers.Extensions.UT
 
                     string section = properties[1].Replace(" ", "");
                     string meet = properties[2].Trim(' ');
-                    string day = properties[3].Trim(' ');
-                    string start = properties[4].Trim(' ').Replace("&nbsp", "");
-                    string finish = properties[5].Trim(' ').Replace("&nbsp", "");
-                    string location = properties[6].Trim(' ').Replace("&nbsp", "");
-                    string notes = properties[7].Trim(' ').Replace("&nbsp", "");
-                    string instructor = properties[8].Trim(' ').Replace("&nbsp", "");
+                    string day = properties[4].Trim(' ');
+                    string start = properties[5].Trim(' ').Replace("&nbsp", "");
+                    string finish = properties[6].Trim(' ').Replace("&nbsp", "");
+                    string location = properties[7].Trim(' ').Replace("&nbsp", "");
+                    string notes = properties[8].Trim(' ').Replace("&nbsp", "");
+                    string instructor = properties[9].Trim(' ').Replace("&nbsp", "");
 
                     string time = String.Join(" ", day, start, finish);
 

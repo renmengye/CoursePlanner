@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAaCaQL2GPOkSRgAkNLOkJAQAAAAACAAAAAAAQZgAAAAEAACAAAADUKQYfYZhmSPiI9VxOytY3+5RIEuauVXxSW70fO00rSQAAAAAOgAAAAAIAACAAAAC0koYkaiev1AgKxXrGaBDq2Zu1NW2+VXcTdzvpj+UssoAAAAD0AKcEcxgcybT8aedEdNojiOBBaFlMWcxLtLggZ0ioiZs7Ntc7G/CDYswUnnxMhSa6pQ9zjhMUd94OZKqiJeV0tGtXF6Oe9EWjf4RAWZy7ZyN0tGrCkLcnrC/TFFDCgZum+0Zwyp9ICy834qYjDi+DB14c+PGzZY2b4MtdwWWwtEAAAADiAWVkljzn3xQpEs7VPvJ4LClCWe5vLqqZ33G1BWA89IdckXNA9LNnwxC9BVq0G+ohwym2aXtV7AN6ZM3+By65</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/antlr.runtime.dll">
+      <publishTime>11/23/2012 20:06:50</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>09/11/2012 20:42:54</publishTime>
+    </File>
+    <File Include="bin/DDay.Collections.dll">
+      <publishTime>11/23/2012 20:06:50</publishTime>
+    </File>
+    <File Include="bin/DDay.iCal.dll">
+      <publishTime>11/23/2012 20:06:51</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>09/11/2012 20:42:49</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>09/11/2012 20:36:18</publishTime>
+    </File>
+    <File Include="bin/Panta.dll">
+      <publishTime>11/24/2012 22:27:48</publishTime>
+    </File>
+    <File Include="bin/Scheduler.Common.dll">
+      <publishTime>11/24/2012 22:27:48</publishTime>
+    </File>
+    <File Include="bin/Scheduler.Web.dll">
+      <publishTime>11/24/2012 22:27:48</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.dll">
+      <publishTime>07/11/2012 00:52:12</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>09/11/2012 20:36:19</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.WebRequest.dll">
+      <publishTime>07/11/2012 00:52:12</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>09/11/2012 20:36:21</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>09/11/2012 20:36:21</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>09/11/2012 20:42:53</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>09/11/2012 20:42:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Providers.dll">
+      <publishTime>09/11/2012 20:42:53</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>09/11/2012 20:42:52</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>09/11/2012 20:42:54</publishTime>
+    </File>
+    <File Include="Data/uoft_progs.bin">
+      <publishTime>11/24/2012 13:31:36</publishTime>
+    </File>
+    <File Include="Data/uoft_progs.idx">
+      <publishTime>11/24/2012 13:32:20</publishTime>
+    </File>
+    <File Include="Default.html">
+      <publishTime>11/24/2012 22:16:34</publishTime>
+    </File>
+    <File Include="favicon.ico">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Handlers/ICalHandler.ashx">
+      <publishTime>11/23/2012 20:05:54</publishTime>
+    </File>
+    <File Include="Images/accent.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/bullet.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/calendar.png">
+      <publishTime>11/24/2012 14:34:21</publishTime>
+    </File>
+    <File Include="Images/calendar.svg">
+      <publishTime>11/24/2012 14:06:41</publishTime>
+    </File>
+    <File Include="Images/close.png">
+      <publishTime>09/15/2012 23:01:47</publishTime>
+    </File>
+    <File Include="Images/heroAccent.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList0.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList1.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList2.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList3.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList4.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList5.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList6.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList7.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList8.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Images/orderedList9.png">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>11/18/2012 21:39:39</publishTime>
+    </File>
+    <File Include="Scripts/Calendar.js">
+      <publishTime>11/24/2012 14:29:35</publishTime>
+    </File>
+    <File Include="Scripts/Default.js">
+      <publishTime>11/24/2012 14:35:44</publishTime>
+    </File>
+    <File Include="Styles/Default.css">
+      <publishTime>11/24/2012 22:22:36</publishTime>
+    </File>
+    <File Include="Views/Home/Index.cshtml">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>09/11/2012 20:42:48</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>11/24/2012 22:27:54</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

@@ -305,16 +305,16 @@ Calendar.prototype.getChildItem = function (id) {
 function CalendarCollection(placeholder, list) {
     this.placeholder = placeholder;
     this.list = list;
-    this.splitted = true;
+    this.split = true;
     $(placeholder).append("<div id='calendarControlBar' class='widgetTitle2'>" +
         "<div id='downloadIcs' class='calendarControls hasTooltip' data-tooltip='Export iCal'>Export to iCal</div>" +
         "<div id='shareLink' class='calendarControls hasTooltip' data-tooltip='Share Calendar'>Share Timetable</div>" +
-        "<div id='splittedView' class='calendarControls selected'>Splitted</div>" +
+        "<div id='splitView' class='calendarControls selected'>Split</div>" +
         "<div id='winterView' class='calendarControls'>Winter</div>" +
         "<div id='fallView' class='calendarControls'>Fall</div>"
         + "</div>");
-    $(placeholder).append("<div id='fallCalendar' class='singleCalendar splitted'></div>");
-    $(placeholder).append("<div id='winterCalendar' class='singleCalendar splitted'></div>");
+    $(placeholder).append("<div id='fallCalendar' class='singleCalendar split'></div>");
+    $(placeholder).append("<div id='winterCalendar' class='singleCalendar split'></div>");
     this.fallCalendar = new Calendar($("#fallCalendar")[0], this, "Fall");
     this.winterCalendar = new Calendar($("#winterCalendar")[0], this, "Winter");
 
@@ -324,7 +324,7 @@ function CalendarCollection(placeholder, list) {
         $(".calendarControls.selected").removeClass("selected");
         $("#fallView").addClass("selected");
         $(this.fallCalendar.placeholder).show("slide", 200, function () {
-            this.splitted = false;
+            this.split = false;
             this.resize();
         }.bind(this));
     }.bind(this));
@@ -335,19 +335,19 @@ function CalendarCollection(placeholder, list) {
         $(".calendarControls.selected").removeClass("selected");
         $("#winterView").addClass("selected");
         $(this.winterCalendar.placeholder).show("slide", 200, function () {
-            this.splitted = false;
+            this.split = false;
             this.resize();
         }.bind(this));
     }.bind(this));
 
-    $("#splittedView").click(function () {
+    $("#splitView").click(function () {
         $(this.fallCalendar.placeholder).hide();
         $(this.winterCalendar.placeholder).hide();
         $(".calendarControls.selected").removeClass("selected");
-        $("#splittedView").addClass("selected");
+        $("#splitView").addClass("selected");
         $(this.winterCalendar.placeholder).show("slide", 200);
         $(this.fallCalendar.placeholder).show("slide", 200, function () {
-            this.splitted = true;
+            this.split = true;
             this.resize();
         }.bind(this));
     }.bind(this));
@@ -382,7 +382,7 @@ function CalendarCollection(placeholder, list) {
 
 CalendarCollection.prototype.resize = function () {
     $(".singleCalendar").height($(this.placeholder).height() - 40);
-    if (!this.splitted) {
+    if (!this.split) {
         $(".singleCalendar").width($(this.placeholder).width() - 10);
     } else {
         $(".singleCalendar").width($(this.placeholder).width() / 2 - 10);
