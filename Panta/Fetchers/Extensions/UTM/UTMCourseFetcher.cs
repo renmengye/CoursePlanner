@@ -12,8 +12,8 @@ namespace Panta.Fetchers.Extensions.UTM
     {
         public UTMCourseFetcher() : base(Home) { }
         private static Regex DepartmentRegex, SelectRegex;
-        private const string Home = "https://registrar2.utm.utoronto.ca/student/timetable/index.php";
-        private const string Address = "https://registrar2.utm.utoronto.ca/student/timetable/formatCourses.php?viewall=&yos=0&subjectarea={0}&session={1}&course=&instr_sname=";
+        private const string Home = "https://registrar.utm.utoronto.ca/student/timetable/index.php";
+        private const string Address = "https://registrar.utm.utoronto.ca/student/timetable/formatCourses.php?viewall=&yos=0&subjectarea={0}&session={1}&course=&instr_sname=";
         private const string Session = "20139";
 
         static UTMCourseFetcher()

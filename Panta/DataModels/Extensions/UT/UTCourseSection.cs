@@ -55,7 +55,10 @@ namespace Panta.DataModels.Extensions.UT
             set
             {
                 base.Name = value;
-                this.IsLecture = value[0] == 'L';
+                if (value.Length > 0)
+                {
+                    this.IsLecture = value[0] == 'L';
+                }
             }
         }
 
