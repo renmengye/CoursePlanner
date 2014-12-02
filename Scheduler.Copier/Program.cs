@@ -70,7 +70,7 @@ namespace Scheduler.Copier
             // The example specifies the credential only to 
             // control how actions are logged on the server.
 
-            request.Credentials = new NetworkCredential("griddy\\griddy", "sandyren1992");
+            request.Credentials = new NetworkCredential(args[2], args[3]);
 
             // Store the request in the object that we pass into the 
             // asynchronous operations.

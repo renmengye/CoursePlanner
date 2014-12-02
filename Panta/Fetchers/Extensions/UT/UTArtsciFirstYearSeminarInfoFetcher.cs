@@ -56,6 +56,7 @@ namespace Panta.Fetchers.Extensions.UT
                     line = CircleRegex.Replace(line, String.Empty);
                     string[] properties = line.Split('|');
 
+                    if (line.ToLower().Contains("cancel")) continue;
                     if (properties.Length < 5) continue;
 
                     UTCourse course = new UTCourse()
