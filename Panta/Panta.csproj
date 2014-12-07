@@ -82,12 +82,15 @@
     <Compile Include="Fetchers\Extensions\UT\UTCourseAbbrComparer.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngHssCsFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngProgramFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\WebUrlConstants.cs" />
     <Compile Include="Fetchers\IItemFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseInfoFetcher.cs" />
-    <Compile Include="Fetchers\WebpageItemFetcher.cs" />
+    <Compile Include="Fetchers\WebpageItemFetcher.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Indexing\Correctors\SuffixCorrector.cs" />
     <Compile Include="Indexing\Expressions\LogicAndExpression.cs" />
     <Compile Include="Indexing\Extensions\UT\UTEngHssCsChecker.cs" />

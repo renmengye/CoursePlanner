@@ -9,28 +9,18 @@ namespace Panta.Fetchers.Extensions.UT
 {
     public class UTArtsciSeminarFetcher : IItemFetcher<UTCourse>
     {
-        public static string[] Addresses = { 
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199h1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199y1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/lte199h1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/lte199y1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/pmu199h1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/pmu199y1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/sii199h1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/sii199y1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/tbb199h1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/tbb199y1.html",
-                                              "http://www.artsandscience.utoronto.ca/ofr/1213_199/xbc199y1.html"
-                                          };
+        public static string[] Addresses = WebUrlConstants.ArtsciSeminars;
         public IEnumerable<UTCourse> FetchItems()
         {
             IEnumerable<UTCourse> courseInfo = new UTArtsciFirstYearSeminarInfoFetcher().FetchItems();
             List<UTCourse> courseDetails = new List<UTCourse>();
 
             Parallel.ForEach<string>(Addresses, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(string address)
+            //foreach(var address in Addresses)
             {
                 courseDetails.AddRange(new UTArtsciFirstYearSeminarDetailFetcher(address).FetchItems());
-            });
+            }
+            );
 
             return courseInfo.GroupJoin(courseDetails,
                 (x => x.Abbr + x.Sections[0].Name),

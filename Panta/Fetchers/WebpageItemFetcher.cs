@@ -7,6 +7,31 @@ using System.Text;
 
 namespace Panta.Fetchers
 {
+    class TimeoutClient : WebClient
+    {
+        /// <summary>
+        /// Time in milliseconds
+        /// </summary>
+        public int Timeout { get; set; }
+
+        public TimeoutClient() : this(60000) { }
+
+        public TimeoutClient(int timeout)
+        {
+            this.Timeout = timeout;
+        }
+
+        protected override WebRequest GetWebRequest(Uri address)
+        {
+            var request = base.GetWebRequest(address);
+            if (request != null)
+            {
+                request.Timeout = this.Timeout;
+            }
+            return request;
+        }
+    }
+
     public abstract class WebpageItemFetcher<T> : IItemFetcher<T>
     {
         public string Url { get; private set; }
@@ -20,18 +45,31 @@ namespace Panta.Fetchers
         public WebpageItemFetcher(string url)
         {
             this.Url = url;
-            using (WebClient client = new WebClient())
+            bool retry = false;
+            int maxRetryCount = 50;
+            int retryCount = 0;
+            do
             {
-                try
+                using (var client = new TimeoutClient())
                 {
-                    this.Content = client.DownloadString(this.Url);
+                    try
+                    {
+                        retryCount++;
+                        retry = false;
+                        this.Content = client.DownloadString(this.Url);
+                    }
+                    catch (WebException ex)
+                    {
+                        ex.Source = "Unable to fetch: " + this.Url;
+                        Trace.WriteLine(ex.ToString());
+                        Console.WriteLine(ex.ToString());
+                        if (retryCount < maxRetryCount)
+                        {
+                            retry = true;
+                        }
+                    }
                 }
-                catch (WebException ex)
-                {
-                    ex.Source = "Unable to fetch: " + this.Url;
-                    Trace.WriteLine(ex.ToString());
-                }
-            }
+            } while (retry);
         }
 
         /// <summary>
@@ -54,7 +92,7 @@ namespace Panta.Fetchers
                     ex.Source = "Unable to fetch: " + this.Url;
                     Trace.WriteLine(ex.ToString());
                 }
-            }   
+            }
         }
 
         public abstract IEnumerable<T> FetchItems();

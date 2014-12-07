@@ -93,7 +93,8 @@ namespace Panta.Fetchers.Extensions.UTM
                 // Assign column number
                 foreach (string column in AngleRegex.Replace(sectionContents[0].Replace("</th>", "|"), String.Empty).Split('|'))
                 {
-                    switch (column)
+                    string columnTrim = column.Trim();
+                    switch (columnTrim)
                     {
                         case ("Section"):
                             {
@@ -135,7 +136,7 @@ namespace Panta.Fetchers.Extensions.UTM
                     UTCourseSection section = new UTCourseSection();
                     string[] meetTimeContent = sectionContent.Replace("</td>", "|").Split('|');
                     if (meetTimeContent.Length < 4) continue;
-                    int meetTimeCount = meetTimeContent[dayColumn].Replace("<br>", "|").Split('|').Length;
+                    int meetTimeCount = meetTimeContent[dayColumn].Replace("<br/>", "|").Split('|').Length;
 
                     // Pre-initialize the meet times
                     CourseSectionTime time = new CourseSectionTime();
@@ -150,17 +151,17 @@ namespace Panta.Fetchers.Extensions.UTM
                         // Section name
                         if (i == nameColumn)
                         {
-                            section.Name = AngleRegex.Replace(meetTimeContent[i], String.Empty);
+                            section.Name = AngleRegex.Replace(meetTimeContent[i], String.Empty).Trim();
                         }
                         // Instructor
                         else if (i == instructorColumn)
                         {
-                            section.Instructor = AngleRegex.Replace(meetTimeContent[i].Replace("<br>", " "), String.Empty);
+                            section.Instructor = AngleRegex.Replace(meetTimeContent[i].Replace("<br/>", " "), String.Empty).Trim();
                         }
                         // Day
                         else if (i == dayColumn)
                         {
-                            string[] days = AngleRegex.Replace(meetTimeContent[i].Replace("<br>", "|"), String.Empty).Split('|');
+                            string[] days = AngleRegex.Replace(meetTimeContent[i].Replace("<br/>", "|"), String.Empty).Split('|');
 
                             for (int j = 0; j < days.Length; j++)
                             {
@@ -173,7 +174,7 @@ namespace Panta.Fetchers.Extensions.UTM
                         else if (i == startColumn)
                         {
                             int meetCount = 0;
-                            foreach (string rawTime in AngleRegex.Replace(meetTimeContent[i].Replace("<br>", "|"), String.Empty).Split('|'))
+                            foreach (string rawTime in AngleRegex.Replace(meetTimeContent[i].Replace("<br/>", "|"), String.Empty).Split('|'))
                             {
                                 byte startTime;
                                 UTCourseSectionTimeSpan.TryParseTimeSpanInt(rawTime, out startTime);
@@ -187,7 +188,7 @@ namespace Panta.Fetchers.Extensions.UTM
                         else if (i == endColumn)
                         {
                             int meetCount = 0;
-                            foreach (string rawTime in AngleRegex.Replace(meetTimeContent[i].Replace("<br>", "|"), String.Empty).Split('|'))
+                            foreach (string rawTime in AngleRegex.Replace(meetTimeContent[i].Replace("<br/>", "|"), String.Empty).Split('|'))
                             {
                                 byte endTime;
                                 UTCourseSectionTimeSpan.TryParseTimeSpanInt(rawTime, out endTime);
@@ -200,7 +201,7 @@ namespace Panta.Fetchers.Extensions.UTM
                         // Location
                         else if (i == locationColumn)
                         {
-                            section.Location = AngleRegex.Replace(meetTimeContent[i].Replace("<br>", "|"), String.Empty).Replace(" ", String.Empty).Replace("|", " ");
+                            section.Location = AngleRegex.Replace(meetTimeContent[i].Replace("<br/>", "|"), String.Empty).Replace(" ", String.Empty).Replace("|", " ");
                         }
                     }
                     time.MeetTimes = meets;

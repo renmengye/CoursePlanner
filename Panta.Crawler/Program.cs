@@ -29,7 +29,6 @@ namespace Panta
             IItemFetcher<UTCourse> engCourseFetcher = new UTEngCourseFetcher();
             IItemFetcher<UTCourse> utscCourseFetcher = new UTSCCourseFetcher();
             IItemFetcher<UTCourse> utmCourseFetcher = new UTMCourseFetcher();
-
             UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses",
                 courseSigner,
                 artsciCourseFetcher.FetchItems()
@@ -39,9 +38,8 @@ namespace Panta
                 .Concat<UTCourse>(utmCourseFetcher.FetchItems()));
             UOfTCourses.SaveBin();
 
-
             IItemFetcher<SchoolProgram> artsciProgramFetcher = new UTArtsciProgramFetcher();
-            IItemFetcher<SchoolProgram> engProgramFetcher = new UTEngProgramFetcher("http://www.apsc.utoronto.ca/Calendars/2014-2015/Engineering_Programs.html");
+            IItemFetcher<SchoolProgram> engProgramFetcher = new UTEngProgramFetcher(WebUrlConstants.EngPrograms);
             IItemFetcher<SchoolProgram> utscProgramFetcher = new UTSCProgramFetcher();
             IItemFetcher<SchoolProgram> utmProgramFetcher = new UTMProgramFetcher();
 

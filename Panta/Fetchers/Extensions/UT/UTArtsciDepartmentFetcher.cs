@@ -1,4 +1,5 @@
 ﻿using Panta.DataModels.Extensions.UT;
+using Panta.Fetchers.Extensions.UT;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,10 +11,10 @@ namespace Panta.Fetchers
     [Serializable]
     public class UTArtsciDepartmentFetcher : IItemFetcher<UTDepartment>
     {
-        public string Root = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
-        public string Home = "sponsors.htm";
+        public string Root = WebUrlConstants.ArtsciTimetableRoot;
+        public string Home = WebUrlConstants.ArtsciTimetableHome;
         public string Url { get { return Root + Home; } }
-        public string CourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
+        public string CourseDetailRoot = WebUrlConstants.ArtsciCourseDetailRoot;
 
         public IEnumerable<UTDepartment> FetchItems()
         {

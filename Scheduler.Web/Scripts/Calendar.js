@@ -383,9 +383,9 @@ function CalendarCollection(placeholder, list) {
 CalendarCollection.prototype.resize = function () {
     $(".singleCalendar").height($(this.placeholder).height() - 40);
     if (!this.split) {
-        $(".singleCalendar").width($(this.placeholder).width() - 10);
+        $(".singleCalendar").width($(this.placeholder).width() - 12);
     } else {
-        $(".singleCalendar").width($(this.placeholder).width() / 2 - 10);
+        $(".singleCalendar").width($(this.placeholder).width() / 2 - 11);
     }
     this.fallCalendar.resize();
     this.winterCalendar.resize();

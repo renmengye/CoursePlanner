@@ -1,4 +1,5 @@
 ﻿using Panta.DataModels.Extensions.UT;
+using Panta.Fetchers.Extensions.UT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +13,13 @@ namespace Panta.Fetchers.Extensions.UTM
     {
         public UTMCourseFetcher() : base(Home) { }
         private static Regex DepartmentRegex, SelectRegex;
-        private const string Home = "https://registrar.utm.utoronto.ca/student/timetable/index.php";
-        private const string Address = "https://registrar.utm.utoronto.ca/student/timetable/formatCourses.php?viewall=&yos=0&subjectarea={0}&session={1}&course=&instr_sname=";
-        private const string Session = "20139";
+        private const string Home = WebUrlConstants.UTMHome;
+        private const string Address = WebUrlConstants.UTMFormat;
+        private const string Session = WebUrlConstants.UTMSession;
 
         static UTMCourseFetcher()
         {
-            SelectRegex = new Regex("<select name='subjectarea' >.*?</select>");
+            SelectRegex = new Regex("<select name='subjectarea'.*?</select>");
             DepartmentRegex = new Regex("<option value='(?<index>[0-9]+)'>(?<depName>[^<]*)");
         }
 
@@ -29,8 +30,8 @@ namespace Panta.Fetchers.Extensions.UTM
             this.Content = this.Content.Replace("\n", String.Empty).Replace("\r", String.Empty);
             this.Content = SelectRegex.Match(this.Content).Value;
             MatchCollection departments = DepartmentRegex.Matches(this.Content);
-            Parallel.ForEach<Match>(departments.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match dep)
-            //foreach (Match dep in departments)
+            //Parallel.ForEach<Match>(departments.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match dep)
+            foreach (Match dep in departments)
             {
                 UTMCourseInfoFetcher fetcher = new UTMCourseInfoFetcher(dep.Groups["depName"].Value.Trim(' '), String.Format(Address, dep.Groups["index"].Value, Session));
                 IEnumerable<UTCourse> result = fetcher.FetchItems();
@@ -38,7 +39,8 @@ namespace Panta.Fetchers.Extensions.UTM
                 {
                     results.AddRange(result);
                 }
-            });
+            }
+            //);
             return results;
         }
     }

@@ -26,10 +26,10 @@ namespace Panta.Fetchers.Extensions.UT
 
         public IEnumerable<UTCourse> FetchItems()
         {
-            IItemFetcher<UTCourse> fallCourseFetcher = new UTEngCourseInfoFetcher(@"http://www.apsc.utoronto.ca/evss/fall.html");
-            IItemFetcher<UTCourse> winterCourseFetcher = new UTEngCourseInfoFetcher(@"http://www.apsc.utoronto.ca/evss/winter.html");
+            IItemFetcher<UTCourse> fallCourseFetcher = new UTEngCourseInfoFetcher(WebUrlConstants.EngTimetableFall);
+            IItemFetcher<UTCourse> winterCourseFetcher = new UTEngCourseInfoFetcher(WebUrlConstants.EngTimetableWinter);
             IEnumerable<UTCourse> allCourses = fallCourseFetcher.FetchItems().Concat<UTCourse>(winterCourseFetcher.FetchItems());
-            IEnumerable<UTCourse> coursesDetail = new UTEngCourseDetailFetcher(@"http://www.apsc.utoronto.ca/Calendars/2014-2015/Course_Descriptions.html").FetchItems();
+            IEnumerable<UTCourse> coursesDetail = new UTEngCourseDetailFetcher(WebUrlConstants.EngCalendar).FetchItems();
 
             // Merge course info and course detail
             allCourses = allCourses.GroupJoin(coursesDetail,

@@ -1,4 +1,5 @@
 ﻿using Panta.DataModels;
+using Panta.Fetchers.Extensions.UT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Panta.Fetchers.Extensions.UTSC
         {
             List<SchoolProgram> results = new List<SchoolProgram>();
 
-            IItemFetcher<string> departmentFetcher = new UTSCDepartmentFetcher("http://www.utsc.utoronto.ca/~registrar/scheduling/timetable");
+            IItemFetcher<string> departmentFetcher = new UTSCDepartmentFetcher(WebUrlConstants.UTSCDepartment);
             Parallel.ForEach<string>(departmentFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(string url)
             //foreach (var url in departmentFetcher.FetchItems())
             {
