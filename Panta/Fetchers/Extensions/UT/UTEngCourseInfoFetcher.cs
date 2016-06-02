@@ -40,8 +40,6 @@ namespace Panta.Fetchers.Extensions.UT
 
             MatchCollection matches = DepartmentRegex.Matches(this.Content);
 
-            Console.WriteLine("hi");
-
             Parallel.ForEach<Match>(matches.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match match)
             //foreach (Match match in matches)
             {
@@ -51,6 +49,8 @@ namespace Panta.Fetchers.Extensions.UT
 
                 UTCourse lastCourse = null;
                 CourseSection lastSection = null;
+                string lastSectionName = null;
+                string lastCourseName = null;
                 // Accumulating course meet times
                 string tempTime = "";
                 string tempLocation = "";
@@ -71,18 +71,18 @@ namespace Panta.Fetchers.Extensions.UT
                     string semester = codeMatch.Groups["semester"].ToString();
 
                     string section = properties[1].Replace(" ", "");
-                    string meet = properties[2].Trim(' ');
-                    string day = properties[4].Trim(' ');
-                    string start = properties[5].Trim(' ').Replace("&nbsp", "");
-                    string finish = properties[6].Trim(' ').Replace("&nbsp", "");
-                    string location = properties[7].Trim(' ').Replace("&nbsp", "");
+                    //string meet = properties[2].Trim(' ');
+                    string day = properties[3].Trim(' ');
+                    string start = properties[4].Trim(' ').Replace("&nbsp", "");
+                    string finish = properties[5].Trim(' ').Replace("&nbsp", "");
+                    string location = properties[6].Trim(' ').Replace("&nbsp", "");
+                    string instructor = properties[7].Trim(' ').Replace("&nbsp", "");
                     string notes = properties[8].Trim(' ').Replace("&nbsp", "");
-                    string instructor = properties[9].Trim(' ').Replace("&nbsp", "");
 
                     string time = String.Join(" ", day, start, finish);
 
                     // Cumulating meet to the previous section
-                    if (section.Equals("&nbsp"))
+                    if (lastSectionName != null && lastCourseName != null && section.Equals(lastSectionName) && code.Equals(lastCourseName))
                     {
                         // Avoid duplication
                         if (!tempTime.Contains(time))
@@ -100,6 +100,8 @@ namespace Panta.Fetchers.Extensions.UT
                             Time = time,
                             Location = location
                         };
+                        lastSectionName = section;
+                        lastCourseName = code;
 
                         if (partialResults.Count > 0)
                         {
@@ -152,7 +154,8 @@ namespace Panta.Fetchers.Extensions.UT
                 {
                     results.AddRange(partialResults);
                 }
-            });
+            }
+            );
             return results;
         }
     }

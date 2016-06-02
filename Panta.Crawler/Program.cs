@@ -29,13 +29,14 @@ namespace Panta
             IItemFetcher<UTCourse> engCourseFetcher = new UTEngCourseFetcher();
             IItemFetcher<UTCourse> utscCourseFetcher = new UTSCCourseFetcher();
             IItemFetcher<UTCourse> utmCourseFetcher = new UTMCourseFetcher();
-            UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses",
-                courseSigner,
-                artsciCourseFetcher.FetchItems()
+
+            UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses", courseSigner,
+                engCourseFetcher.FetchItems()
+                .Concat<UTCourse>(artsciCourseFetcher.FetchItems())
                 .Concat<UTCourse>(artsciSeminarFetcher.FetchItems())
-                .Concat<UTCourse>(engCourseFetcher.FetchItems())
                 .Concat<UTCourse>(utscCourseFetcher.FetchItems())
-                .Concat<UTCourse>(utmCourseFetcher.FetchItems()));
+                .Concat<UTCourse>(utmCourseFetcher.FetchItems())
+                );
             UOfTCourses.SaveBin();
 
             IItemFetcher<SchoolProgram> artsciProgramFetcher = new UTArtsciProgramFetcher();

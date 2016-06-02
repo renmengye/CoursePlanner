@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 
 namespace Panta.Fetchers
 {
-    class TimeoutClient : WebClient
+    public class TimeoutClient : WebClient
     {
         /// <summary>
         /// Time in milliseconds
@@ -45,31 +46,50 @@ namespace Panta.Fetchers
         public WebpageItemFetcher(string url)
         {
             this.Url = url;
-            bool retry = false;
-            int maxRetryCount = 50;
-            int retryCount = 0;
-            do
+
+            WebRequest req = HttpWebRequest.Create(url);
+            req.Proxy = null;
+            req.Method = "GET";
+
+            try
             {
-                using (var client = new TimeoutClient())
+                string source;
+                using (StreamReader reader = new StreamReader(req.GetResponse().GetResponseStream()))
                 {
-                    try
-                    {
-                        retryCount++;
-                        retry = false;
-                        this.Content = client.DownloadString(this.Url);
-                    }
-                    catch (WebException ex)
-                    {
-                        ex.Source = "Unable to fetch: " + this.Url;
-                        Trace.WriteLine(ex.ToString());
-                        Console.WriteLine(ex.ToString());
-                        if (retryCount < maxRetryCount)
-                        {
-                            retry = true;
-                        }
-                    }
+                    source = reader.ReadToEnd();
                 }
-            } while (retry);
+                this.Content = source;
+            }
+            catch
+            {
+                Console.WriteLine("Unable to fetch: {0:S}", url);
+            }
+            //bool retry = false;
+            //int maxRetryCount = 50;
+            //int retryCount = 0;
+            //do
+            //{
+            //    using (var client = new TimeoutClient(10000))
+            //    {
+
+            //        client.Proxy = null;
+            //        try
+            //        {
+            //            retryCount++;
+            //            retry = false;
+            //            this.Content = client.DownloadString(this.Url);
+            //        }
+            //        catch (WebException ex)
+            //        {
+            //            Console.WriteLine("Retry: {0:D}, unable to fetch: {1:G}", retryCount, this.Url);
+            //            Console.WriteLine(ex.ToString());
+            //            if (retryCount < maxRetryCount)
+            //            {
+            //                retry = true;
+            //            }
+            //        }
+            //    }
+            //} while (retry);
         }
 
         /// <summary>
@@ -80,19 +100,31 @@ namespace Panta.Fetchers
         public WebpageItemFetcher(string url, string parameters)
         {
             this.Url = url;
-            using (WebClient client = new WebClient())
+            bool retry = false;
+            int maxRetryCount = 50;
+            int retryCount = 0;
+            do
             {
-                client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                try
+                using (var client = new TimeoutClient(10000))
                 {
-                    this.Content = client.UploadString(this.Url, parameters);
+                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    try
+                    {
+                        retryCount++;
+                        retry = false;
+                        this.Content = client.UploadString(this.Url, parameters);
+                    }
+                    catch (WebException ex)
+                    {
+                        Console.WriteLine("Retry: {0:D}, unable to fetch: {1:G}", retryCount, this.Url);
+                        Console.WriteLine(ex.ToString());
+                        if (retryCount < maxRetryCount)
+                        {
+                            retry = true;
+                        }
+                    }
                 }
-                catch (WebException ex)
-                {
-                    ex.Source = "Unable to fetch: " + this.Url;
-                    Trace.WriteLine(ex.ToString());
-                }
-            }
+            } while (retry);
         }
 
         public abstract IEnumerable<T> FetchItems();

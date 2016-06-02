@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Panta.Indexer
@@ -21,25 +22,28 @@ namespace Panta.Indexer
             string cpath = args.Length > 0 ? args[0] : UTCoursesSavePath;
             string ppath = args.Length > 1 ? args[1] : UTProgramsSavePath;
 
-            if (File.Exists(cpath))
+            if (File.Exists(cpath) && File.Exists(ppath))
             {
                 school = DefaultIIndexableCollection<Course>.ReadBin(cpath);
-                Index<Course>(school);
+                pschool = DefaultIIndexableCollection<SchoolProgram>.ReadBin(ppath);
+                Task indexTask = Task.Run(() =>
+                {
+                    Index<Course>(school);
+                    Index<SchoolProgram>(pschool);
+                });
+                while (indexTask.Status == TaskStatus.Running)
+                {
+                    Console.WriteLine("Running...");
+                    Thread.Sleep(1000);
+                }
+                indexTask.Wait();
             }
             else
             {
                 throw new FileNotFoundException("Data file not found");
             }
 
-            if (File.Exists(ppath))
-            {
-                pschool = DefaultIIndexableCollection<SchoolProgram>.ReadBin(ppath);
-                Index<SchoolProgram>(pschool);
-            }
-            else
-            {
-                throw new FileNotFoundException("Data file not found");
-            }
+            Console.WriteLine("Finished indexing");
         }
 
         public static void Index<T>(DefaultIIndexableCollection<T> school) where T : IIndexable

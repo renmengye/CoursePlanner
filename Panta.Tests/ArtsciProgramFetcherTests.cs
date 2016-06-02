@@ -36,5 +36,18 @@ namespace Panta.Tests
     //        //new UTArtsciCourseFetcher().FetchItems();
     //        new UTEngCourseFetcher().FetchItems();
     //    }
+    [TestClass]
+      public class MyTestClass
+      {
+          [TestMethod]
+          public void Sta220()
+          {
+              var f = new UTArtsciCourseInfoFetcher("http://www.artsandscience.utoronto.ca/ofr/timetable/winter/stat.html");
+              f.FetchItems();
+              Assert.IsTrue(true);
+          }
+          
+      }
+
     //}
 }

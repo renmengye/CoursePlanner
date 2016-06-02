@@ -105,20 +105,5 @@ namespace Panta.DataModels.Extensions.UT
                 this.Categories = String.Join(",", this.Categories, category);
             }
         }
-
-        public override string ToString()
-        {
-            StringBuilder builder = new StringBuilder(base.ToString());
-            builder.AppendLine("Semester: " + this.Semester);
-            builder.AppendLine("Prerequisites: " + this.Prerequisites);
-            builder.AppendLine("Corequisites: " + this.Corequisites);
-            builder.AppendLine("Exclusions: " + this.Exclusions);
-            builder.AppendLine("Breath: " + this.BreadthRequirement);
-            builder.AppendLine("Distribution: " + this.DistributionRequirement);
-
-            return builder.ToString();
-        }
-
-
     }
 }

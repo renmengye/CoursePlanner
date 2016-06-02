@@ -37,6 +37,8 @@ namespace Panta.Fetchers.Extensions.UT
             List<UTCourse> coursesDetail = new List<UTCourse>();
             List<UTDepartment> deps = new List<UTDepartment>(depFetcher.FetchItems());
 
+            UTEngHssCsChecker checker = new UTEngHssCsChecker();
+
             // Parallel threads for fetching each department
             Parallel.ForEach<UTDepartment>(depFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTDepartment dep)
             //foreach (UTDepartment dep in depFetcher.FetchItems())
@@ -48,7 +50,6 @@ namespace Panta.Fetchers.Extensions.UT
                 IEnumerable<UTCourse> tempCourses = courseInfoFetcher.FetchItems();
 
                 // Add hss/cs/department info
-                UTEngHssCsChecker checker = new UTEngHssCsChecker();
                 foreach (UTCourse course in tempCourses)
                 {
                     // Add department info
@@ -84,6 +85,26 @@ namespace Panta.Fetchers.Extensions.UT
                 if (!CoursesCollection.ContainsKey(course.Abbr))
                 {
                     CoursesCollection.Add(course.Abbr, course);
+                }
+                else
+                {
+                    UTCourse existingCourse = CoursesCollection[course.Abbr];
+                    foreach (CourseSection section in course.Sections)
+                    {
+                        bool found = false;
+                        foreach (CourseSection section2 in existingCourse.Sections)
+                        {
+                            if (section.Name == section2.Name)
+                            {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        {
+                            existingCourse.Sections.Add(section);
+                        }
+                    }
                 }
             }
 

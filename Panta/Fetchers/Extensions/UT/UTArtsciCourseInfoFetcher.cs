@@ -99,11 +99,14 @@ namespace Panta.Fetchers.Extensions.UT
                                     if (results.Last<UTCourse>().Sections.Count > 0)
                                     {
                                         location = results.Last<UTCourse>().Sections.Last<CourseSection>().Location;
-                                        location = location.Split(' ')[0];
-                                        matchedLocation = location;
-                                        for (int i = 1; i < ptime.MeetTimes.Count(); i++)
+                                        if (location != null)
                                         {
-                                            matchedLocation = String.Join(" ", matchedLocation, location);
+                                            location = location.Split(' ')[0];
+                                            matchedLocation = location;
+                                            for (int i = 1; i < ptime.MeetTimes.Count(); i++)
+                                            {
+                                                matchedLocation = String.Join(" ", matchedLocation, location);
+                                            }
                                         }
                                     }
                                 }

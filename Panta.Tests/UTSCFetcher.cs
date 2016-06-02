@@ -2,17 +2,19 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Panta.Fetchers.Extensions.UTSC;
 using System.IO;
+using Panta.Fetchers.Extensions.UT;
 
 namespace Panta.Tests
 {
     [TestClass]
     public class UTSCFetcher
     {
-        //[TestMethod]
-        //public void PostMethod()
-        //{
-        //    new UTSCCourseInfoFetcher("http://www.utsc.utoronto.ca/~registrar/timetable_src/export.php?&submit&course&sess=year").FetchItems();
-        //}
+        [TestMethod]
+        public void PostMethod()
+        {
+            new UTSCCourseInfoHtmlFetcher(WebUrlConstants.UTSCTimetable).FetchItems();
+            Assert.IsTrue(true);
+        }
 
         //[TestMethod]
         //public void Department()

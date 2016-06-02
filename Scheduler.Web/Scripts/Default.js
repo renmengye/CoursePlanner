@@ -657,10 +657,12 @@ function getSectionObject(course, i, j, ID) {
     item.Time = course.Sections[i].ParsedTime.StringFormat;
     item.Location = course.Sections[i].Location;
 
-    if (meetTimes[j]) {
-        item.Day = meetTimes[j].Day;
-        item.StartTime = meetTimes[j].Start;
-        item.EndTime = meetTimes[j].End;
+    if (meetTimes) {
+        if (meetTimes[j]) {
+            item.Day = meetTimes[j].Day;
+            item.StartTime = meetTimes[j].Start;
+            item.EndTime = meetTimes[j].End;
+        }
     }
 
     item.Order = j;

@@ -52,5 +52,10 @@ namespace Panta.DataModels
             }
             return results;
         }
+
+        public override string ToString()
+        {
+            return String.Join(" ", this.Name, this.Time, this.Location);
+        }
     }
 }

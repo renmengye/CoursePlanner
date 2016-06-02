@@ -18,6 +18,7 @@ namespace Panta.DataModels
         public string StringFormat
         {
             get { return this.ToString(); }
+            set { }
         }
 
         [DataMember]
