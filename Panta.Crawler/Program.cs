@@ -31,9 +31,11 @@ namespace Panta
             IItemFetcher<UTCourse> utmCourseFetcher = new UTMCourseFetcher();
 
             UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses", courseSigner,
-                engCourseFetcher.FetchItems()
-                .Concat<UTCourse>(artsciCourseFetcher.FetchItems())
-                .Concat<UTCourse>(artsciSeminarFetcher.FetchItems())
+                //engCourseFetcher.FetchItems()
+                artsciCourseFetcher.FetchItems()
+                //utscCourseFetcher.FetchItems()
+                //.Concat<UTCourse>(artsciCourseFetcher.FetchItems())
+                //.Concat<UTCourse>(artsciSeminarFetcher.FetchItems())
                 .Concat<UTCourse>(utscCourseFetcher.FetchItems())
                 .Concat<UTCourse>(utmCourseFetcher.FetchItems())
                 );

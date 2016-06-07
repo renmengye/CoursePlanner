@@ -45,9 +45,9 @@
     <Optimize>true</Optimize>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -86,9 +86,10 @@
     <Compile Include="Fetchers\Extensions\UTSC\UTSCDepartmentFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramFetcher.cs" />
-    <Compile Include="Fetchers\Extensions\UT\UTArsciProgramDetailFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciProgramDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciAntiCalendarCourseEvaluationFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciAntiCalendarDepartmentFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseInfoFetcherNew.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciFirstYearSeminarDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciFirstYearSeminarInfoFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciProgramFetcher.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngCourseInfoFetcher.cs" />
+    <Compile Include="Fetchers\TextFileItemFetcher.cs" />
     <Compile Include="Fetchers\WebpageItemFetcher.cs">
       <SubType>Component</SubType>
     </Compile>

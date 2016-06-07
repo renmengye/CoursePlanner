@@ -12,10 +12,11 @@ namespace Panta.Fetchers.Extensions.UTSC
     {
         public IEnumerable<UTCourse> FetchItems()
         {
-            IEnumerable<UTCourse> courseInfos = new UTSCCourseInfoHtmlFetcher(WebUrlConstants.UTSCTimetable).FetchItems();
+            string sess = "summer";
+            IEnumerable<UTCourse> courseInfos = new UTSCCourseInfoHtmlFetcher(WebUrlConstants.UTSCTimetable, sess).FetchItems();
             List<UTCourse> courseDetails = new List<UTCourse>();
 
-            IItemFetcher<string> departmentFetcher = new UTSCDepartmentFetcher(WebUrlConstants.UTSCDepartment);
+            IItemFetcher<string> departmentFetcher = new UTSCDepartmentFetcher(WebUrlConstants.UTSCDepartment, sess);
             Parallel.ForEach<string>(departmentFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount },delegate(string url)
             //foreach (var url in departmentFetcher.FetchItems())
             {

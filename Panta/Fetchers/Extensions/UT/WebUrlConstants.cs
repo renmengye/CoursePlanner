@@ -16,6 +16,7 @@ namespace Panta.Fetchers.Extensions.UT
         public const string ArtsciTimetableRoot = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
         public const string ArtsciTimetableHome = "index.html";
         public const string ArtsciCourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
+        public const string ArtsciTimetableNewCsv = "artsci_course_info.json";
         public static string[] ArtsciSeminars =  { 
                                               "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199h1.html",
                                               "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199y1.html",
@@ -32,7 +33,7 @@ namespace Panta.Fetchers.Extensions.UT
 
         public const string UTSCTimetable = "https://www.utsc.utoronto.ca/~registrar/scheduling/timetable";
         // public const string UTSCTimetable = "http://www.utsc.utoronto.ca/~registrar/timetable_src/export.php?&submit&course&sess=year";
-        public const string UTSCDepartment = "http://www.utsc.utoronto.ca/~registrar/scheduling/timetable";
+        public const string UTSCDepartment = "http://www.utsc.utoronto.ca/~registrar/calendars/calendar/Programs.html";
 
         public const string UTMHome = "https://registrar.utm.utoronto.ca/student/timetable/index.php";
         public const string UTMFormat = "https://registrar.utm.utoronto.ca/student/timetable/formatCourses2.php?yos=0&subjectarea={0}&session={1}&course=&instr_sname=";

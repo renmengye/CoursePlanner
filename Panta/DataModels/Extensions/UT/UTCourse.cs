@@ -33,8 +33,7 @@ namespace Panta.DataModels.Extensions.UT
                         SemesterDetail = "Winter";
                         break;
                     default:
-                        SemesterDetail = "Year";
-                        break;
+                        throw new ArgumentException(string.Format("Unknown semester: {}", value));
                 }
             }
         }

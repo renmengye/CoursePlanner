@@ -72,8 +72,7 @@ namespace Panta.Fetchers.Extensions.UTSC
                 course.Department = SpaceRegex.Replace(HttpUtility.HtmlDecode(description), " ").Trim(' ');
                 course.Department = UrlRegex.Match(this.Url).Groups["name"].Value.Replace("_", " ");
                 results.Add(course);
-
-                Console.WriteLine("UTSC Course: " + course.Abbr);
+                //Console.WriteLine("UTSC Course: " + course.Abbr);
             }
 
             return results;

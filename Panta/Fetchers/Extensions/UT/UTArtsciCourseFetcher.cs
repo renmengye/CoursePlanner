@@ -33,42 +33,47 @@ namespace Panta.Fetchers.Extensions.UT
         {
             IItemFetcher<UTDepartment> depFetcher = new UTArtsciDepartmentFetcher();
 
-            List<UTCourse> courses = new List<UTCourse>();
             List<UTCourse> coursesDetail = new List<UTCourse>();
             List<UTDepartment> deps = new List<UTDepartment>(depFetcher.FetchItems());
-
             UTEngHssCsChecker checker = new UTEngHssCsChecker();
+            Dictionary<string, UTDepartment> depDict = new Dictionary<string, UTDepartment>();
 
             // Parallel threads for fetching each department
             Parallel.ForEach<UTDepartment>(depFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTDepartment dep)
             //foreach (UTDepartment dep in depFetcher.FetchItems())
             {
-                IItemFetcher<UTCourse> courseInfoFetcher = new UTArtsciCourseInfoFetcher(dep.Url);
                 IItemFetcher<UTCourse> courseDetailFetcher = new UTArtsciCourseDetailFetcher(dep.DetailUrl);
-
-                // Going to merge the info fetched from courseDetail and courseInfo
-                IEnumerable<UTCourse> tempCourses = courseInfoFetcher.FetchItems();
-
-                // Add hss/cs/department info
-                foreach (UTCourse course in tempCourses)
-                {
-                    // Add department info
-                    course.Department = dep.Name;
-                    course.Faculty = "Artsci";
-
-                    // Check cs/hss requirement for engineering students
-                    if (checker.CheckHss(course.Code + course.SemesterPrefix))
-                    {
-                        course.AddCategory("hss");
-                    }
-                    if (checker.CheckArtsciCs(course.Code + course.SemesterPrefix))
-                    {
-                        course.AddCategory("cs");
-                    }
-                }
-
-                courses.AddRange(tempCourses);
                 coursesDetail.AddRange(courseDetailFetcher.FetchItems());
+                if (!depDict.ContainsKey(dep.Abbr))
+                {
+                    depDict.Add(dep.Abbr, dep);
+                }
+            });
+            //}
+            string csvUrl = WebUrlConstants.ArtsciTimetableNewCsv;
+            IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew(csvUrl);
+            IEnumerable<UTCourse> courses = courseInfoFetcherNew.FetchItems();
+
+            // Add hss/cs/department info
+            //foreach (UTCourse course in courses)
+            Parallel.ForEach<UTCourse>(courses, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTCourse course)
+            {
+                // Add department info
+                if (depDict.ContainsKey(course.Code.Substring(0, 3)))
+                {
+                    course.Department = depDict[course.Code.Substring(0, 3)].Name;
+                }
+                course.Faculty = "Artsci";
+
+                // Check cs/hss requirement for engineering students
+                if (checker.CheckHss(course.Code + course.SemesterPrefix))
+                {
+                    course.AddCategory("hss");
+                }
+                if (checker.CheckArtsciCs(course.Code + course.SemesterPrefix))
+                {
+                    course.AddCategory("cs");
+                }
             });
             //}
 

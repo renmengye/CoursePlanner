@@ -23,11 +23,11 @@ namespace Panta.Fetchers.Extensions.UTSC
             SectionRegex = new Regex("(LEC|TUT)[0-9]+", RegexOptions.Compiled);
         }
 
-        public UTSCCourseInfoHtmlFetcher(string url)
+        public UTSCCourseInfoHtmlFetcher(string url, string sess="year")
         {
             var request = (HttpWebRequest)WebRequest.Create(url);
 
-            var postData = "sess=year";
+            var postData = "sess=" + sess;
             postData += "&course=DISPLAY_ALL";
             postData += "&submit=Display by Discipline";
             postData += "&course2=";
@@ -73,7 +73,7 @@ namespace Panta.Fetchers.Extensions.UTSC
                         Campus = "UTSC"
                     };
                     results.Add(course);
-                    Console.Write("{0}Course: {1} ", Environment.NewLine, course.Abbr);
+                    Console.Write("{0}UTSC Course: {1} ", Environment.NewLine, course.Abbr);
                 }
                 else if (secMatch.Success)
                 {
