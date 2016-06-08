@@ -17,7 +17,7 @@ namespace Scheduler.Web.Handlers
         {
             context.Response.ContentType = "text/plain";
             FileInfo dataInfo = new FileInfo(context.Request.PhysicalApplicationPath + "Data\\uoft_courses.bin");
-            context.Response.Write("data updated on " + dataInfo.LastWriteTime.ToShortDateString());
+            context.Response.Write("Data updated on " + dataInfo.LastWriteTime.ToShortDateString());
         }
 
         public bool IsReusable
