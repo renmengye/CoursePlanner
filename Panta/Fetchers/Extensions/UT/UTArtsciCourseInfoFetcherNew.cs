@@ -19,10 +19,10 @@ namespace Panta.Fetchers.Extensions.UT
             dynamic allCourseData = JsonConvert.DeserializeObject(this.Content);
             List<UTCourse> allCourses = new List<UTCourse>();
 
-            //foreach (dynamic category in allCourseData.categorydata)
-            Parallel.ForEach<dynamic>((IEnumerable<dynamic>)allCourseData.categorydata,
-                new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, 
-                delegate(dynamic category)
+            foreach (dynamic category in allCourseData.categorydata)
+            //Parallel.ForEach<dynamic>((IEnumerable<dynamic>)allCourseData.categorydata,
+            //    new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, 
+            //    delegate(dynamic category)
             {
                 foreach (dynamic course in category.course)
                 {
@@ -61,8 +61,8 @@ namespace Panta.Fetchers.Extensions.UT
                                     string timeTo = time.time_to;
                                     CourseSectionTimeSpan timespan;
                                     timespan.Day = ((DayOfWeek)Enum.Parse(typeof(DayOfWeek), day));
-                                    timespan.Start = (byte)(Convert.ToInt32(timeFrom.Substring(0, 2)) * 4 + Convert.ToInt32(timeFrom.Substring(3, 2)));
-                                    timespan.End = (byte)(Convert.ToInt32(timeTo.Substring(0, 2)) * 4 + Convert.ToInt32(timeTo.Substring(3, 2)));
+                                    timespan.Start = (byte)(Convert.ToInt32(timeFrom.Substring(0, 2)) * 4 + Convert.ToInt32(timeFrom.Substring(3, 2)) / 15);
+                                    timespan.End = (byte)(Convert.ToInt32(timeTo.Substring(0, 2)) * 4 + Convert.ToInt32(timeTo.Substring(3, 2)) / 15);
                                     meetTimes.Add(timespan);
                                 }
                                 section.ParsedTime = new CourseSectionTime(meetTimes);
@@ -78,8 +78,8 @@ namespace Panta.Fetchers.Extensions.UT
                     Console.Out.WriteLine();
                     allCourses.Add(courseObj);
                 }
-            });
-            //}
+            //});
+            }
             Console.Out.WriteLine("Total number of courses: {0}", allCourses.Count);
             return allCourses;
         }

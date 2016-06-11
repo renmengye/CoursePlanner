@@ -62,6 +62,7 @@ namespace Panta.Tests
                     }
                     catch (NullReferenceException e)
                     {
+                        Trace.WriteLine(e.ToString());
                         continue;
                     }
                     Trace.WriteLine("");

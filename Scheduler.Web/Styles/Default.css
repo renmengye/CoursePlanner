@@ -261,7 +261,7 @@ img.loading {
     -ms-zoom: 1;
     /*math-zoom: 1;*/
     background: #fff;
-    max-height: 800px;
+    /*max-height: 1000px;*/
     position: relative;
     overflow: hidden;
 }
@@ -824,6 +824,20 @@ img.loading {
     font-size: 9pt;
     border: 2px solid #ddd;
     cursor: default;
+}
+
+#sponsorLink {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.sponsorLogoDiv{
+    padding-top: 15px;
+    padding-left: 75px;
+}
+
+.sponsorLogo {
+    height: 30px;
 }
 
     /*#calItemInfo:before {

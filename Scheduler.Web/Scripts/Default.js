@@ -224,16 +224,13 @@ $(document).ready(function () {
 
 function layout() {
     $("#pageWrapper").height($(window).height() - 85);
-    //$("#resultView").height($("#sideBar").height() - $("#addedCoursesList").height() - 47);
     $("#searchBox").width($("#sideBar").width() - 80);
-    //$("#resultView").width($("#searchBoxWrapper").width() + 5);
     $("#resultView").css("min-width", $("#searchBox").width());
     $("#calendarViews").width($(window).width() - $("#sideBar").width() - 32);
     $("#calendarViews").height($(window).height() - 90);
-    $("#sideBar").height($("#calendarViews").height());
-    $("#courseList").height($("#sideBar").height() - 68);
-    //$("#calendarViews").height($("#sideBar").height());
-
+    $("#calendarViews").height($("#pageWrapper").height() - 20);
+    $("#sideBar").height($("#pageWrapper").height() - 30);
+    $("#courseList").css("max-height", $("#sideBar").height() - 165);
     if (calendar) {
         calendar.resize();
     }
@@ -767,7 +764,7 @@ function getUrlParameters() {
 
 function CoursesList(placeholder) {
     this.placeholder = placeholder;
-    $(this.placeholder).append("<div id='coursesListTitle' class='widgetTitle'></div><div id='courseList'></div>");
+    $(this.placeholder).append("<div id='coursesListTitle' class='widgetTitle'>0 course added.</div><div id='courseList'></div>");
     this.items = {};
     this.courses = {};
     this.creditCount = 0;
