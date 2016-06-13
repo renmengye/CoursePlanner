@@ -12,7 +12,7 @@ namespace Panta.Fetchers.Extensions.UTSC
     {
         public IEnumerable<UTCourse> FetchItems()
         {
-            string sess = "summer";
+            string sess = WebUrlConstants.UTSCSession;
             IEnumerable<UTCourse> courseInfos = new UTSCCourseInfoHtmlFetcher(WebUrlConstants.UTSCTimetable, sess).FetchItems();
             List<UTCourse> courseDetails = new List<UTCourse>();
 

@@ -34,6 +34,7 @@ namespace Panta.Fetchers.Extensions.UT
         public const string UTSCTimetable = "https://www.utsc.utoronto.ca/~registrar/scheduling/timetable";
         // public const string UTSCTimetable = "http://www.utsc.utoronto.ca/~registrar/timetable_src/export.php?&submit&course&sess=year";
         public const string UTSCDepartment = "http://www.utsc.utoronto.ca/~registrar/calendars/calendar/Programs.html";
+        public const string UTSCSession = "year";
 
         public const string UTMHome = "https://registrar.utm.utoronto.ca/student/timetable/index.php";
         public const string UTMFormat = "https://registrar.utm.utoronto.ca/student/timetable/formatCourses2.php?yos=0&subjectarea={0}&session={1}&course=&instr_sname=";

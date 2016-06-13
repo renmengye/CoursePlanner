@@ -833,11 +833,22 @@ img.loading {
 
 .sponsorLogoDiv{
     padding-top: 15px;
-    padding-left: 75px;
+    padding-left: 50px;
 }
 
 .sponsorLogo {
     height: 30px;
+}
+
+.sponsorWechat{
+    width: 160px;
+    margin-top: 10px;
+    margin-left: 130px;
+}
+
+.sponsorWechatImg {
+    display: block;
+    margin: 0 auto;
 }
 
     /*#calItemInfo:before {

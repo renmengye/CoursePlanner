@@ -25,6 +25,7 @@ namespace Panta.Fetchers.Extensions.UTSC
 
         public UTSCCourseInfoHtmlFetcher(string url, string sess="year")
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             var postData = "sess=" + sess;

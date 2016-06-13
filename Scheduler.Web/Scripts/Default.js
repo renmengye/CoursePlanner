@@ -198,6 +198,13 @@ $(document).ready(function () {
             $("#programInfoButton").removeClass("expand");
         }
     });
+    $("#sponsorWechat").hide();
+    $("#sponsorWechatLogo").hover(function (e) {
+        $("#sponsorWechat").show();
+    }, function (e) {
+        $("#sponsorWechat").hide();
+    });
+    $("#sponsorWechatLogo").css("cursor", "pointer");
     $(".options").click(function () {
         if ($("#searchBox").val() !== "Search Courses") {
             searchCourse($("#searchBox").val());
