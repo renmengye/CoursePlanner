@@ -26,6 +26,7 @@ namespace Panta.Fetchers.Extensions.UTM
         public override IEnumerable<SchoolProgram> FetchItems()
         {
             List<SchoolProgram> results = new List<SchoolProgram>();
+            if (this.Content == null) return results;
             TextInfo formatter = CultureInfo.CurrentCulture.TextInfo;
 
             this.Content = this.Content.Replace("\n", String.Empty).Replace("\r", String.Empty);

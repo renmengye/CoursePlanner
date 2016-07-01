@@ -54,15 +54,61 @@ namespace Panta.Fetchers
             try
             {
                 string source;
-                using (StreamReader reader = new StreamReader(req.GetResponse().GetResponseStream()))
+                int BYTES_TO_READ = 30000000;
+                var buffer = new byte[BYTES_TO_READ];
+                int totalBytesRead = 0;
+                int bytesRead;
+                int retry = 0;
+                int MAX_RETRY = 10;
+
+                using (HttpWebResponse resp = (HttpWebResponse)req.GetResponse())
                 {
-                    source = reader.ReadToEnd();
+                    using (Stream sm = resp.GetResponseStream())
+                    {
+                        do
+                        {
+                            // You have to do this in a loop because there's no guarantee that
+                            // all the bytes you need will be ready when you call.
+                            bytesRead = sm.Read(buffer, totalBytesRead, BYTES_TO_READ - totalBytesRead);
+                            Console.Out.WriteLine(this.Url);
+                            Console.Out.WriteLine(bytesRead);
+                            totalBytesRead += bytesRead;
+                            if (bytesRead == 0)
+                            {
+                                retry++;
+                            }
+                            else
+                            {
+                                retry = 0;
+                            }
+                            if (totalBytesRead >= BYTES_TO_READ)
+                            {
+                                throw new IndexOutOfRangeException("Exceeding limit");
+                            } 
+                        } while(retry < MAX_RETRY && totalBytesRead < BYTES_TO_READ);
+
+                        // Sometimes WebResponse will hang if you try to close before
+                        // you've read the entire stream.  So you can abort the request.
+                        req.Abort();
+                    }
                 }
+                buffer = buffer.Take(totalBytesRead).ToArray();
+                source = System.Text.Encoding.Default.GetString(buffer);
+                //using (StreamReader reader = new StreamReader(req.GetResponse().GetResponseStream()))
+                //{
+                //    source = reader.ReadToEnd();
+                //}
                 this.Content = source;
             }
-            catch
+            catch (IOException e)
             {
-                Console.WriteLine("Unable to fetch: {0:S}", url);
+                Console.Out.WriteLine("Unable to fetch: {0:S}", url);
+                Console.Out.WriteLine(e);
+            }
+            catch (WebException e)
+            {
+                Console.Out.WriteLine("Unable to fetch: {0:S}", url);
+                Console.Out.WriteLine(e);
             }
             //bool retry = false;
             //int maxRetryCount = 50;

@@ -16,7 +16,7 @@ namespace Panta.Fetchers.Extensions.UT
         public const string ArtsciTimetableRoot = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
         public const string ArtsciTimetableHome = "index.html";
         public const string ArtsciCourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
-        public const string ArtsciTimetableNewCsv = "artsci_course_info.json";
+        public const string ArtsciTimetableNew = "https://timetable.iit.artsci.utoronto.ca/api/courses?code=";
         public static string[] ArtsciSeminars =  { 
                                               "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199h1.html",
                                               "http://www.artsandscience.utoronto.ca/ofr/1213_199/ccr199y1.html",

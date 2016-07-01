@@ -50,9 +50,21 @@ namespace Panta.Fetchers.Extensions.UT
                 }
             });
             //}
-            string csvUrl = WebUrlConstants.ArtsciTimetableNewCsv;
-            IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew(csvUrl);
-            IEnumerable<UTCourse> courses = courseInfoFetcherNew.FetchItems();
+            string artsciUrl = WebUrlConstants.ArtsciTimetableNew;
+            List<UTCourse> courses = new List<UTCourse>();
+            object _sync = new object();
+            Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(int code)
+            //for (char c = 'A'; c < 'Z'; c++)
+            {
+                char codeChar = (char)code;
+                IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew2(artsciUrl + codeChar);
+                IEnumerable<UTCourse> _courses = courseInfoFetcherNew.FetchItems();
+                lock (_sync)
+                {
+                    courses.AddRange(_courses);
+                }
+            }
+            );
 
             // Add hss/cs/department info
             //foreach (UTCourse course in courses)
