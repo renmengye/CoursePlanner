@@ -20,7 +20,7 @@ namespace Panta.Fetchers.Extensions.UTSC
             AngleRegex = new Regex("<[^>]+>", RegexOptions.Compiled);
             TableRegex = new Regex("<tr.+?</tr>", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Compiled);
             CodeRegex = new Regex("[A-Z]{4}[0-9]{2}[HY]3[FSY]", RegexOptions.Compiled);
-            SectionRegex = new Regex("(LEC|TUT)[0-9]+", RegexOptions.Compiled);
+            SectionRegex = new Regex("(LEC|TUT|PRA)[0-9]+", RegexOptions.Compiled);
         }
 
         public UTSCCourseInfoHtmlFetcher(string url, string sess="year")
@@ -61,7 +61,7 @@ namespace Panta.Fetchers.Extensions.UTSC
                 var line = match.ToString();
                 var codeMatch = CodeRegex.Match(line);
                 var secMatch = SectionRegex.Match(line);
-                if (codeMatch.Success && !line.Contains("<br>"))
+                if (codeMatch.Success && !line.Contains("<br>") && line.Contains("<b>"))
                 {
                     // New course
                     string courseName = AngleRegex.Replace(line, String.Empty);

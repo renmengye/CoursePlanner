@@ -12,7 +12,10 @@ namespace Panta.Fetchers.Extensions.UT
     /// </summary>
     public class UTArtsciCourseInfoFetcherNew2 : WebpageItemFetcher<UTCourse>
     {
-        public UTArtsciCourseInfoFetcherNew2(string path) : base(path) { }
+        public UTArtsciCourseInfoFetcherNew2(string path)
+            : base(path)
+        {
+        }
 
         public override IEnumerable<UTCourse> FetchItems()
         {
@@ -47,7 +50,7 @@ namespace Panta.Fetchers.Extensions.UT
                 if (course.meetings != null)
                 {
                     //foreach (dynamic activity in course.activities)
-                    
+
                     foreach (dynamic meeting in course.meetings)
                     {
                         dynamic activity = meeting.Value;

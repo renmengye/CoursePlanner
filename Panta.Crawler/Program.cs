@@ -24,33 +24,21 @@ namespace Panta
             IdSigner<Course> courseSigner = new IdSigner<Course>();
             IdSigner<SchoolProgram> progSigner = new IdSigner<SchoolProgram>();
 
-            IItemFetcher<UTCourse> artsciCourseFetcher = new UTArtsciCourseFetcher();
-            IItemFetcher<UTCourse> artsciSeminarFetcher = new UTArtsciSeminarFetcher();
-            IItemFetcher<UTCourse> engCourseFetcher = new UTEngCourseFetcher();
-            IItemFetcher<UTCourse> utscCourseFetcher = new UTSCCourseFetcher();
-            IItemFetcher<UTCourse> utmCourseFetcher = new UTMCourseFetcher();
-
             UOfTCourses = new DefaultIIndexableCollection<Course>("University of Toronto", "uoft_courses", courseSigner,
-                engCourseFetcher.FetchItems()
-                //artsciCourseFetcher.FetchItems()
-                //utscCourseFetcher.FetchItems()
-                .Concat<UTCourse>(artsciCourseFetcher.FetchItems())
-                //.Concat<UTCourse>(artsciSeminarFetcher.FetchItems())
-                .Concat<UTCourse>(utscCourseFetcher.FetchItems())
-                .Concat<UTCourse>(utmCourseFetcher.FetchItems())
+                new UTEngCourseFetcher().FetchItems()
+                //new UTArtsciCourseFetcher().FetchItems()
+                //new UTSCCourseFetcher().FetchItems()
+                .Concat<UTCourse>(new UTArtsciCourseFetcher().FetchItems())
+                .Concat<UTCourse>(new UTSCCourseFetcher().FetchItems())
+                .Concat<UTCourse>(new UTMCourseFetcher().FetchItems())
                 );
             UOfTCourses.SaveBin();
 
-            IItemFetcher<SchoolProgram> artsciProgramFetcher = new UTArtsciProgramFetcher();
-            IItemFetcher<SchoolProgram> engProgramFetcher = new UTEngProgramFetcher(WebUrlConstants.EngPrograms);
-            IItemFetcher<SchoolProgram> utscProgramFetcher = new UTSCProgramFetcher();
-            IItemFetcher<SchoolProgram> utmProgramFetcher = new UTMProgramFetcher();
-
             UOfTPrograms = new DefaultIIndexableCollection<SchoolProgram>("University of Toronto", "uoft_progs", progSigner,
-                artsciProgramFetcher.FetchItems()
-                .Concat<SchoolProgram>(engProgramFetcher.FetchItems())
-                .Concat<SchoolProgram>(utscProgramFetcher.FetchItems())
-                .Concat<SchoolProgram>(utmProgramFetcher.FetchItems()));
+                new UTArtsciProgramFetcher().FetchItems()
+                .Concat<SchoolProgram>(new UTEngProgramFetcher(WebUrlConstants.EngPrograms).FetchItems())
+                .Concat<SchoolProgram>(new UTSCProgramFetcher().FetchItems())
+                .Concat<SchoolProgram>(new UTMProgramFetcher().FetchItems()));
             UOfTPrograms.SaveBin();
         }
     }

@@ -12,9 +12,9 @@ namespace Panta.Tests
         [TestMethod]
         public void TestMethod1()
         {
-            UTArtsciCourseInfoFetcherNew2 fetcher = new UTArtsciCourseInfoFetcherNew2(
-               @"https://timetable.iit.artsci.utoronto.ca/api/courses?code=A");
-            fetcher.FetchItems();
+            string url = @"https://timetable.iit.artsci.utoronto.ca/api/20179/courses?code=A";
+            UTArtsciCourseInfoFetcherNew2 fetcher2 = new UTArtsciCourseInfoFetcherNew2(url);
+            fetcher2.FetchItems();
         }
     }
 }

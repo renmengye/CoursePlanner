@@ -309,7 +309,7 @@ function CalendarCollection(placeholder, list) {
     $(placeholder).append("<div id='calendarControlBar' class='widgetTitle2'>" +
         "<div id='downloadIcs' class='calendarControls hasTooltip' data-tooltip='Export iCal'>Export to iCal</div>" +
         "<div id='shareLink' class='calendarControls hasTooltip' data-tooltip='Share Calendar'>Share Timetable</div>" +
-        "<div id='splitView' class='calendarControls selected'>Split</div>" +
+        "<div id='splitView' class='calendarControls selected'>Both</div>" +
         "<div id='winterView' class='calendarControls'>Winter</div>" +
         "<div id='fallView' class='calendarControls'>Fall</div>"
         + "</div>");

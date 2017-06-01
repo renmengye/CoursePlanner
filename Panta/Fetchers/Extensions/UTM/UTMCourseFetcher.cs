@@ -1,4 +1,5 @@
-﻿using Panta.DataModels.Extensions.UT;
+﻿using Newtonsoft.Json;
+using Panta.DataModels.Extensions.UT;
 using Panta.Fetchers.Extensions.UT;
 using System;
 using System.Collections.Generic;
@@ -13,27 +14,27 @@ namespace Panta.Fetchers.Extensions.UTM
     {
         public UTMCourseFetcher() : base(Home) { }
         private static Regex DepartmentRegex, SelectRegex;
-        private const string Home = WebUrlConstants.UTMHome;
+        private const string Home = WebUrlConstants.UTMDepartment;
         private const string Address = WebUrlConstants.UTMFormat;
         private const string Session = WebUrlConstants.UTMSession;
 
         static UTMCourseFetcher()
         {
-            SelectRegex = new Regex("<select name='subjectarea'.*?</select>");
-            DepartmentRegex = new Regex("<option value='(?<index>[0-9]+)'>(?<depName>[^<]*)");
+            //DepartmentRegex = new Regex("<div class=\"option\" data-selectable=\"\" data-value=\"(?<index>[0-9]+)\">(?<depName>[^<]*)</div>");
+            //SelectRegex = new Regex("<select name='subjectarea'.*?</select>");
+            //SelectRegex = new Regex("<select name='subjectarea'.*?</select>");
+            //DepartmentRegex = new Regex("<option value='(?<index>[0-9]+)'>(?<depName>[^<]*)");
         }
 
         public override IEnumerable<UTCourse> FetchItems()
         {
             List<UTCourse> results = new List<UTCourse>();
 
-            this.Content = this.Content.Replace("\n", String.Empty).Replace("\r", String.Empty);
-            this.Content = SelectRegex.Match(this.Content).Value;
-            MatchCollection departments = DepartmentRegex.Matches(this.Content);
-            //Parallel.ForEach<Match>(departments.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match dep)
-            foreach (Match dep in departments)
+            dynamic allDepData = JsonConvert.DeserializeObject(this.Content);
+            //Parallel.ForEach<Dynamic>(allDepData, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(dynamic dep)
+            foreach (dynamic dep in allDepData)
             {
-                UTMCourseInfoFetcher fetcher = new UTMCourseInfoFetcher(dep.Groups["depName"].Value.Trim(' '), String.Format(Address, dep.Groups["index"].Value, Session));
+                UTMCourseInfoFetcher fetcher = new UTMCourseInfoFetcher(dep["deptName"].Value.Trim(' '), String.Format(Address, dep["deptId"].Value, Session));
                 IEnumerable<UTCourse> result = fetcher.FetchItems();
                 lock (this)
                 {
