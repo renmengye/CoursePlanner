@@ -7,11 +7,14 @@ namespace Panta.Fetchers.Extensions.UT
 {
     public class WebUrlConstants
     {
-        public const string EngTimetableFall = "http://www.apsc.utoronto.ca/timetable/fall.html";
-        public const string EngTimetableWinter = "http://www.apsc.utoronto.ca/timetable/winter.html";
-        public const string EngCalendar = "http://www.apsc.utoronto.ca/Calendars/Current/Course_Descriptions.html";
-
-        public const string EngPrograms = "http://www.apsc.utoronto.ca/Calendars/Current/Engineering_Programs.html";
+        //public const string EngTimetableFall = "http://www.apsc.utoronto.ca/timetable/fall.html";
+        //public const string EngTimetableWinter = "http://www.apsc.utoronto.ca/timetable/winter.html";
+        public const string EngTimetableFall = "https://portal.engineering.utoronto.ca/sites/timetable/fall.html";
+        public const string EngTimetableWinter = "https://portal.engineering.utoronto.ca/sites/timetable/winter.html";
+        //public const string EngCalendar = "http://www.apsc.utoronto.ca/Calendars/Current/Course_Descriptions.html";
+        public const string EngCalendar = "https://portal.engineering.utoronto.ca/sites/calendars/current/Course_Descriptions.html";
+        //public const string EngPrograms = "http://www.apsc.utoronto.ca/Calendars/Current/Engineering_Programs.html";
+        public const string EngPrograms = "https://portal.engineering.utoronto.ca/sites/calendars/current/Engineering_Programs.html";
 
         public const string ArtsciTimetableRoot = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
         public const string ArtsciTimetableHome = "index.html";
