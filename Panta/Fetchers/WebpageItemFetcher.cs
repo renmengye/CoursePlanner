@@ -39,6 +39,11 @@ namespace Panta.Fetchers
 
         public string Content { get; protected set; }
 
+        public bool AcceptAllCertifications(object sender, System.Security.Cryptography.X509Certificates.X509Certificate certification, System.Security.Cryptography.X509Certificates.X509Chain chain, System.Net.Security.SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+
         /// <summary>
         /// Use normal/get data method to fetch webpage data
         /// </summary>
@@ -46,11 +51,17 @@ namespace Panta.Fetchers
         public WebpageItemFetcher(string url)
         {
             this.Url = url;
+            
+            // Support a local file.
+            if (url.StartsWith("C:\\"))
+            {
+                this.Content = File.ReadAllText(url);
+                return;
+            }
 
-            WebRequest req = HttpWebRequest.Create(url);
+            var req = HttpWebRequest.Create(url);
             req.Proxy = null;
             req.Method = "GET";
-
             try
             {
                 string source;
@@ -84,8 +95,8 @@ namespace Panta.Fetchers
                             if (totalBytesRead >= BYTES_TO_READ)
                             {
                                 throw new IndexOutOfRangeException("Exceeding limit");
-                            } 
-                        } while(retry < MAX_RETRY && totalBytesRead < BYTES_TO_READ);
+                            }
+                        } while (retry < MAX_RETRY && totalBytesRead < BYTES_TO_READ);
 
                         // Sometimes WebResponse will hang if you try to close before
                         // you've read the entire stream.  So you can abort the request.
@@ -99,6 +110,7 @@ namespace Panta.Fetchers
                 //    source = reader.ReadToEnd();
                 //}
                 this.Content = source;
+                return;
             }
             catch (IOException e)
             {
@@ -110,7 +122,8 @@ namespace Panta.Fetchers
                 Console.Out.WriteLine("Unable to fetch: {0:S}", url);
                 Console.Out.WriteLine(e);
             }
-            //bool retry = false;
+            //Console.Out.WriteLine("Started 2nd retry.");
+            //bool retry2 = false;
             //int maxRetryCount = 50;
             //int retryCount = 0;
             //do
@@ -122,7 +135,7 @@ namespace Panta.Fetchers
             //        try
             //        {
             //            retryCount++;
-            //            retry = false;
+            //            retry2 = false;
             //            this.Content = client.DownloadString(this.Url);
             //        }
             //        catch (WebException ex)
@@ -131,11 +144,11 @@ namespace Panta.Fetchers
             //            Console.WriteLine(ex.ToString());
             //            if (retryCount < maxRetryCount)
             //            {
-            //                retry = true;
+            //                retry2 = true;
             //            }
             //        }
             //    }
-            //} while (retry);
+            //} while (retry2);
         }
 
         /// <summary>
