@@ -33,6 +33,27 @@ namespace Panta.Fetchers
         }
     }
 
+    [Flags]
+    public enum MySecurityProtocolType
+    {
+        //
+        // Summary:
+        //     Specifies the Secure Socket Layer (SSL) 3.0 security protocol.
+        Ssl3 = 48,
+        //
+        // Summary:
+        //     Specifies the Transport Layer Security (TLS) 1.0 security protocol.
+        Tls = 192,
+        //
+        // Summary:
+        //     Specifies the Transport Layer Security (TLS) 1.1 security protocol.
+        Tls11 = 768,
+        //
+        // Summary:
+        //     Specifies the Transport Layer Security (TLS) 1.2 security protocol.
+        Tls12 = 3072
+    }
+
     public abstract class WebpageItemFetcher<T> : IItemFetcher<T>
     {
         public string Url { get; private set; }
@@ -59,6 +80,9 @@ namespace Panta.Fetchers
                 return;
             }
 
+            System.Net.ServicePointManager.SecurityProtocol = (SecurityProtocolType)(MySecurityProtocolType.Tls12 | MySecurityProtocolType.Tls11 | MySecurityProtocolType.Tls);
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
             var req = HttpWebRequest.Create(url);
             req.Proxy = null;
             req.Method = "GET";
