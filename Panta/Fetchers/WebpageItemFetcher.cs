@@ -128,7 +128,7 @@ namespace Panta.Fetchers
                     }
                 }
                 buffer = buffer.Take(totalBytesRead).ToArray();
-                source = System.Text.Encoding.Default.GetString(buffer);
+                source = System.Text.Encoding.UTF8.GetString(buffer);
                 //using (StreamReader reader = new StreamReader(req.GetResponse().GetResponseStream()))
                 //{
                 //    source = reader.ReadToEnd();

@@ -86,6 +86,8 @@
     <Compile Include="Fetchers\Extensions\UTSC\UTSCDepartmentFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UTSC\UTSCProgramFetcher.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseDetailFetcherNew.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseDetailPageNumberFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciCourseInfoFetcherNew2.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciProgramDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciAntiCalendarCourseEvaluationFetcher.cs" />

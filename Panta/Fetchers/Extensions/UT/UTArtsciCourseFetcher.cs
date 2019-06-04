@@ -32,29 +32,30 @@ namespace Panta.Fetchers.Extensions.UT
         public IEnumerable<UTCourse> FetchItems()
         {
             IItemFetcher<UTDepartment> depFetcher = new UTArtsciDepartmentFetcher();
-
             List<UTCourse> coursesDetail = new List<UTCourse>();
-            List<UTDepartment> deps = new List<UTDepartment>(depFetcher.FetchItems());
             UTEngHssCsChecker checker = new UTEngHssCsChecker();
-            Dictionary<string, UTDepartment> depDict = new Dictionary<string, UTDepartment>();
+            UTArtsciCourseDetailPageNumberFetcher pagenumberFetcher = new UTArtsciCourseDetailPageNumberFetcher(
+                String.Format(WebUrlConstants.ArtsciCourseDetailNew, 0));
+            int numPages = pagenumberFetcher.FetchItems().First();
+            object _sync = new object();
 
-            // Parallel threads for fetching each department
-            Parallel.ForEach<UTDepartment>(depFetcher.FetchItems(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTDepartment dep)
-            //foreach (UTDepartment dep in depFetcher.FetchItems())
+            Parallel.For(0, numPages, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 4 }, delegate (int page)
+            //for (int page = 0; page < numPages; page++)
             {
-                IItemFetcher<UTCourse> courseDetailFetcher = new UTArtsciCourseDetailFetcher(dep.DetailUrl);
-                coursesDetail.AddRange(courseDetailFetcher.FetchItems());
-                if (!depDict.ContainsKey(dep.Abbr))
+                UTArtsciCourseDetailFetcherNew fetcher = new UTArtsciCourseDetailFetcherNew(
+                    String.Format(WebUrlConstants.ArtsciCourseDetailNew, page));
+                IEnumerable<UTCourse> _courses = fetcher.FetchItems();
+                lock (_sync)
                 {
-                    depDict.Add(dep.Abbr, dep);
+                    coursesDetail.AddRange(_courses);
                 }
-            });
-            //}
+            }
+            );
+
             string artsciUrl = WebUrlConstants.ArtsciTimetableNew;
             List<UTCourse> courses = new List<UTCourse>();
-            object _sync = new object();
-            Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(int code)
-            //for (char c = 'A'; c < 'Z'; c++)
+            Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (int code)
+            //for (char code = 'A'; code < 'Z'; c++)
             {
                 char codeChar = (char)code;
                 IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew2(artsciUrl + codeChar);
@@ -68,13 +69,8 @@ namespace Panta.Fetchers.Extensions.UT
 
             // Add hss/cs/department info
             //foreach (UTCourse course in courses)
-            Parallel.ForEach<UTCourse>(courses, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(UTCourse course)
+            Parallel.ForEach<UTCourse>(courses, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (UTCourse course)
             {
-                // Add department info
-                if (depDict.ContainsKey(course.Code.Substring(0, 3)))
-                {
-                    course.Department = depDict[course.Code.Substring(0, 3)].Name;
-                }
                 course.Faculty = "Artsci";
 
                 // Check cs/hss requirement for engineering students
