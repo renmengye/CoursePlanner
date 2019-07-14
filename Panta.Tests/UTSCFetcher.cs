@@ -12,6 +12,7 @@ namespace Panta.Tests
         [TestMethod]
         public void PostMethod()
         {
+            //new UTSCCourseInfoHtmlFetcher("C:\\Users\\renme_000\\Projects\\CoursePlanner\\bin\\Debug\\utsc.html").FetchItems();
             new UTSCCourseInfoHtmlFetcher(WebUrlConstants.UTSCTimetable).FetchItems();
             Assert.IsTrue(true);
         }

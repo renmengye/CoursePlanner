@@ -31,7 +31,8 @@ namespace Panta.Fetchers.Extensions.UT
                                               "http://www.artsandscience.utoronto.ca/ofr/1213_199/xbc199y1.html"
                                           };
 
-        public const string UTSCTimetable = "https://www.utsc.utoronto.ca/~registrar/scheduling/timetable";
+        //public const string UTSCTimetable = "C:\\Users\\renme_000\\Projects\\CoursePlanner\\bin\\Debug\\utsc.html";
+        public const string UTSCTimetable = "https://www.utsc.utoronto.ca/regoffice/timetable/timetable.php";
         // public const string UTSCTimetable = "http://www.utsc.utoronto.ca/~registrar/timetable_src/export.php?&submit&course&sess=year";
         public const string UTSCDepartment = "http://www.utsc.utoronto.ca/~registrar/calendars/calendar/Programs.html";
         public const string UTSCSession = "year";

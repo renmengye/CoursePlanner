@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -23,27 +24,37 @@ namespace Panta.Fetchers.Extensions.UTSC
             SectionRegex = new Regex("(LEC|TUT|PRA)[0-9]+", RegexOptions.Compiled);
         }
 
-        public UTSCCourseInfoHtmlFetcher(string url, string sess="year")
+        public UTSCCourseInfoHtmlFetcher(string url, string sess = "year")
         {
+            //HttpClient client = new HttpClient();
+            //var values = new Dictionary<string, string>{
+            //   { "sess", sess },
+            //   { "course", "DISPLAY_ALL" },
+            //   { "submit", "Display by Discipline" },
+            //   { "course2", "" }
+            //};
+            //var content = new FormUrlEncodedContent(values);
+            //var response = client.PostAsync(url, content).Result;
+            //var responseString = response.Content.ReadAsStringAsync().Result;
+            //this.Content = responseString;
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             var postData = "sess=" + sess;
             postData += "&course=DISPLAY_ALL";
-            postData += "&submit=Display by Discipline";
+            postData += "&submit=Display+by+Discipline";
             postData += "&course2=";
             var data = Encoding.ASCII.GetBytes(postData);
 
             request.Method = "POST";
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = data.Length;
-
             using (var stream = request.GetRequestStream())
             {
                 stream.Write(data, 0, data.Length);
             }
-
-            var response = (HttpWebResponse)request.GetResponse();
+            var response = request.GetResponse();
             this.Content = new StreamReader(response.GetResponseStream()).ReadToEnd();
         }
 
