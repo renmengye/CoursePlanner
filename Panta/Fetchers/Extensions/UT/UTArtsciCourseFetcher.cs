@@ -54,18 +54,22 @@ namespace Panta.Fetchers.Extensions.UT
 
             string artsciUrl = WebUrlConstants.ArtsciTimetableNew;
             List<UTCourse> courses = new List<UTCourse>();
-            Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (int code)
-            //for (char code = 'A'; code < 'Z'; c++)
+            //Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (int code)
+            for (char code = 'A'; code <= 'Z'; code++)
             {
-                char codeChar = (char)code;
-                IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew2(artsciUrl + codeChar);
-                IEnumerable<UTCourse> _courses = courseInfoFetcherNew.FetchItems();
-                lock (_sync)
+                // Memory issue from the server when searching for only one character.
+                for (char code2 = 'A'; code2 <= 'Z'; code2++)
                 {
-                    courses.AddRange(_courses);
+                    char codeChar = (char)code;
+                    IItemFetcher<UTCourse> courseInfoFetcherNew = new UTArtsciCourseInfoFetcherNew2(artsciUrl + codeChar + code2);
+                    IEnumerable<UTCourse> _courses = courseInfoFetcherNew.FetchItems();
+                    lock (_sync)
+                    {
+                        courses.AddRange(_courses);
+                    }
                 }
             }
-            );
+            //);
 
             // Add hss/cs/department info
             //foreach (UTCourse course in courses)

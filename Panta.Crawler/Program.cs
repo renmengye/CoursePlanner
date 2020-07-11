@@ -29,7 +29,7 @@ namespace Panta
                 //new UTArtsciCourseFetcher().FetchItems()
                 //new UTSCCourseFetcher().FetchItems()
                 .Concat<UTCourse>(new UTArtsciCourseFetcher().FetchItems())
-                .Concat<UTCourse>(new UTSCCourseFetcher().FetchItems())
+                //.Concat<UTCourse>(new UTSCCourseFetcher().FetchItems())
                 .Concat<UTCourse>(new UTMCourseFetcher().FetchItems())
                 );
             UOfTCourses.SaveBin();

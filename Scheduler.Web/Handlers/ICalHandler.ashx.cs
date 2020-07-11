@@ -26,7 +26,7 @@ namespace Scheduler.Web.Handlers
             if (this.TryParseCalendar(courseStrings, out calendar))
             {
                 context.Response.ContentType = "text/calendar";
-                context.Response.Headers["Content-Disposition"] = "attachment; filename=2018_2019_Calendar.ics";
+                context.Response.Headers["Content-Disposition"] = "attachment; filename=2020_2021_Calendar.ics";
                 iCalendarSerializer serializer = new iCalendarSerializer(calendar);
                 context.Response.Write(serializer.SerializeToString(calendar));
             }
@@ -85,12 +85,12 @@ namespace Scheduler.Web.Handlers
 
                                     if (utCourse.Faculty == "Engineering")
                                     {
-                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2018, 9, 6), timeSpan.Day, timeSpan.Start), "America/Toronto");
-                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2018, 9, 6), timeSpan.Day, timeSpan.End), "America/Toronto");
+                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2020, 9, 1), timeSpan.Day, timeSpan.Start), "America/Toronto");
+                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2020, 9, 1), timeSpan.Day, timeSpan.End), "America/Toronto");
                                         courseEvent.RecurrenceRules.Add(new RecurrencePattern(FrequencyType.Weekly)
                                         {
                                             //Count = 13
-                                            Until = new DateTime(2018, 12, 5)
+                                            Until = new DateTime(2020, 12, 15)
                                         });
                                     }
                                     else
@@ -100,7 +100,7 @@ namespace Scheduler.Web.Handlers
                                         courseEvent.RecurrenceRules.Add(new RecurrencePattern(FrequencyType.Weekly)
                                         {
                                             //Count = 13
-                                            Until = new DateTime(2018, 12, 5)
+                                            Until = new DateTime(2020, 12, 15)
                                         });
                                     }
 
@@ -120,23 +120,23 @@ namespace Scheduler.Web.Handlers
 
                                     if (utCourse.Faculty == "Engineering")
                                     {
-                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2019, 1, 7), timeSpan.Day, timeSpan.Start), "America/Toronto");
-                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2019, 1, 7), timeSpan.Day, timeSpan.End), "America/Toronto");
+                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2021, 1, 3), timeSpan.Day, timeSpan.Start), "America/Toronto");
+                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2021, 1, 3), timeSpan.Day, timeSpan.End), "America/Toronto");
 
                                         courseEvent.RecurrenceRules.Add(new RecurrencePattern(FrequencyType.Weekly)
                                         {
-                                            Until = new DateTime(2019, 4, 5)
+                                            Until = new DateTime(2021, 4, 10)
                                             //Count = 13
                                         });
                                     }
                                     else
                                     {
-                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2019, 1, 7), timeSpan.Day, timeSpan.Start), "America/Toronto");
-                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2019, 1, 7), timeSpan.Day, timeSpan.End), "America/Toronto");
+                                        courseEvent.Start = new iCalDateTime(this.ConvertDateTime(new DateTime(2021, 1, 3), timeSpan.Day, timeSpan.Start), "America/Toronto");
+                                        courseEvent.End = new iCalDateTime(this.ConvertDateTime(new DateTime(2021, 1, 3), timeSpan.Day, timeSpan.End), "America/Toronto");
 
                                         courseEvent.RecurrenceRules.Add(new RecurrencePattern(FrequencyType.Weekly)
                                         {
-                                            Until = new DateTime(2019, 4, 5)
+                                            Until = new DateTime(2021, 4, 10)
                                             //Count = 13
                                         });
                                     }

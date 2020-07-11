@@ -250,6 +250,14 @@ function searchCourse(query) {
 
     query = query.replace("(", " ").replace(")", " ");
 
+    if (query.length < 2) {
+        return;
+    }
+    if (query.split(":").length == 1) {
+        query = "code:" + query;
+    }
+    //query = query + "|code:" + query.split(" ")[0];
+
     var semsQuery = "";
     var utsgQuery = "";
     var utscQuery = "";

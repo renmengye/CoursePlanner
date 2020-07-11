@@ -14,7 +14,7 @@ namespace Panta.Fetchers.Extensions.UT
         public const string ArtsciTimetableRoot = "http://www.artsandscience.utoronto.ca/ofr/timetable/winter/";
         public const string ArtsciTimetableHome = "index.html";
         public const string ArtsciCourseDetailRoot = "http://www.artsandscience.utoronto.ca/ofr/calendar/crs_";
-        public const string ArtsciSession = "20199";
+        public const string ArtsciSession = "20209";
         public static string ArtsciTimetableNew = String.Format("https://timetable.iit.artsci.utoronto.ca/api/{0}/courses?code=", ArtsciSession);
         public const string ArtsciCourseDetailNew = "https://fas.calendar.utoronto.ca/search-courses?combine=&field_breadth_req_value=All&field_distribution_req_value=All&field_fas_program_area_value=All&filter_2=&page={0}";
         public static string[] ArtsciSeminars =  { 
@@ -40,7 +40,7 @@ namespace Panta.Fetchers.Extensions.UT
         //public const string UTMHome = "https://registrar.utm.utoronto.ca/student/timetable/index.php";
         //public const string UTMFormat = "https://registrar.utm.utoronto.ca/student/timetable/formatCourses2.php?yos=0&subjectarea={0}&session={1}&course=&instr_sname=";
         public const string UTMFormat = "https://student.utm.utoronto.ca/timetable/timetable?subjectarea={0}&session={1}";
-        public const string UTMSession = "20199";
+        public const string UTMSession = "20209";
         public const string UTMDepartment = "https://student.utm.utoronto.ca/timetable/api/departments";
         //public const string UTMDepartment = "C:\\Users\\renme_000\\Projects\\CoursePlanner\\RawData\\departments.json";
     }
