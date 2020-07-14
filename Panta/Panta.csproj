@@ -99,6 +99,7 @@
     <Compile Include="Fetchers\Extensions\UT\UTArtsciProgramFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTArtsciSeminarFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTCourseAbbrComparer.cs" />
+    <Compile Include="Fetchers\Extensions\UT\UTCourseDetailFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngHssCsFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\UTEngProgramFetcher.cs" />
     <Compile Include="Fetchers\Extensions\UT\WebUrlConstants.cs" />

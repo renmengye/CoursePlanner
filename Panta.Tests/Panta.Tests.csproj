@@ -68,6 +68,7 @@
     <Compile Include="SeminarTests.cs" />
     <Compile Include="JsonTest.cs" />
     <Compile Include="ArtsciNew2Tests.cs" />
+    <Compile Include="CourseFinderTests.cs" />
     <Compile Include="UTArtsciCourseDetailFetcherTests.cs" />
     <Compile Include="UTEngFetcherTest.cs" />
     <Compile Include="UTSCFetcher.cs" />

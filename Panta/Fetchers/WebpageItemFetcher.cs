@@ -105,8 +105,8 @@ namespace Panta.Fetchers
                             // You have to do this in a loop because there's no guarantee that
                             // all the bytes you need will be ready when you call.
                             bytesRead = sm.Read(buffer, totalBytesRead, BYTES_TO_READ - totalBytesRead);
-                            Console.Out.WriteLine(this.Url);
-                            Console.Out.WriteLine(bytesRead);
+                            //Console.Out.WriteLine(this.Url);
+                            //Console.Out.WriteLine(bytesRead);
                             totalBytesRead += bytesRead;
                             if (bytesRead == 0)
                             {

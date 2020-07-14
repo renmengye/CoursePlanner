@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Panta.Fetchers.Extensions.UT
 {
@@ -29,10 +30,37 @@ namespace Panta.Fetchers.Extensions.UT
             IItemFetcher<UTCourse> fallCourseFetcher = new UTEngCourseInfoFetcher(WebUrlConstants.EngTimetableFall);
             IItemFetcher<UTCourse> winterCourseFetcher = new UTEngCourseInfoFetcher(WebUrlConstants.EngTimetableWinter);
             IEnumerable<UTCourse> allCourses = fallCourseFetcher.FetchItems().Concat<UTCourse>(winterCourseFetcher.FetchItems());
-            IEnumerable<UTCourse> coursesDetail = new UTEngCourseDetailFetcher(WebUrlConstants.EngCalendar).FetchItems();
+
+            //IEnumerable<UTCourse> courseDetail = new UTEngCourseDetailFetcher(WebUrlConstants.EngCalendar).FetchItems();
+            List<UTCourse> courseDetail = new List<UTCourse>();
+            Parallel.ForEach<UTCourse>(allCourses, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (UTCourse course)
+            {
+                string session;
+                if (String.Equals(course.Semester, "S")) {
+                    session = WebUrlConstants.ArtsciSessionWinter;
+                }
+                else
+                {
+                    session = WebUrlConstants.ArtsciSession;
+                }
+                IEnumerable<UTCourse> courseDetail_ = new UTCourseDetailFetcher(String.Format(WebUrlConstants.CourseFinderCourse, course.Abbr, session)).FetchItems();
+                lock (this)
+                {
+                    if (courseDetail_.Count() > 0)
+                    {
+                        UTCourse course_ = courseDetail_.First();
+                        courseDetail.Add(course_);
+                        Console.WriteLine("Engineering Course Detail: {0} | {1}", course_.Abbr, course.Abbr);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Engineering Course Detail Not Found: {0}", course.Abbr);
+                    }
+                }
+            });
 
             // Merge course info and course detail
-            allCourses = allCourses.GroupJoin(coursesDetail,
+            allCourses = allCourses.GroupJoin(courseDetail,
                     (x => x.Abbr),
                     (x => x.Abbr),
                     ((x, y) => this.CombineInfoDetail(x, y.FirstOrDefault())),
@@ -54,7 +82,6 @@ namespace Panta.Fetchers.Extensions.UT
                 }
             }
 
-
             // Match the prerequisites to postrequisites
             foreach (UTCourse course in CoursesCollection.Values)
             {
@@ -69,7 +96,6 @@ namespace Panta.Fetchers.Extensions.UT
                     }
                 }
             }
-
             return CoursesCollection.Values;
         }
 

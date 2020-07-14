@@ -935,6 +935,29 @@ footer {
     padding: 5px;
 }
 
-    #shareLinkDropDown .shareLinks {
-        margin-right: 2px;
+#shareLinkDropDown .shareLinks {
+    margin-right: 2px;
+}
+
+.tipsText {
+    margin-right: 2px;
+    font-size: small;
+    color: #444;
+}
+
+.nobullet {
+    list-style: none;
+    list-style-type: none;
+    padding-left: 10px;
+    /*margin-top: -4px;*/
+}
+
+    .nobullet li {
+        /*display: inline;*/
+        margin-top: -4px;
     }
+
+tt{
+    color: darkorange;
+    background-color:#eee;
+}
