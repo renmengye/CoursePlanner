@@ -36,7 +36,7 @@ namespace Panta.Fetchers.Extensions.UT
             UTEngHssCsChecker checker = new UTEngHssCsChecker();
             UTArtsciCourseDetailPageNumberFetcher pagenumberFetcher = new UTArtsciCourseDetailPageNumberFetcher(
                 String.Format(WebUrlConstants.ArtsciCourseDetailNew, 0));
-            int numPages = pagenumberFetcher.FetchItems().First();
+            int numPages = pagenumberFetcher.FetchItems().Count();
             object _sync = new object();
 
             Parallel.For(0, numPages, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount * 4 }, delegate (int page)
@@ -54,8 +54,8 @@ namespace Panta.Fetchers.Extensions.UT
 
             string artsciUrl = WebUrlConstants.ArtsciTimetableNew;
             List<UTCourse> courses = new List<UTCourse>();
-            //Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (int code)
-            for (char code = 'A'; code <= 'Z'; code++)
+            Parallel.For((int)'A', (int)'Z' + 1, new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate (int code)
+            //for (char code = 'A'; code <= 'Z'; code++)
             {
                 // Memory issue from the server when searching for only one character.
                 for (char code2 = 'A'; code2 <= 'Z'; code2++)
@@ -69,7 +69,7 @@ namespace Panta.Fetchers.Extensions.UT
                     }
                 }
             }
-            //);
+            );
 
             // Add hss/cs/department info
             //foreach (UTCourse course in courses)

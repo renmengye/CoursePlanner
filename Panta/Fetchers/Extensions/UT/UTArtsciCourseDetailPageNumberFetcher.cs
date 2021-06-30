@@ -15,22 +15,33 @@ namespace Panta.Fetchers.Extensions.UT
 
         static UTArtsciCourseDetailPageNumberFetcher()
         {
-            PageNumberRegex = new Regex("<li class=\"pager-current\">1 of (?<number>[0-9]+)</li>", RegexOptions.Compiled);
+            PageNumberRegex = new Regex("page=(?<number>[0-9]+)", RegexOptions.Compiled);
         }
         public override IEnumerable<int> FetchItems()
         {
-            List<int> results = new List<int>();
+            //List<int> results = new List<int>();
 
-            if (this.Content == null) return results;
+            if (this.Content == null) return new List<int>();
             this.Content = this.Content.Replace("\r", String.Empty);
             this.Content = this.Content.Replace("\n", String.Empty);
             MatchCollection matches = PageNumberRegex.Matches(this.Content);
+            int max = -1;
+            int min = Int32.MaxValue;
             foreach (Match match in matches)
             {
                 int pagenumber = 0;
                 Int32.TryParse(match.Groups["number"].ToString(), out pagenumber);
-                results.Add(pagenumber);
+                if (pagenumber > max)
+                {
+                    max = pagenumber;
+                }
+                if (pagenumber < min)
+                {
+                    min = pagenumber;
+                }
+                //results.Add(pagenumber);
             }
+            var results = Enumerable.Range(min, max - min + 1);
             return results;
         }
     }
