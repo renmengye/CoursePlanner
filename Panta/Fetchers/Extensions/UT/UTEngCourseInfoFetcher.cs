@@ -40,8 +40,8 @@ namespace Panta.Fetchers.Extensions.UT
 
             MatchCollection matches = DepartmentRegex.Matches(this.Content);
 
-            Parallel.ForEach<Match>(matches.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match match)
-            //foreach (Match match in matches)
+            //Parallel.ForEach<Match>(matches.Cast<Match>(), new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount }, delegate(Match match)
+            foreach (Match match in matches)
             {
                 List<UTCourse> partialResults = new List<UTCourse>();
                 MatchCollection courseMatches = CourseRegex.Matches(match.Value);
@@ -155,7 +155,7 @@ namespace Panta.Fetchers.Extensions.UT
                     results.AddRange(partialResults);
                 }
             }
-            );
+            //);
             return results;
         }
     }

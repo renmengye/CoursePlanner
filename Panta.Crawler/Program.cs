@@ -30,7 +30,7 @@ namespace Panta
                 //new UTSCCourseFetcher().FetchItems()
                 .Concat<UTCourse>(new UTArtsciCourseFetcher().FetchItems())
                 //.Concat<UTCourse>(new UTSCCourseFetcher().FetchItems())
-                .Concat<UTCourse>(new UTMCourseFetcher().FetchItems())
+                //.Concat<UTCourse>(new UTMCourseFetcher().FetchItems())
                 );
             UOfTCourses.SaveBin();
 
@@ -38,7 +38,8 @@ namespace Panta
                 new UTArtsciProgramFetcher().FetchItems()
                 .Concat<SchoolProgram>(new UTEngProgramFetcher(WebUrlConstants.EngPrograms).FetchItems())
                 .Concat<SchoolProgram>(new UTSCProgramFetcher().FetchItems())
-                .Concat<SchoolProgram>(new UTMProgramFetcher().FetchItems()));
+                //.Concat<SchoolProgram>(new UTMProgramFetcher().FetchItems())
+                );
             UOfTPrograms.SaveBin();
         }
     }
